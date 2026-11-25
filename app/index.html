@@ -2945,6 +2945,7 @@ window.Core = (function(){
       updReady:'Update downloaded. It starts the next time you open the game.', updNone:'You have the newest version',
       updApp:'This update needs the new app. Install it from the download page.', updFail:'Could not check right now. Try again later.',
       updDone:'Updated to version {v}',
+      safeMode:'The game closed unexpectedly last time, so it now uses lighter graphics to stay steady. You can change this in Settings, Display.',
       appName:'Détour!', tagline:'A Montréal puzzle', love:'With love from Montréal',
       play:'Start', continueBtn:'Continue', home:'Home', postcards:'postcards', stopsDone:'stops', next:'Next level', retry:'Try again', done:'Done',
       level:'Level', hard:'Hard level', left:'left', moves:'moves', best:'Best',
@@ -3070,6 +3071,7 @@ window.Core = (function(){
       updReady:'Mise à jour téléchargée. Elle commence à la prochaine ouverture du jeu.', updNone:'Tu as la version la plus récente',
       updApp:'Cette mise à jour demande la nouvelle appli. Installe-la depuis la page de téléchargement.', updFail:'Impossible de vérifier pour l’instant. Réessaie plus tard.',
       updDone:'Mis à jour : version {v}',
+      safeMode:'Le jeu s’est fermé d’un coup la dernière fois : il utilise maintenant des graphismes plus légers pour rester stable. Tu peux changer ça dans Réglages, Affichage.',
       appName:'Détour!', tagline:'Un casse-tête montréalais', love:'Avec amour, de Montréal',
       play:'Commencer', continueBtn:'Continuer', home:'Accueil', postcards:'cartes', stopsDone:'arrêts', next:'Niveau suivant', retry:'Réessayer', done:'Terminé',
       level:'Niveau', hard:'Niveau difficile', left:'restants', moves:'coups', best:'Record',
@@ -3195,22 +3197,46 @@ window.Core = (function(){
     vol:{music:0.6, sfx:0.8, amb:0.6}, mute:{music:false, sfx:false, amb:false},
     hints:true, battery:false, calm:false, av:0,
     // the player: a name (a fun one until they pick their own), a colour, since when, and time played (seconds)
-    name:'', named:0, avatar:-1, since:'', playS:0
+    name:'', named:0, avatar:-1, since:'', playS:0,
+    // when this save was written (to pick the newest copy), and how much lighter the graphics run after unexpected closes
+    ts:0, safe:0, crashes:[], exitSeen:0
   };
   /* The save lives in this browser's (or the app's) local storage. A second
      copy, the last one that loaded cleanly, is kept beside it: if the main
      copy is ever damaged, the game comes back from that one. */
   var BAK_KEY = SAVE_KEY + '-bak', fromBackup = false;
   function parseSave(raw){ try{ var o = raw && JSON.parse(raw); return o && typeof o === 'object' && !Array.isArray(o) ? o : null; }catch(e){ return null; } }
+  /* Only values of the right kind are taken (a number stays a number, a list a
+     list), and the few settings that are words must be one of their choices:
+     a damaged or hand-made save, or a pasted save code, cannot slip anything
+     else into the game. */
+  var CHOICES = {lang:['en','fr'], gfx:['auto','best','good','fast'], season:null};
+  function kindOf(v){ return Array.isArray(v) ? 'array' : v === null ? 'null' : typeof v; }
   function adopt(o){
     // migrate: version 1 stored a single level number
     if(!o.v && typeof o.level === 'number'){ o.reached = o.level; o.stars = {}; }
-    for(var k in save) if(o[k] !== undefined && o[k] !== null) save[k] = o[k];
+    for(var k in save){
+      var v = o[k];
+      if(v === undefined || v === null) continue;
+      if(save[k] !== null && save[k] !== undefined && kindOf(v) !== kindOf(save[k])) continue;
+      if(typeof v === 'number' && !isFinite(v)) continue;
+      if(CHOICES[k] && CHOICES[k].indexOf(v) < 0) continue;
+      save[k] = v;
+    }
+    save.name = typeof save.name === 'string' ? save.name : '';
   }
+  /* Inside the Android app a copy of the save is also written straight to the
+     phone's storage (the browser part writes its own copy a few seconds late,
+     and a sudden close could lose those seconds). The newer copy wins. */
+  var NATIVE = window.DetourNative && typeof window.DetourNative.kept === 'function' ? window.DetourNative : null;
   try{
     var raw = localStorage.getItem(SAVE_KEY), o = parseSave(raw);
     if(o){ adopt(o); try{ localStorage.setItem(BAK_KEY, raw); }catch(e){} }
     else { o = parseSave(localStorage.getItem(BAK_KEY)); if(o){ adopt(o); fromBackup = true; } }
+  }catch(e){}
+  try{
+    var nk = NATIVE && parseSave(NATIVE.kept());
+    if(nk && (nk.ts || 0) > (save.ts || 0)) adopt(nk);
   }catch(e){}
   try{ if(navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function(){}); }catch(e){}
   var FUN_NAMES = {
@@ -3233,7 +3259,16 @@ window.Core = (function(){
   }
   if(!save.vol || typeof save.vol !== 'object') save.vol = {music:0.6, sfx:0.8, amb:0.6};
   if(!save.mute || typeof save.mute !== 'object') save.mute = {music:false, sfx:false, amb:false};
-  function persist(){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(save)); }catch(e){} }
+  var keepT = 0;
+  function persist(){
+    save.ts = Date.now();
+    var json = JSON.stringify(save);
+    try{ localStorage.setItem(SAVE_KEY, json); }catch(e){}
+    if(NATIVE && !keepT){
+      // to the phone's storage too, at most every half second
+      keepT = setTimeout(function(){ keepT = 0; try{ NATIVE.keep(JSON.stringify(save)); }catch(e){} }, 500);
+    }
+  }
   /* The save code: the whole game as one line of text the player can keep
      (a note, an email) and paste back later, here or on a new phone. The play
      log stays behind. A checksum catches a code that was cut short. */
@@ -8720,16 +8755,21 @@ window.SignLogic = (function(){
       var cv = document.createElement('canvas');
       var r = new THREE.WebGLRenderer({canvas:cv, antialias:true, alpha:true});
       r.setPixelRatio(1); r.setClearColor(0x000000, 0);
-      r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+      r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFShadowMap;   // (in r128 only this type honours shadow.radius: soft clay edges)
       shared = {renderer:r, canvas:cv, w:0, h:0, lost:false};
-      cv.addEventListener('webglcontextlost', function(e){ e.preventDefault(); shared.lost = true; });
-      cv.addEventListener('webglcontextrestored', function(){ shared.lost = false; });
+      // the phone can take the graphics memory back; the game hears about it (and three.js rebuilds on return)
+      cv.addEventListener('webglcontextlost', function(e){ e.preventDefault(); shared.lost = true; window.dispatchEvent(new CustomEvent('detour-gl', {detail:'lost'})); });
+      cv.addEventListener('webglcontextrestored', function(){ shared.lost = false; window.dispatchEvent(new CustomEvent('detour-gl', {detail:'back'})); });
       return true;
     } catch(e){ shared = false; return false; }
   }
   /* Quality steps down by itself on a device that cannot hold a decent frame
      rate: fewer pixels, then no shadows, and finally the flat drawing. */
-  var QUALITY = [{px:1.5e6, map:2048}, {px:0.9e6, map:1024}, {px:0.5e6, map:0}];
+  /* Phones (a touch screen) get a smaller first step: their graphics memory is
+     shared with everything else, and running out of it closes the whole app. */
+  var TOUCH = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+  var QUALITY = TOUCH ? [{px:1.1e6, map:1024}, {px:0.75e6, map:1024}, {px:0.45e6, map:0}]
+                      : [{px:1.5e6, map:2048}, {px:0.9e6, map:1024}, {px:0.5e6, map:0}];
   var q = {level:0, locked:false, last:0, sum:0, n:0, skip:14, onChange:null};
   function quality(){ return QUALITY[Math.min(q.level, QUALITY.length - 1)]; }
   function watchFrames(){
@@ -8804,11 +8844,21 @@ window.SignLogic = (function(){
       var hdr = gl2 && (r.extensions.has('EXT_color_buffer_float') || r.extensions.has('EXT_color_buffer_half_float'));
       // (a stencil buffer brings 24-bit depth with it, so road paint never flickers against the road)
       var opts = {type:hdr ? THREE.HalfFloatType : THREE.UnsignedByteType, format:THREE.RGBAFormat, depthBuffer:true, stencilBuffer:true};
-      var rt = gl2 && THREE.WebGLMultisampleRenderTarget ? new THREE.WebGLMultisampleRenderTarget(w, h, opts) : new THREE.WebGLRenderTarget(w, h, opts);
-      p.comp = new THREE.EffectComposer(r, rt);
+      /* Graphics memory: the scene is drawn into ONE multisampled buffer (2
+         samples on phones, none for a picture that is already drawn larger
+         and scaled down); the composer's second buffer is a plain one with no
+         depth, and the last pass draws to the screen without swapping, so the
+         scene always lands in the multisampled one. */
+      var samples = o.noMsaa ? 0 : TOUCH ? 2 : 4, rt;
+      if(gl2 && THREE.WebGLMultisampleRenderTarget && samples){ rt = new THREE.WebGLMultisampleRenderTarget(w, h, opts); rt.samples = samples; }
+      else rt = new THREE.WebGLRenderTarget(w, h, opts);
+      var spare = new THREE.WebGLRenderTarget(w, h, {type:opts.type, format:THREE.RGBAFormat, depthBuffer:false, stencilBuffer:false});
+      p.comp = new THREE.EffectComposer(r, spare);
+      p.comp.renderTarget2.dispose(); p.comp.renderTarget2 = rt;
+      p.comp.writeBuffer = spare; p.comp.readBuffer = rt;
       p.comp.setPixelRatio(1); p.comp.setSize(w, h);
       p.rp = new THREE.RenderPass(null, null); p.comp.addPass(p.rp);
-      if(o.sao){
+      if(o.sao && !TOUCH){                                  // ambient occlusion draws the scene twice more: computers only
         p.sao = new THREE.SAOPass(new THREE.Scene(), cam, false, true, new THREE.Vector2(w, h));
         var sp = p.sao.params;
         sp.saoBias = 0.5; sp.saoIntensity = o.sao.intensity; sp.saoScale = o.sao.scale; sp.saoKernelRadius = o.sao.radius || 24;
@@ -8822,7 +8872,7 @@ window.SignLogic = (function(){
         bm.blendSrc = THREE.OneFactor; bm.blendDst = THREE.OneFactor; bm.blendSrcAlpha = THREE.ZeroFactor; bm.blendDstAlpha = THREE.OneFactor;
         p.comp.addPass(p.bloom);
       }
-      p.grade = new THREE.ShaderPass(GRADE); p.comp.addPass(p.grade);
+      p.grade = new THREE.ShaderPass(GRADE); p.grade.needsSwap = false; p.comp.addPass(p.grade);
       p.w = w; p.h = h; p.cam = cam;
     }
     p.render = function(scene, cam, w, h){
@@ -8845,8 +8895,17 @@ window.SignLogic = (function(){
     p.dispose = function(){
       if(!p.comp) return;
       p.comp.renderTarget1.dispose(); p.comp.renderTarget2.dispose();
-      p.comp.passes.forEach(function(ps){ if(ps.dispose) ps.dispose(); });
-      p.comp = null;
+      p.comp.passes.forEach(function(ps){
+        if(ps.dispose) ps.dispose();
+        // r128 passes without a dispose of their own (ambient occlusion, plain shader passes): free what they hold
+        Object.keys(ps).forEach(function(k){
+          var v = ps[k];
+          if(v && (v.isWebGLRenderTarget || v.isMaterial) && v.dispose) v.dispose();
+          if(v && v.isWebGLRenderTarget && v.depthTexture) v.depthTexture.dispose();
+        });
+        if(ps.fsQuad && ps.fsQuad.dispose) ps.fsQuad.dispose();
+      });
+      p.comp = null; p.sao = null; p.bloom = null; p.grade = null; p.rp = null;
     };
     return p;
   }
@@ -10168,7 +10227,8 @@ window.SignLogic = (function(){
     if(FX.pbr){ hemi *= 0.32; sunI *= 1.55; }
     // a warm sun and a cool sky fill: lit faces glow, shaded faces go blue rather than grey
     var skyHex = o.sky || (FX.pbr ? 0xc4dcff : 0xffffff), sunHex = o.sunHex || (FX.pbr ? 0xfff0d8 : 0xffffff);
-    scene.add(new THREE.HemisphereLight(skyHex, o.ground || 0x8d97a6, hemi));
+    // the light bounced up from the ground is warm, so undersides read as soft clay, not mud
+    scene.add(new THREE.HemisphereLight(skyHex, o.ground || 0xb39c95, hemi));
     var sun = new THREE.DirectionalLight(sunHex, sunI);
     sun.position.copy(o.from); sun.target.position.copy(o.to || new THREE.Vector3());
     scene.add(sun); scene.add(sun.target);
@@ -10180,7 +10240,7 @@ window.SignLogic = (function(){
       sun.shadow.mapSize.set(o.map || 1024, o.map || 1024);
       sun.shadow.bias = o.bias == null ? -0.0015 : o.bias;
       sun.shadow.normalBias = o.nbias || 0;
-      sun.shadow.radius = 2.2;
+      sun.shadow.radius = o.map >= 2048 ? 3 : 2.4;
     }
     return sun;
   }
@@ -10573,11 +10633,11 @@ window.SignLogic = (function(){
     var style = where && STYLE3[where.style] && where.style !== 'glass' ? where.style : 'triplex';
     var cam = new THREE.PerspectiveCamera(CAM.fov, 1, 1, 500), v = new THREE.Vector3();
     lights(scene, moodLight({hemi:0.66, sun:0.58, sunHex:0xfff1dc, from:new THREE.Vector3(-20, 34, 28), to:new THREE.Vector3(0, 0, 0),
-                   shadow:19, near:5, far:110, map:2048, bias:-0.0008, fixed:true}));
+                   shadow:19, near:5, far:110, map:TOUCH ? 1024 : 2048, bias:-0.0008, fixed:true}));
     var hazeCol = mood && mood.haze ? mood.haze : sn.sky[1];
     premium(scene);
     // the photos are stills, rendered once: they can afford the full treatment
-    var post = postFX({vignette:0.06});
+    var post = postFX({vignette:0.06, noMsaa:true}), postBye = 0;
     var walk = tint(sn.verge, '#b8c2cf', .35);
     scene.add(ground(400, 400, sn.ground, 0, 0, -150, sn.banks ? 'snow' : 'grass'));
     scene.add(ground(80, 5.2, walk, 0, 0.02, 0.0, 'concrete'));           // the sidewalk along the houses
@@ -10683,9 +10743,12 @@ window.SignLogic = (function(){
         aim(w/h); show(p);
         var out = document.createElement('canvas'); out.width = w; out.height = h;
         // render larger and scale down: smooth edges on every tier
-        var ss = FX.pbr && q.level === 0 ? Math.min(2, Math.max(1, Math.floor(2600/Math.max(w, h)*10)/10)) : 1;
+        var ss = FX.pbr && q.level === 0 ? Math.min(TOUCH ? 1.4 : 2, Math.max(1, Math.floor(2600/Math.max(w, h)*10)/10)) : 1;
+        if(TOUCH) ss = Math.max(1, Math.min(ss, Math.sqrt(1.6e6/(w*h))));
         var oc = out.getContext('2d'); oc.imageSmoothingQuality = 'high';
         oc.drawImage(render(scene, cam, Math.round(w*ss), Math.round(h*ss), false, {post:post}), 0, 0, w, h);
+        // the pictures are drawn once: let the big buffers go straight after
+        clearTimeout(postBye); postBye = setTimeout(function(){ post.dispose(); }, 400);
         return out;
       },
       /* The tap map at w by h: one byte per pixel, 0 for nothing, or the
@@ -11700,6 +11763,7 @@ window.SignLogic = (function(){
 
   window.Kit3D = {
     setQuality:function(level, lock){ q.level = level; q.locked = !!lock; },
+    lost:function(){ return !!(shared && shared.lost); },
     quality:function(){ return q.level; },
     onQuality:function(fn){ q.onChange = fn; },
     available:available, vehicle:vehicle, cone:cone, house:house, tower:tower, STYLE:STYLE, lotView:lotView, trafficView:trafficView, homeView:homeView, findView:findView, runView:runView, bmxRider:bmxRider, riderPreview:riderPreview,
@@ -13561,7 +13625,7 @@ window.SignLogic = (function(){
   var bg = document.createElement('canvas'), bgx = bg.getContext('2d');
   var mqReduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   var reduceMotion = mqReduce || !!C.save.calm;
-  var APP_VERSION = 31;
+  var APP_VERSION = 32;
   var dpr = 1, k = 1, bgDirty = true;
   var G = {W:420, H:800};
   var screen = 'map', game = null, gameStop = 0, paused = false;
@@ -13621,7 +13685,8 @@ window.SignLogic = (function(){
   var toastTimer = 0;
   function toast(msg){
     toastEl.textContent = msg; toastEl.classList.add('show');
-    clearTimeout(toastTimer); toastTimer = setTimeout(function(){ toastEl.classList.remove('show'); }, 1300);
+    // long messages stay up long enough to read
+    clearTimeout(toastTimer); toastTimer = setTimeout(function(){ toastEl.classList.remove('show'); }, Math.max(1300, String(msg).length*60));
   }
   function tip(msg){ if(msg){ tipEl.textContent = msg; tipEl.classList.add('show'); } else tipEl.classList.remove('show'); }
 
@@ -13856,7 +13921,8 @@ window.SignLogic = (function(){
       if(r.e === 'lose') o.lost++;
       if(r.e === 'quit' || r.e === 'retry') o.quit++;
     });
-    out.push('Détour play log (' + new Date().toISOString().slice(0, 10) + ')');
+    out.push('Détour play log (' + new Date().toISOString().slice(0, 10) + ', version ' + APP_VERSION + ', graphics ' + (C.save.gfx || 'auto') + (C.save.safe ? ' lighter x' + C.save.safe : '') + ')');
+    (C.save.crashes || []).forEach(function(c){ out.push('closed unexpectedly ' + c.at + ' v' + c.v + ': ' + c.how + '; ' + c.where + '; graphics ' + c.gfx + (c.why ? '; ' + c.why : '')); });
     out.push('stop, game, tries, wins, lost, gave up, stalled (hand shown), skipped, best stars, seconds to win');
     Object.keys(by).sort(function(a, b){ return a - b; }).forEach(function(s){
       var o = by[s]; out.push([s, o.g, o.tries, o.wins, o.lost, o.quit, o.hints, o.skip, o.stars, o.secs.join(' ')].join(', '));
@@ -15125,15 +15191,18 @@ window.SignLogic = (function(){
   function autoTier(){
     var K = window.Kit3D;
     if(!K || !K.available()) return 'off';
-    var coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
-    var mem = navigator.deviceMemory || 4, cores = navigator.hardwareConcurrency || 4;
-    if(!coarse) return 'console';
-    return mem >= 6 && cores >= 8 ? 'console' : 'high';
+    var coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches, safe = C.save.safe || 0;
+    if(safe >= 3) return 'off';                        // after unexpected closes, lighter each time
+    if(!coarse) return safe ? 'high' : 'console';
+    // phones: Good. Best (post-processing on moving scenes) stays a choice in Settings,
+    // because a phone's graphics memory is shared and running out of it closes the app
+    return 'high';
   }
   function applyGraphics(){
     var K = window.Kit3D;
     if(!K || !K.setFX) return;
     var g = C.save.gfx || 'auto', tier = g === 'best' ? 'console' : g === 'good' ? 'high' : g === 'fast' ? 'off' : autoTier();
+    if(g === 'auto' && (C.save.safe || 0) >= 2 && K.quality && K.quality() < 1 && K.setQuality) K.setQuality(1);
     if(!K.setFX(tier)) return;
     bgDirty = true;
     if(screen === 'game' && game) game.layout(G);
@@ -15318,7 +15387,7 @@ window.SignLogic = (function(){
       };
     });
     pane.querySelectorAll('[data-gfx]').forEach(function(b){
-      b.onclick = function(){ C.save.gfx = b.dataset.gfx; C.persist(); applyGraphics(); renderPane(); };
+      b.onclick = function(){ C.save.gfx = b.dataset.gfx; C.save.safe = 0; C.persist(); applyGraphics(); renderPane(); };
     });
     pane.querySelectorAll('[data-season]').forEach(function(b){
       b.onclick = function(){ C.save.season = b.dataset.season; C.persist(); bgDirty = true; renderPane(); if(screen === 'home') showHome(); };
@@ -15467,6 +15536,85 @@ window.SignLogic = (function(){
   C.setMusic('calm');
   try{ if(sessionStorage.getItem('detour-restored')){ sessionStorage.removeItem('detour-restored'); setTimeout(function(){ toast(C.t('restoreOk')); }, 900); } }catch(err){}
 
+  /* ---------- steadiness (the Android app) ----------
+     Every few seconds the game writes one status line (where the player is,
+     the graphics level) to a file in the app's storage. Putting the game away
+     marks the line "clean". If the next start finds a line that is not clean,
+     the app was closed under the player: on a phone that almost always means
+     it ran out of graphics memory. The game then runs one step lighter, says
+     so once, and keeps a short note for the feedback report (Settings, More,
+     Send feedback). The app also says why it last ended (Android 11 and up). */
+  var Nat = window.DetourNative && typeof window.DetourNative.note === 'function' ? window.DetourNative : null;
+  var steady = {errs:0, t0:Date.now()};
+  window.addEventListener('error', function(){ steady.errs++; });
+  var EXIT_WHY = {1:'closed itself', 2:'stopped by a signal', 3:'low memory', 4:'crash (app)', 5:'crash (native, often graphics)', 6:'not responding',
+                  7:'failed to start', 8:'permission change', 9:'used too many resources', 10:'closed by the user', 11:'stopped by the user',
+                  12:'a part it needs stopped', 13:'other', 14:'frozen', 15:'app updated or removed'};
+  function statusLine(clean){
+    var K = window.Kit3D, inGame = screen === 'game' && game;
+    return JSON.stringify({v:APP_VERSION, t:Date.now(), clean:clean ? 1 : 0, s:screen || '',
+      l:inGame ? gameStop : 0, g:inGame ? (game.isEndless ? 'endless' : game.isDaily ? 'daily' : gameFor(gameStop)) : '',
+      tier:K && K.fx ? K.fx() : '', q:K && K.quality ? K.quality() : 0, up:Math.round((Date.now() - steady.t0)/1000),
+      heap:window.performance && performance.memory ? Math.round(performance.memory.usedJSHeapSize/1048576) : 0});
+  }
+  function crumb(clean){ if(Nat) try{ Nat.note(statusLine(clean)); }catch(e){} }
+  // the newest way the app ended that we have not looked at yet (Android 11 and up)
+  function lastExitNew(){
+    var raw = ''; try{ raw = Nat.lastExit ? Nat.lastExit() || '' : ''; }catch(e){}
+    var best = null;
+    raw.split('\n').forEach(function(line){
+      var f = line.split('|'); if(f.length < 7) return;
+      var e = {t:+f[0], reason:+f[1], imp:+f[3], pss:+f[4], rss:+f[5], desc:f.slice(6).join('|')};
+      if(e.t > (C.save.exitSeen || 0) && (!best || e.t > best.t)) best = e;
+    });
+    if(best){ C.save.exitSeen = best.t; }
+    return best;
+  }
+  function safer(prev, how, ex){
+    var L = C.save.crashes || (C.save.crashes = []);
+    L.push({at:new Date().toISOString().slice(0, 16), v:APP_VERSION, how:how,
+            where:prev ? (prev.s === 'game' ? 'level ' + prev.l + ' (' + prev.g + ')' : prev.s) + ', ' + Math.round((prev.up || 0)/60) + ' min in' : '',
+            gfx:prev ? prev.tier + ' q' + prev.q : '', why:ex ? (EXIT_WHY[ex.reason] || 'reason ' + ex.reason) + (ex.desc && ex.desc !== 'null' ? ': ' + ex.desc.slice(0, 120) : '') +
+            (ex.pss ? ', memory ' + Math.round(ex.pss/1024) + ' MB' : '') : ''});
+    if(L.length > 8) L.splice(0, L.length - 8);
+    // one step lighter: Best becomes Good; on Auto, each close steps further down
+    if(C.save.gfx === 'best') C.save.gfx = 'good';
+    else if(C.save.gfx === 'auto' || !C.save.gfx) C.save.safe = Math.min(3, (C.save.safe || 0) + 1);
+    C.persist();
+    applyGraphics();
+    setTimeout(function(){ toast(C.t('safeMode')); }, 1600);
+  }
+  function steadyStart(){
+    if(!Nat) return;
+    var prev = null, gone = '', ex = null;
+    try{ prev = JSON.parse(Nat.prev() || 'null'); }catch(e){}
+    try{ gone = Nat.gone() || ''; }catch(e){}
+    ex = lastExitNew();
+    var hard = ex && [3, 4, 5, 6, 9].indexOf(ex.reason) >= 0 && ex.imp && ex.imp <= 200;
+    if(gone) safer(prev, 'the game view was ' + (gone.indexOf('crash') === 0 ? 'crashed' : 'closed for memory') + ' and restarted', ex);
+    else if(prev && !prev.clean && (prev.up || 0) > 3) safer(prev, 'the app closed while open', ex);
+    else if(hard) safer(prev, 'the app closed', ex);
+    else if(ex) C.persist();
+    crumb(false);
+    setInterval(function(){ if(!document.hidden) crumb(false); }, 3000);
+    document.addEventListener('visibilitychange', function(){ crumb(document.hidden); });
+    window.addEventListener('pagehide', function(){ crumb(true); });
+  }
+  // the 3D view lost its graphics (the phone took the memory back): if it does not come back, start again lighter
+  window.addEventListener('detour-gl', function(e){
+    if(e.detail === 'lost'){
+      clearTimeout(steady.lostT);
+      steady.lostT = setTimeout(function(){
+        if(window.Kit3D && window.Kit3D.lost && window.Kit3D.lost()){
+          safer(JSON.parse(statusLine(false)), 'the 3D view lost its graphics and did not come back', null);
+          crumb(true); setTimeout(function(){ location.reload(); }, 300);
+        }
+      }, 5000);
+    } else clearTimeout(steady.lostT);
+  });
+
+  steadyStart();
+
   /* ---------- updates over the air (the Android app only) ----------
      Inside the app, window.DetourNative is the app's update helper. A few
      seconds after start (and at most every few hours) the game reads the
@@ -15498,13 +15646,15 @@ window.SignLogic = (function(){
   }
   function otaCheck(force){
     if(!Native || !window.crypto || !crypto.subtle || ota.state === 'busy') return Promise.resolve(ota.state);
-    var st = otaGet(), now = Date.now(), remote, base;
-    if(!force && st.at && now - st.at < 4*3600e3) return Promise.resolve(ota.state);
+    var st = otaGet(), now = Date.now(), remote, base, age = now - (st.at || 0);
+    // (a clock that was set ahead and then fixed gives a negative age: check anyway)
+    if(!force && st.at && age >= 0 && age < 4*3600e3) return Promise.resolve(ota.state);
     if(Native.pending && Native.pending()){ ota.state = 'ready'; return Promise.resolve('ready'); }
     st.at = now; otaSet(st); ota.state = 'busy'; paintUpd();
     return fetchOk(OTA_URL + 'ota-manifest.json?t=' + now, 'json').then(function(m){
       remote = m;
-      if(!m || !m.files || !(m.version > APP_VERSION) || m.version === st.bad) throw 'none';
+      var badNative = 0; try{ badNative = Native.bad ? +Native.bad() || 0 : 0; }catch(e){}
+      if(!m || !m.files || !(m.version > APP_VERSION) || m.version === st.bad || m.version === badNative) throw 'none';
       if((m.api || 1) > (Native.api ? Native.api() : 1)) throw 'app';          // needs a newer APK
       return fetchOk('ota-base.json', 'json');
     }).then(function(b){
@@ -15525,6 +15675,9 @@ window.SignLogic = (function(){
       }
       return next();
     }).then(function(){
+      // the set carries its version, so the app can remember it if it does not start
+      return putFile('ver.txt', new TextEncoder().encode(String(remote.version)).buffer);
+    }).then(function(){
       if(!Native.commit()) throw new Error('commit');
       st = otaGet(); st.trying = remote.version; otaSet(st);
       ota.state = 'ready'; paintUpd(); toast(C.t('updReady'));
@@ -15541,8 +15694,15 @@ window.SignLogic = (function(){
     b.classList.toggle('ok', ota.state === 'ready' || ota.state === 'none');
   }
   if(Native){
-    // this copy of the game started: the app may keep it
-    try{ Native.ok(); }catch(e){}
+    /* Tell the app this copy of the game works, but only once it really does:
+       20 seconds in with no script errors, or a minute in either way (it is
+       still running). An update that breaks at the start is never confirmed,
+       so the next launch goes back to the version inside the app. */
+    var okDone = false;
+    function confirmOk(){ if(okDone) return; okDone = true; try{ Native.ok(); }catch(e){} }
+    setTimeout(function(){ if(!steady.errs) confirmOk(); }, 20000);
+    setTimeout(confirmOk, 60000);
+    document.addEventListener('visibilitychange', function(){ if(document.hidden && !steady.errs && Date.now() - steady.t0 > 5000) confirmOk(); });
     (function(){
       var st = otaGet();
       if(st.trying){
