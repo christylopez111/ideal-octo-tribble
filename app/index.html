@@ -5367,7 +5367,9 @@ window.SignLogic = (function(){
     PARK.forEach(function(x, i){
       if(i === empty) return;
       var van = rich && i === 1 && rng() < 0.4;          // a long van only fits the middle space
-      add({kind:van ? 'van' : 'car', x:x, z:PARK_Z, hue:rnd(rich ? 8 : 6), rot:rng() < 0.5 ? 0 : Math.PI, row:'p'});
+      // parked on the near side, facing the way traffic drives on that side (Montréal drives on the right);
+      // the random draw stays, so every level's layout is unchanged
+      add({kind:van ? 'van' : 'car', x:x, z:PARK_Z, hue:rnd(rich ? 8 : 6), rot:(rng(), 0), row:'p'});
     });
 
     /* ---- the near sidewalk ---- */
@@ -5952,7 +5954,12 @@ window.SignLogic = (function(){
         else if(ch === 'B'){
           var kind = pick(BLOCKV, rng), on = 0;
           if(l !== 1 && rng() < P.long){ kind = rng() < 0.6 ? 'bus' : 'truck'; }
-          else if(pat.split('B').length === 2 && rng() < P.on){ on = 5 + rng()*2.5; kind = rng() < 0.7 ? 'car' : 'van'; }
+          else if(pat.split('B').length === 2 && rng() < P.on){
+            var onV = 5 + rng()*2.5, onK = rng() < 0.7 ? 'car' : 'van';
+            // oncoming traffic keeps to its own side: the rider's left, since Montréal drives on the right
+            // (the draws above still happen in every lane, so the rest of the street is unchanged)
+            if(l === 0){ on = onV; kind = onK; }
+          }
           ob = {need:'block', kind:kind, on:on};
         }
         if(!ob) continue;
@@ -10502,10 +10509,11 @@ window.SignLogic = (function(){
     mbody.scale.setScalar(3.0); masc.add(mbody); put(masc, 1.2, 12.2, 0);
     var cousinA = put(cone(false), -2.6, 13.0, 0.3, 1.45), cousinB = put(cone(false), 4.4, 12.9, -0.2, 1.3);
     put(vehicle('car', C.COLORS[6], 4.3, 1.9, true), -10, 9.7, 0);
-    var bus = put(vehicle('bus', C.COLORS[1], 11.5, 2.6, true), 0, 4.1, 0);
-    var car = put(vehicle('car', C.COLORS[0], 4.3, 1.9, true), 0, 7.9, Math.PI);
-    var van = put(vehicle('van', C.COLORS[2], 6.2, 2.1, true), 0, 4.1, 0);
-    var car2 = put(vehicle('car', C.COLORS[5], 4.3, 1.9, true), 0, 7.9, Math.PI);
+    // Montréal drives on the right: the near lane heads right (east), the far lane heads left (west)
+    var bus = put(vehicle('bus', C.COLORS[1], 11.5, 2.6, true), 0, 4.1, Math.PI);
+    var car = put(vehicle('car', C.COLORS[0], 4.3, 1.9, true), 0, 7.9, 0);
+    var van = put(vehicle('van', C.COLORS[2], 6.2, 2.1, true), 0, 4.1, Math.PI);
+    var car2 = put(vehicle('car', C.COLORS[5], 4.3, 1.9, true), 0, 7.9, 0);
     var movers = [bus, car, van, car2];
 
     var W = 0, H = 0, ctx = canvas.getContext('2d'), look = new THREE.Vector3(), v = new THREE.Vector3();
@@ -10587,10 +10595,10 @@ window.SignLogic = (function(){
       draw:function(dt){
         if(!available()) return false;
         resize(); t0 += dt;
-        bus.position.x = ((t0*7 + 60) % 240) - 120;
-        van.position.x = ((t0*9 + 150) % 240) - 120;
-        car.position.x = 120 - ((t0*11 + 40) % 240);
-        car2.position.x = 120 - ((t0*11 + 160) % 240);
+        bus.position.x = 120 - ((t0*7 + 60) % 240);
+        van.position.x = 120 - ((t0*9 + 150) % 240);
+        car.position.x = ((t0*11 + 40) % 240) - 120;
+        car2.position.x = ((t0*11 + 160) % 240) - 120;
         // Ti-Cône breathes, and hops when poked (every third hop is a spin)
         var breathe = 1 + Math.sin(t0*2.4)*0.035, y = 0, sq = 1, spin = 0;
         if(hop >= 0){
@@ -11378,7 +11386,7 @@ window.SignLogic = (function(){
         var tl = trafficLight(side); tl.position.set(side*(RUN.road + 0.5), 0.12, -(BLOCK - 0.5)); g.add(tl);
         // a car parked down the side street
         var pc = vehicle('car', C.COLORS[(hue*3 + k) % C.COLORS.length], 4.3, 1.85, true);
-        pc.position.set(side*(RUN.walk + 6.5), 0, cz + 2.2); pc.rotation.y = side < 0 ? Math.PI : 0; g.add(pc);
+        pc.position.set(side*(RUN.walk + 6.5), 0, cz + 2.2); pc.rotation.y = 0; g.add(pc);   // parked facing the traffic on its side (right-hand)
       }
       // a building closing the view down the side street
       var ebH = 11 + (hue % 3)*3, ebC = style === 'glass' ? GLASS[hue % 4] : tint(HOUSE[(hue + 1) % 6], '#ffffff', .2);
@@ -13625,7 +13633,7 @@ window.SignLogic = (function(){
   var bg = document.createElement('canvas'), bgx = bg.getContext('2d');
   var mqReduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   var reduceMotion = mqReduce || !!C.save.calm;
-  var APP_VERSION = 32;
+  var APP_VERSION = 33;
   var dpr = 1, k = 1, bgDirty = true;
   var G = {W:420, H:800};
   var screen = 'map', game = null, gameStop = 0, paused = false;
