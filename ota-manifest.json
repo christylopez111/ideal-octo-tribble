@@ -1,0 +1,271 @@
+{
+ "version": 31,
+ "api": 1,
+ "built": "2026-11-25T17:45:55.705Z",
+ "files": {
+  "assets/cars/Textures/colormap.png": {
+   "sha": "f3622a03a20c6696065cae9cbe391351be873508af190c2ebd1d420c055787a5",
+   "size": 12371
+  },
+  "assets/cars/ambulance.glb": {
+   "sha": "9e429e2b6202c0d78d0c38b2adbaae6b77716bb2a0f6fbb2811556e1fb31edba",
+   "size": 233612
+  },
+  "assets/cars/cone.glb": {
+   "sha": "d6659fc365de47c5d056b14f3d3fb3e191d3a5b869c43171753621dcf14b76bd",
+   "size": 16696
+  },
+  "assets/cars/delivery.glb": {
+   "sha": "426a3e3a2c242c05c889b1445ba02ef95b2c8b7cd6f597e1275ef736a826014b",
+   "size": 240264
+  },
+  "assets/cars/firetruck.glb": {
+   "sha": "c0c0a22809316536468da7e9c7f57b8ec1a8e387ec3a1cde032976c6d8a6c7a4",
+   "size": 232448
+  },
+  "assets/cars/garbage-truck.glb": {
+   "sha": "6f2943e0ba4c6d86eb69a9243224259d6e0f169f474228439cda0579d49d3509",
+   "size": 268224
+  },
+  "assets/cars/hatchback-sports.glb": {
+   "sha": "bd5c9d4c3b4bdd254a66b8426563a68b1487ae7a5076df3a2488e6ffed7be64f",
+   "size": 197804
+  },
+  "assets/cars/heroes/hero-71.glb": {
+   "sha": "9619956c6d64ea6f32905fb81d8711904ec21e425fbc2ed3f3b3c0d7e459b69c",
+   "size": 97804
+  },
+  "assets/cars/heroes/hero-72.glb": {
+   "sha": "80d1c137e3668a66b256e75c662be95e5acb701ad520db26f5157b94781f41ec",
+   "size": 192048
+  },
+  "assets/cars/heroes/hero-74.glb": {
+   "sha": "d8433a689581c910ea7a95f944d3f6d85553bd87e2780317afe6da193e45f706",
+   "size": 129844
+  },
+  "assets/cars/models.js": {
+   "sha": "20d29b41aa15413354fe4afa4d016fda13e055fea62bfacc09a7c2b89605d38e",
+   "size": 22369
+  },
+  "assets/cars/police.glb": {
+   "sha": "a617b880594f56239b7ac4cf6fd4d74ebdae3ba6c5d842e77c76a5906eff352a",
+   "size": 195336
+  },
+  "assets/cars/sedan-sports.glb": {
+   "sha": "2889c428ca1dd9c975c3ff760eb8757883490410555ab60b818f712f583826d6",
+   "size": 177676
+  },
+  "assets/cars/sedan.glb": {
+   "sha": "b532ea7d2c59f7f6b22b138cf1955218a2c1898f1cea932af4d3fd563c3959b7",
+   "size": 172216
+  },
+  "assets/cars/suv-luxury.glb": {
+   "sha": "9e2a79dc050189d4555a88d2e9da0f30ff946ba74f1d43b5b3bda3c193d1f7d7",
+   "size": 175908
+  },
+  "assets/cars/suv.glb": {
+   "sha": "9df31f6e89e927a8176fc792aa125f0b19dc1ba29d2025bfef7c4f4d6ab1778a",
+   "size": 207572
+  },
+  "assets/cars/taxi.glb": {
+   "sha": "3803539718ffd3b84b515dbce8ed6b489f1ff5be58edb1903d2c5db5c584bdc7",
+   "size": 175608
+  },
+  "assets/cars/truck.glb": {
+   "sha": "5e1bc66c343501dd7d5734b57e672dd949bf95d7abdce680c6508cef99d374f8",
+   "size": 176360
+  },
+  "assets/cars/van.glb": {
+   "sha": "ed4ed56e8e5ed98db050af09ed2062b3b6bb7b93eab1e563cb6774b387b233a1",
+   "size": 175664
+  },
+  "assets/city/Textures/colormap.png": {
+   "sha": "106cf02e0d6dccded6d9f90c2ae6a51eb94c6301645fea159e834c44ed4708a3",
+   "size": 10108
+  },
+  "assets/city/building-garage.glb": {
+   "sha": "7373b558fc9b1e27e60b60ca1ce53000af7e132d7304eeb6d49b47528a3b6806",
+   "size": 19204
+  },
+  "assets/city/building-small-a.glb": {
+   "sha": "22ce989013bd16b1732e81798e343cf85f947e92b6c93825b18131feded48e07",
+   "size": 39660
+  },
+  "assets/city/building-small-b.glb": {
+   "sha": "0bc8459045975158524753d6b648ff77e5f91fe8c033bc4886930b6d55543a2b",
+   "size": 49764
+  },
+  "assets/city/building-small-c.glb": {
+   "sha": "3ea0f46fbed4e0acba7fda365cd968b3f23a6e02b9fee79dd54c99c42ffadf2f",
+   "size": 70088
+  },
+  "assets/city/building-small-d.glb": {
+   "sha": "0ab476fbd7956cea52e590a8e68e351ce2f6fc04df158aa3f5a76b7744bf37a0",
+   "size": 39348
+  },
+  "assets/city/grass-trees-tall.glb": {
+   "sha": "d23e3b722453236bf6f4f8922b7bf64f81a7f3f804848a89c4b100ccbf13abef",
+   "size": 47016
+  },
+  "assets/city/grass-trees.glb": {
+   "sha": "cb06d03cc1c64ca7e7692c0aef3628d8e7cd4afee69093025f9ddd668653a4ce",
+   "size": 38160
+  },
+  "assets/city/grass.glb": {
+   "sha": "3e3ec91132ad8519967aa2e4c0bedbab2aeed39b5714d66068bb75648ae73a52",
+   "size": 4604
+  },
+  "assets/city/pavement-fountain.glb": {
+   "sha": "ea2996089e90a79ba13d764106d374486bb8137666cf1cdbaebd1927ef365185",
+   "size": 14076
+  },
+  "assets/city/pavement.glb": {
+   "sha": "60152776325d436761a13eb0c2ec9368b393bc82cf754b63cab810d79639ade9",
+   "size": 3620
+  },
+  "assets/roads/Textures/colormap.png": {
+   "sha": "a48e2962661ae44368ffddf3054f80ed8491d082b757dcc3011184cd9a98b185",
+   "size": 11428
+  },
+  "assets/roads/construction-barrier.glb": {
+   "sha": "906f73a6d62d8de58a4c5a19e76ff95b460c42b37e5fa37478b8612f06793f26",
+   "size": 7052
+  },
+  "assets/roads/construction-cone.glb": {
+   "sha": "50ceae45cd1d71f738a8f7c40f8b6b46f360063c2754bf717aae54013d6f2ee4",
+   "size": 7056
+  },
+  "assets/roads/dumpster.glb": {
+   "sha": "d87d4a812567d0e8b91c545387d758aa18f7652eb8fc0aed2513a83abb988dd6",
+   "size": 24400
+  },
+  "assets/roads/light-curved.glb": {
+   "sha": "154dcce9d58ec2cd165e26c91a89c97bdd2838cf06d255099b3570df84f82ec6",
+   "size": 9492
+  },
+  "assets/roads/light-square.glb": {
+   "sha": "6230d136c8883d7f9bc1b86f0309077e452e26e5e1e587ef1b77abef3c5f047c",
+   "size": 6996
+  },
+  "assets/roads/road-crossroad.glb": {
+   "sha": "2dc52a28cf89ec88025a047c0f6fff4c643f16b0f50f0e9a1140f16230c28b12",
+   "size": 10084
+  },
+  "assets/roads/road-side.glb": {
+   "sha": "f5482c921a40719f89b1e7c0f6cc9d662b1f3a6149060e9b6bb543390fbdff66",
+   "size": 5272
+  },
+  "assets/roads/road-sign-stop.glb": {
+   "sha": "0991181f37171daf8d2501e436a688e46ea2bcebb5e27aa451640fcbaab107ef",
+   "size": 10720
+  },
+  "assets/roads/road-square.glb": {
+   "sha": "97ee7a325fd53087388c317fdee2620a61fc8a9f5e467bbe1a0a80f0b52a98c0",
+   "size": 4436
+  },
+  "assets/roads/road-straight.glb": {
+   "sha": "f8f744fb6fc96dedd5ad1f763b550166f2624a3757bf36b4b39969d2e7cacac5",
+   "size": 5248
+  },
+  "assets/roads/traffic-light.glb": {
+   "sha": "6c9ee253b7370e1043168493b2e662b349484a0cdd02100cff04d9d8d1bd9abb",
+   "size": 20344
+  },
+  "assets/sfx/ambience.mp3": {
+   "sha": "636a180b3e41ef26d0adf92dfe7342fb9733a13d28af4e02009257380c103df4",
+   "size": 966500
+  },
+  "assets/sfx/placement-a.mp3": {
+   "sha": "bf45849669769d452b2d33a979454594ba4a1c5b2ecde9fda5937f2584456ec2",
+   "size": 2443
+  },
+  "assets/sfx/placement-b.mp3": {
+   "sha": "41089147273b544cb38cec4a960155a1b9dbac4b793507b1309f170081192c2f",
+   "size": 2704
+  },
+  "assets/sfx/placement-c.mp3": {
+   "sha": "9f61ecf33ec479743b909daf2ac8dc4f6b7a4f9da09210a8d3cc4e0878a65fda",
+   "size": 2497
+  },
+  "assets/sfx/placement-d.mp3": {
+   "sha": "cf8eac1122371caac8f49984777ef5e80f0586f8ecc7997a114a0c719a033420",
+   "size": 2704
+  },
+  "assets/sfx/removal-a.mp3": {
+   "sha": "b14ff553828d88e9f22a5a99874414563a6bfce02a9e04dc3fbe23758edc48f5",
+   "size": 3664
+  },
+  "assets/sfx/rotate.mp3": {
+   "sha": "d5773fa5fc1ce0615a836630f07f8288e7f95ff8ba170a695490a7db0ed38f6e",
+   "size": 1244
+  },
+  "assets/sfx/toggle.mp3": {
+   "sha": "83765b0e03ae1a118ee24b136a3bbd86a41f697205840fc5caeb86e25d5cd627",
+   "size": 1166
+  },
+  "index.html": {
+   "sha": "9ab94192f30be942fa66b1a9aa63f36fbeb8b56adf3d50f1786f24e3a24c2606",
+   "size": 868635
+  },
+  "lib/GLTFLoader.js": {
+   "sha": "5c15967ba830918a9caea6338712c994c354bccd4edc4569bde411c3ec06a3e6",
+   "size": 96550
+  },
+  "lib/fonts.css": {
+   "sha": "cb6ee1b462277ec9bab4d1ec97e25af7b9851f801ef3853b3706ad13a8178217",
+   "size": 665
+  },
+  "lib/fonts/lilita-one-latin-400-normal.woff2": {
+   "sha": "d2575d4fa3632580aafcbcdf6978b3b57e144b90cf5bd9c2c98194f28b869704",
+   "size": 10672
+  },
+  "lib/fonts/nunito-latin-700-normal.woff2": {
+   "sha": "fa89300b9bbb3bd0f60d6991aa055965d98e2ccca27bf8688fe0c39cdc796846",
+   "size": 16228
+  },
+  "lib/fonts/nunito-latin-800-normal.woff2": {
+   "sha": "2363d3ed037283ebb961e8c4b4917e40a8bc8853cf9965cf1ea7b4daa1df630a",
+   "size": 16520
+  },
+  "lib/fonts/nunito-latin-900-normal.woff2": {
+   "sha": "9ca32f5d8334579387361096944286df451272a557bb09bd906254a623aba99e",
+   "size": 16676
+  },
+  "lib/three.min.js": {
+   "sha": "9274bbcec8d96168626c732b5d31c775aa8cfb7eaa0599bec0c175908a2c1ce2",
+   "size": 603445
+  },
+  "photos/berri-band.jpg": {
+   "sha": "508545a1dd17f56ff0000962c05a692aaffdd6ba1a25ae1470e191f9358ea3dc",
+   "size": 226852
+  },
+  "photos/berri.jpg": {
+   "sha": "8b9aedfafe48a515fa8395624509d1a56f0d0e80d32acd54848ea21403ad7076",
+   "size": 154295
+  },
+  "photos/carrestlouis-band.jpg": {
+   "sha": "4d2e2873fa516f0d7adf582165d22e090709256b34318babab4dfc9a18d90aac",
+   "size": 289939
+  },
+  "photos/carrestlouis.jpg": {
+   "sha": "dda1d4c5cdf40d04238010d60a48d22e5a5aa5ce78fc4964410c0d84deba90f1",
+   "size": 200645
+  },
+  "photos/montroyal-band.jpg": {
+   "sha": "8d77d688bd8362625f594bb5d9b9544be061957c973b9819fd0253f47f6f6b02",
+   "size": 187415
+  },
+  "photos/montroyal.jpg": {
+   "sha": "d881f6dae197ef66c52e47b8d33502b0f537884b08b3756262865b4eee4e57b5",
+   "size": 148147
+  },
+  "photos/stdenis-band.jpg": {
+   "sha": "1fc91e233f3255c1212969af496d96640c8e85f8fc20881b131743e5ef223be3",
+   "size": 222340
+  },
+  "photos/stdenis.jpg": {
+   "sha": "26eadc69710272a03fb4638f45edc2291d278c497bea82860cdd8ac2edb93acd",
+   "size": 149636
+  }
+ }
+}
