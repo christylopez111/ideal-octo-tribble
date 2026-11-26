@@ -1,7 +1,7 @@
 {
- "version": 37,
+ "version": 38,
  "api": 1,
- "built": "2026-11-26T05:37:06.244Z",
+ "built": "2026-11-26T05:58:55.107Z",
  "files": {
   "assets/cars/Textures/colormap.png": {
    "sha": "f3622a03a20c6696065cae9cbe391351be873508af190c2ebd1d420c055787a5",
@@ -203,9 +203,85 @@
    "sha": "83765b0e03ae1a118ee24b136a3bbd86a41f697205840fc5caeb86e25d5cd627",
    "size": 1166
   },
+  "assets/ui/day_coins_1.webp": {
+   "sha": "71666ddd5e3ff3a44da0b84848d6a6b0ca641460c82cb5ba85486cfce2614305",
+   "size": 12316
+  },
+  "assets/ui/day_coins_2.webp": {
+   "sha": "aba20131526372d64a8110bad59b8d566979f14332ee9ed3b50bc9f31d75f3a4",
+   "size": 11322
+  },
+  "assets/ui/day_coins_3.webp": {
+   "sha": "8f5158abce5d5e0a5fb0d972b468704f6258917dd13a53a46bd9ecb6effbca49",
+   "size": 13980
+  },
+  "assets/ui/deco_fall.webp": {
+   "sha": "e95158262c9a141cfa7036d3ee8dd2af5e65df17d7d551dad429b0e8ed62ab2e",
+   "size": 20978
+  },
+  "assets/ui/deco_spring.webp": {
+   "sha": "185b26993211fe0631bca32c02311086ebb12f28359ed46b5be2b77683c9b1c0",
+   "size": 23058
+  },
+  "assets/ui/deco_summer.webp": {
+   "sha": "93955906af08ee06f5fe6559d2f62f7337cfc677ddb3d12fef8186af27329941",
+   "size": 22264
+  },
+  "assets/ui/deco_winter.webp": {
+   "sha": "fdf159c5cc0e78766f44f88c7d095c89cf43d1ebccd6f43e7173b475ded28118",
+   "size": 22644
+  },
+  "assets/ui/icon_check.webp": {
+   "sha": "5b910d813270c437e6df879c8c5a208a82bd84448d46d951a3fd4bdb001e0498",
+   "size": 16960
+  },
+  "assets/ui/icon_clock.webp": {
+   "sha": "a0584cbb26e95cfa804160c0ef7f2bbf2a14498f68c3c7664ea2e88f110ec0f8",
+   "size": 10728
+  },
+  "assets/ui/icon_coin.webp": {
+   "sha": "f510e20c44f0c1c6242980b538a25f8c8209f93371f5d0219581424dbf26a42a",
+   "size": 10036
+  },
+  "assets/ui/reward_chest_closed.webp": {
+   "sha": "e913ca1a77e1492eccd1aee69967868b08f497d6d930545576b62aac4d69d05b",
+   "size": 33788
+  },
+  "assets/ui/reward_chest_open.webp": {
+   "sha": "a4a8d38e8dce244616abf7464e08b3d7a6e692de5b02c4fdf6ddbac0583a7674",
+   "size": 36364
+  },
+  "assets/ui/reward_coins_big.webp": {
+   "sha": "07e10dbf8c7ab4d7dc0691faa4a49545332beee6f483f599f8c2068b8228b1d6",
+   "size": 38102
+  },
+  "assets/ui/reward_coins_small.webp": {
+   "sha": "ce7d7dd53b9572fa96642ce6a06df481cc4acbd1d7b1594a61e1fd3866db0432",
+   "size": 17590
+  },
+  "assets/ui/reward_gift.webp": {
+   "sha": "e7a4d5a927975591700fa6a6f02057b722c98332a09a75291b4e2bfc7c0a1cdc",
+   "size": 22606
+  },
+  "assets/ui/reward_stars.webp": {
+   "sha": "358b7cfcb2d4720ffd910e3084176a8c1042880c52778ab6f982d998e8f05ccc",
+   "size": 22046
+  },
+  "assets/ui/ribbon_blue.webp": {
+   "sha": "7ee3ec1fd0e1c6b16c82a2fd476e164f330ed5d3aae44483e07516fb720af04e",
+   "size": 19624
+  },
+  "assets/ui/ribbon_green.webp": {
+   "sha": "5859800bef4e9bc02f6575e85845882fed150b37a815e1ab6777400f9bdecc89",
+   "size": 19840
+  },
+  "assets/ui/ribbon_red.webp": {
+   "sha": "ebfc3410065cc6093aaf0432ef4a9280c65dd992931a8f11eebb2b86f3ec167b",
+   "size": 18886
+  },
   "index.html": {
-   "sha": "5c4831303b784c7a8a62f7805bae0a6b1be1bcebd1234df9fb9be42b8f2c52ad",
-   "size": 947380
+   "sha": "06dfd9a991018fe7a6b91863fb2ed6d73f6658958999d9e02b057a05ce327375",
+   "size": 953863
   },
   "lib/GLTFLoader.js": {
    "sha": "5c15967ba830918a9caea6338712c994c354bccd4edc4569bde411c3ec06a3e6",

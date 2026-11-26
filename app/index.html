@@ -1053,15 +1053,15 @@ button:focus-visible{ outline-color:var(--pp-lav-ink); }
 .rwc .rib{ position:relative; margin:-50px -24px 4px; height:56px; z-index:3; }
 .rwc .rib b{ position:relative; z-index:2; display:block; height:56px; line-height:54px; border-radius:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding:0 18px;
   font:400 27px "Lilita One","Nunito",sans-serif; color:#fff; letter-spacing:1px; text-transform:uppercase;
-  background:linear-gradient(#8fd3f6, #4aa3dc); border:3px solid #ffc46b;
+  background:linear-gradient(#8fd8fa 0%, #4fb0e8 55%, #3a94d2 100%); border:4px solid #ffcf6e; outline:2px solid #c9862a; outline-offset:-1px;
   -webkit-text-stroke:1.2px rgba(25,70,125,.55); paint-order:stroke fill;
   text-shadow:0 3px 0 rgba(20,60,110,.55); box-shadow:inset 0 3px 0 rgba(255,255,255,.4), 0 5px 0 #2f7cb8, 0 10px 18px rgba(30,40,80,.25); }
 .rwc .rib::before, .rwc .rib::after{ content:""; position:absolute; z-index:1; top:16px; width:44px; height:48px; background:#2f86c4; }
 .rwc .rib::before{ left:-18px; -webkit-clip-path:polygon(0 0,100% 0,100% 100%,0 100%,14px 50%); clip-path:polygon(0 0,100% 0,100% 100%,0 100%,14px 50%); }
 .rwc .rib::after{ right:-18px; -webkit-clip-path:polygon(0 0,100% 0,calc(100% - 14px) 50%,100% 100%,0 100%); clip-path:polygon(0 0,100% 0,calc(100% - 14px) 50%,100% 100%,0 100%); }
-.rwc .rib i{ position:absolute; z-index:4; top:-24px; width:58px; height:58px; background:center/contain no-repeat; pointer-events:none; }
-.rwc .rib i.l{ left:-22px; transform:rotate(-16deg); }
-.rwc .rib i.r{ right:-20px; transform:scaleX(-1) rotate(-12deg); }
+.rwc .rib i{ position:absolute; z-index:4; top:-30px; width:76px; height:76px; background:center/contain no-repeat; pointer-events:none; }
+.rwc .rib i.l{ left:-30px; }
+.rwc .rib i.r{ right:-30px; transform:scaleX(-1); }
 .rwc.red .rib b{ background:linear-gradient(#ff9e8c, #e85d52); -webkit-text-stroke:1.2px rgba(130,35,30,.55); text-shadow:0 3px 0 rgba(120,30,30,.55); box-shadow:inset 0 3px 0 rgba(255,255,255,.4), 0 5px 0 #b8403a, 0 10px 18px rgba(80,30,30,.25); }
 .rwc.red .rib::before, .rwc.red .rib::after{ background:#c8453d; }
 .rwc .show{ position:relative; height:196px; margin:4px 0 2px; }
@@ -1071,8 +1071,8 @@ button:focus-visible{ outline-color:var(--pp-lav-ink); }
   -webkit-mask-image:radial-gradient(circle, #000 18%, transparent 66%); mask-image:radial-gradient(circle, #000 18%, transparent 66%);
   animation:rwSpin 26s linear infinite; }
 @keyframes rwSpin{ to{ transform:rotate(360deg); } }
-.rwc .show img{ position:absolute; left:50%; bottom:0; width:210px; margin-left:-105px; }
-.rwc .show.short img{ width:190px; margin-left:-95px; }
+.rwc .show img{ position:absolute; left:50%; bottom:0; width:auto; height:auto; max-width:230px; max-height:166px; transform:translateX(-50%); }
+.rwc .show.short img{ max-width:200px; max-height:120px; }
 .rwc .bub{ position:absolute; z-index:2; left:50%; top:2px; transform:translateX(-50%); display:flex; align-items:center; gap:6px;
   padding:4px 10px 4px 14px; border-radius:16px; background:#fffdf7; box-shadow:0 3px 0 rgba(170,130,80,.25), 0 6px 14px rgba(120,80,30,.16);
   font:400 30px "Lilita One","Nunito",sans-serif; color:#5a3a1c; animation:rwPop .5s cubic-bezier(.3,1.6,.5,1) both .15s; }
@@ -1081,10 +1081,11 @@ button:focus-visible{ outline-color:var(--pp-lav-ink); }
 @keyframes rwPop{ from{ transform:translateX(-50%) scale(.4); opacity:0; } to{ transform:translateX(-50%) scale(1); opacity:1; } }
 .rwc p.small{ margin:6px 4px 12px; }
 .rwc .prize{ margin:4px 0 8px; }
-.card .btn.cont{ background:linear-gradient(#fffefb, #fff0db); color:#8a4a1c; border:3px solid #ffffff; text-shadow:none;
-  font-family:"Lilita One","Nunito",sans-serif; font-size:24px; letter-spacing:1px; text-transform:uppercase;
-  box-shadow:inset 0 -3px 0 rgba(220,180,130,.35), 0 6px 0 #e2c29a, 0 12px 18px rgba(110,70,30,.2); }
-.card .btn.cont:active{ transform:translateY(4px); box-shadow:0 2px 0 #e2c29a; }
+.card .btn.cont{ background:linear-gradient(#ff9a72 0%, #f8714d 55%, #ee5a3c 100%); color:#fff; border:3px solid #ffe2cf;
+  font-family:"Lilita One","Nunito",sans-serif; font-size:25px; letter-spacing:1px; text-transform:uppercase;
+  -webkit-text-stroke:1.4px #b8402a; paint-order:stroke fill; text-shadow:0 2px 0 #b8402a;
+  box-shadow:inset 0 3px 0 rgba(255,255,255,.4), inset 0 -4px 0 rgba(170,50,30,.25), 0 6px 0 #c4452c, 0 12px 18px rgba(150,50,30,.25); }
+.card .btn.cont:active{ transform:translateY(4px); box-shadow:inset 0 2px 0 rgba(255,255,255,.3), 0 2px 0 #c4452c; }
 .rwc .wk-say{ margin:0 6px 10px; font-size:17px; font-weight:900; line-height:1.3; }
 .rwc .wk-prize{ position:relative; margin:0 8px; height:96px; border-radius:16px; background:linear-gradient(#fff6e4, #ffe9c6);
   box-shadow:inset 0 2px 6px rgba(150,100,40,.18); display:flex; align-items:center; justify-content:center; gap:4px; }
@@ -1113,6 +1114,37 @@ button:focus-visible{ outline-color:var(--pp-lav-ink); }
 .hm-event.ready{ animation:evGlow 1.6s ease-in-out infinite; }
 .hm-event.ready small{ color:#e85d52; }
 @keyframes evGlow{ 50%{ box-shadow:0 4px 0 #e0bf98, 0 0 0 7px rgba(255,200,90,.45); } }
+
+/* ---- the painted kit (assets/ui), switched on once its pictures load ---- */
+.uikit .coin, .uikit .coin.sm{ background:url(assets/ui/icon_coin.webp) center/contain no-repeat; box-shadow:none; border-radius:0; }
+.uikit .rwc .rib{ height:auto; margin:-64px -30px -4px; }
+.uikit .rwc .rib b{ height:98px; line-height:76px; padding:0 46px; border:0; outline:0; border-radius:0; box-shadow:none; overflow:visible;
+  background:url(assets/ui/ribbon_blue.webp) center/100% 100% no-repeat; font-size:27px;
+  -webkit-text-stroke:1.6px #1b4a8a; text-shadow:0 3px 0 #1b4a8a; filter:drop-shadow(0 6px 5px rgba(30,40,80,.22)); }
+.uikit .rwc .rib b.long{ font-size:22px; }
+.uikit .rwc.red .rib b{ background-image:url(assets/ui/ribbon_red.webp); -webkit-text-stroke-color:#7a1424; text-shadow:0 3px 0 #7a1424; }
+.uikit .rwc.green .rib b{ background-image:url(assets/ui/ribbon_green.webp); -webkit-text-stroke-color:#145a24; text-shadow:0 3px 0 #145a24; }
+.uikit .rwc .rib::before, .uikit .rwc .rib::after{ display:none; }
+.uikit .rwc .rib i{ width:88px; height:88px; top:-34px; }
+.uikit .rwc .rib i.l{ left:-30px; }
+.uikit .rwc .rib i.r{ right:-30px; }
+.uikit .rwc .wk-time i{ border:0; border-radius:0; width:20px; height:20px; margin:-4px 0; background:url(assets/ui/icon_clock.webp) center/contain no-repeat; }
+.uikit .rwc .wk-time i::after{ display:none; }
+.uikit .rwc .bub .coin{ width:32px; height:32px; }
+/* the 7-day calendar */
+.rwc.dly > p.small{ margin:4px 6px 8px; }
+.rwc.dly .cal{ grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; margin:4px 2px 12px; }
+.rwc.dly .cd{ position:relative; justify-content:space-between; min-height:92px; padding:6px 2px; border-radius:14px; background:linear-gradient(#fffaf0, #ffefd6);
+  box-shadow:inset 0 0 0 2px #f3d9b4, 0 3px 0 #e2c29a; }
+.rwc.dly .cd.big{ grid-column:span 2; }
+.rwc.dly .cd img{ height:44px; width:auto; max-width:92%; object-fit:contain; }
+.rwc.dly .cd.big img{ height:60px; }
+.rwc.dly .cd small{ color:#8a6a4a; font-size:11px; }
+.rwc.dly .cd b{ color:#5a3a1c; font-size:17px; text-shadow:none; }
+.rwc.dly .cd.got{ opacity:.72; }
+.rwc.dly .cd img.ck{ position:absolute; right:-6px; top:-8px; height:34px; opacity:1; }
+.uikit .rwc.dly .cd.got::after{ display:none; }
+.rwc.dly .cd.now{ background:#ffffff; box-shadow:0 0 0 3px #ffcf6e, 0 4px 0 #c9862a; }
 </style>
 <script src="lib/three.min.js"></script>
 <script src="lib/GLTFLoader.js"></script>
@@ -13666,14 +13698,14 @@ window.SignLogic = (function(){
     return {n:w.n, goal:WEEK.goal, ready:weekReady(), got:w.got, left:weekLeft()};
   }
   function showWeek(after){
-    var w = week(), ready = weekReady(), pct = Math.round(Math.min(1, w.n/WEEK.goal)*100), sid = C.season().id, sp = art('sprig-' + sid);
+    var w = week(), ready = weekReady(), pct = Math.round(Math.min(1, w.n/WEEK.goal)*100), sid = C.season().id, sp = pic('sprig-' + sid);
     var html = '<div class="rwc red">' +
-      '<div class="rib"><b>' + C.t('weekTitle') + '</b>' + (sp ? '<i class="l" style="background-image:url(' + sp + ')"></i><i class="r" style="background-image:url(' + sp + ')"></i>' : '') + '</div>' +
-      '<div class="show short"><div class="rays"></div><img alt="" src="' + art('stars') + '"></div>' +
+      '<div class="rib"><b' + (C.t('weekTitle').length > 13 ? ' class="long"' : '') + '>' + C.t('weekTitle') + '</b>' + (sp ? '<i class="l" style="background-image:url(' + sp + ')"></i><i class="r" style="background-image:url(' + sp + ')"></i>' : '') + '</div>' +
+      '<div class="show short"><div class="rays"></div><img alt="" src="' + pic('stars') + '"></div>' +
       '<p class="wk-say">' + (w.got ? C.t('weekGot') : ready ? C.t('weekReady') : C.t('weekBody').replace('{n}', WEEK.goal)) + '</p>' +
-      '<div class="wk-prize"><img alt="" src="' + art('coins') + '"><b>+' + WEEK.coins + '</b></div>' +
+      '<div class="wk-prize"><img alt="" src="' + pic('coins', WEEK.coins) + '"><b>+' + WEEK.coins + '</b></div>' +
       '<div class="wk-time"><i></i>' + weekLeft() + '</div>' +
-      '<div class="wk-bar"><img alt="" src="' + art('stars') + '"><span><i style="width:' + pct + '%"></i></span><b>' + Math.min(w.n, WEEK.goal) + '/' + WEEK.goal + '</b></div>' +
+      '<div class="wk-bar"><img alt="" src="' + pic('stars') + '"><span><i style="width:' + pct + '%"></i></span><b>' + Math.min(w.n, WEEK.goal) + '/' + WEEK.goal + '</b></div>' +
       '<div class="stack"><button class="btn cont" id="wkGo">' + (ready ? C.t('collect') : C.t('continueBtn')) + '</button></div></div>';
     UI.open(html);
     var card = document.querySelector('#overlay .card');
@@ -13682,7 +13714,7 @@ window.SignLogic = (function(){
       C.sfx.tap();
       if(!weekReady()){ if(after) after(); else { UI.close(); UI.refresh(); } return; }
       w.got = true; UI.addCoins(WEEK.coins, true); C.persist(); C.sfx.clear(); C.haptic([20, 40, 30]);
-      showReward({title:C.t('weekTitle'), coins:WEEK.coins, art:'coins', note:C.t('weekGot')}, after);
+      showReward({title:C.t('weekTitle'), coins:WEEK.coins, art:'coins', note:C.t('weekGot'), tone:'red'}, after);
     };
   }
 
@@ -13750,19 +13782,30 @@ window.SignLogic = (function(){
         sparkle(c, 70, 70, 7); sparkle(c, 128, 88, 5); sparkle(c, 178, 76, 6); sparkle(c, 120, 138, 4);
       } else if(kind === 'chest'){
         o = canvas2(220, 170); c = o.c;
-        c.fillStyle = 'rgba(120,80,20,.16)'; c.beginPath(); c.ellipse(110, 150, 80, 13, 0, 0, Math.PI*2); c.fill();
+        c.fillStyle = 'rgba(120,80,20,.18)'; c.beginPath(); c.ellipse(110, 152, 84, 13, 0, 0, Math.PI*2); c.fill();
         function rr(x, y, w, h, r){ c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
-        c.fillStyle = '#8f5a2a'; rr(46, 34, 128, 40, 18); c.fill();                    // the lid, open
-        c.fillStyle = '#c98a4b'; rr(46, 30, 128, 38, 18); c.fill();
-        c.fillStyle = '#f6c744'; c.fillRect(70, 30, 12, 38); c.fillRect(138, 30, 12, 38);
-        c.fillStyle = '#5c3a1d'; rr(50, 72, 120, 20, 6); c.fill();                     // inside
-        for(i = 0; i < 7; i++) coinFlat(c, 62 + i*16, 80 - (i % 3)*4, 12, 5, 4);       // coins heaped inside
-        c.fillStyle = '#9c5f2c'; rr(44, 84, 132, 62, 10); c.fill();                    // the body
-        c.fillStyle = '#d08a4a'; rr(44, 80, 132, 60, 10); c.fill();
-        c.fillStyle = '#f6c744'; c.fillRect(70, 80, 12, 60); c.fillRect(138, 80, 12, 60);
-        c.fillStyle = '#c9961c'; rr(100, 92, 20, 22, 4); c.fill(); c.fillStyle = '#f6c744'; rr(102, 94, 16, 18, 3); c.fill();
-        c.fillStyle = '#5c3a1d'; c.beginPath(); c.arc(110, 101, 3, 0, Math.PI*2); c.fill(); c.fillRect(109, 101, 2, 7);
-        sparkle(c, 56, 58, 7); sparkle(c, 168, 50, 6); sparkle(c, 120, 64, 5);
+        function wood(y0, y1){ var g2 = c.createLinearGradient(0, y0, 0, y1); g2.addColorStop(0, '#e9a75e'); g2.addColorStop(1, '#a8652e'); return g2; }
+        function goldG(y0, y1){ var g3 = c.createLinearGradient(0, y0, 0, y1); g3.addColorStop(0, '#ffe58a'); g3.addColorStop(1, '#d9961a'); return g3; }
+        c.lineJoin = 'round';
+        // the body
+        rr(38, 80, 144, 66, 10); c.fillStyle = wood(80, 146); c.fill(); c.lineWidth = 3; c.strokeStyle = '#5c3416'; c.stroke();
+        c.strokeStyle = 'rgba(92,52,22,.35)'; c.lineWidth = 1.5;
+        [98, 116, 132].forEach(function(y){ c.beginPath(); c.moveTo(42, y); c.lineTo(178, y); c.stroke(); });
+        // the lid, a rounded top
+        c.beginPath(); c.moveTo(34, 84); c.lineTo(34, 58); c.quadraticCurveTo(34, 24, 110, 24); c.quadraticCurveTo(186, 24, 186, 58); c.lineTo(186, 84); c.closePath();
+        c.fillStyle = wood(24, 84); c.fill(); c.lineWidth = 3; c.strokeStyle = '#5c3416'; c.stroke();
+        c.fillStyle = 'rgba(255,255,255,.22)'; c.beginPath(); c.ellipse(90, 40, 44, 8, -0.08, 0, Math.PI*2); c.fill();
+        // gold bands, corners and the rim between lid and body
+        [[52, 22], [146, 22]].forEach(function(bd){
+          rr(bd[0], 26, bd[1], 120, 5); c.fillStyle = goldG(26, 146); c.fill(); c.lineWidth = 2.5; c.strokeStyle = '#8a5a10'; c.stroke();
+          [40, 70, 104, 130].forEach(function(y){ c.fillStyle = '#fff2b8'; c.beginPath(); c.arc(bd[0] + bd[1]/2, y, 2.4, 0, Math.PI*2); c.fill(); });
+        });
+        rr(30, 78, 160, 12, 5); c.fillStyle = goldG(78, 90); c.fill(); c.lineWidth = 2.5; c.strokeStyle = '#8a5a10'; c.stroke();
+        // the lock plate with a gold maple leaf
+        rr(92, 72, 36, 42, 8); c.fillStyle = goldG(72, 114); c.fill(); c.lineWidth = 2.5; c.strokeStyle = '#8a5a10'; c.stroke();
+        sprigLeaf(c, 110, 86, 11, 0, '#fff0a8', '#b8800f');
+        c.fillStyle = '#5c3416'; c.beginPath(); c.arc(110, 101, 3.2, 0, Math.PI*2); c.fill(); c.fillRect(108.6, 101, 2.8, 8);
+        sparkle(c, 44, 30, 7); sparkle(c, 176, 40, 6); sparkle(c, 150, 70, 4);
       } else if(kind === 'stars'){
         o = canvas2(220, 150); c = o.c;
         [[58, 88, 34, -0.25], [162, 88, 34, 0.25], [110, 72, 48, 0]].forEach(function(p){
@@ -13776,28 +13819,64 @@ window.SignLogic = (function(){
         });
         sparkle(c, 40, 44, 7); sparkle(c, 184, 48, 6); sparkle(c, 112, 16, 5);
       } else if(kind.indexOf('sprig-') === 0){
-        o = canvas2(64, 64); c = o.c;
+        o = canvas2(80, 80); c = o.c;
         var sid = kind.slice(6);
-        if(sid === 'winter'){                                // a snowflake
-          c.translate(32, 32); c.strokeStyle = '#ffffff'; c.lineCap = 'round';
-          for(var pass = 0; pass < 2; pass++){
-            c.lineWidth = pass ? 3 : 6.5; c.strokeStyle = pass ? '#ffffff' : '#8cc4ea';
-            for(i = 0; i < 6; i++){ c.save(); c.rotate(i*Math.PI/3); c.beginPath(); c.moveTo(0, 0); c.lineTo(0, -24); c.moveTo(0, -14); c.lineTo(-7, -20); c.moveTo(0, -14); c.lineTo(7, -20); c.stroke(); c.restore(); }
-          }
-        } else if(sid === 'fall'){
-          sprigLeaf(c, 32, 34, 26, -0.3, '#e0572e', '#a83a1c');
-          sprigLeaf(c, 22, 42, 16, 0.6, '#f2a33a', '#b86f14');
-        } else {                                             // a flower: pink in spring, yellow in summer
-          var pet = sid === 'spring' ? '#ffb8d2' : '#ffd23f', petD = sid === 'spring' ? '#e889ad' : '#e0a812';
-          c.translate(32, 32);
-          for(i = 0; i < 6; i++){ c.save(); c.rotate(i*Math.PI/3); c.fillStyle = petD; c.beginPath(); c.ellipse(0, -15, 8, 14, 0, 0, Math.PI*2); c.fill();
-            c.fillStyle = pet; c.beginPath(); c.ellipse(0, -14, 6.5, 12, 0, 0, Math.PI*2); c.fill(); c.restore(); }
-          c.fillStyle = sid === 'spring' ? '#ffe680' : '#b8661a'; c.beginPath(); c.arc(0, 0, 7.5, 0, Math.PI*2); c.fill();
+        if(sid === 'winter'){                                // two snowflakes and a sprig of holly
+          [[30, 30, 1], [56, 50, 0.7]].forEach(function(f){
+            c.save(); c.translate(f[0], f[1]); c.scale(f[2], f[2]); c.lineCap = 'round';
+            for(var pass = 0; pass < 2; pass++){
+              c.lineWidth = pass ? 3 : 6.5; c.strokeStyle = pass ? '#ffffff' : '#7fb8e2';
+              for(i = 0; i < 6; i++){ c.save(); c.rotate(i*Math.PI/3); c.beginPath(); c.moveTo(0, 0); c.lineTo(0, -22); c.moveTo(0, -13); c.lineTo(-6, -19); c.moveTo(0, -13); c.lineTo(6, -19); c.stroke(); c.restore(); }
+            }
+            c.restore();
+          });
+          sprigLeaf(c, 22, 60, 14, 0.9, '#3f9a52', '#24693a'); c.fillStyle = '#e8413c';
+          [[30, 58], [35, 63], [27, 65]].forEach(function(p){ c.beginPath(); c.arc(p[0], p[1], 3.6, 0, Math.PI*2); c.fill(); });
+        } else if(sid === 'fall'){                          // a cluster of maple leaves
+          sprigLeaf(c, 50, 50, 20, 0.7, '#f2a33a', '#b86f14');
+          sprigLeaf(c, 26, 50, 18, -0.6, '#e0572e', '#a83a1c');
+          sprigLeaf(c, 38, 30, 24, 0.05, '#d9432a', '#9c2e18');
+        } else {                                             // flowers: pink blossoms in spring, sunflowers in summer
+          var spring = sid === 'spring', pet = spring ? '#ffb8d2' : '#ffd23f', petD = spring ? '#e076a0' : '#d99a0c';
+          sprigLeaf(c, 22, 58, 14, -0.9, '#5fb85a', '#3a8a3a'); sprigLeaf(c, 58, 60, 12, 0.9, '#5fb85a', '#3a8a3a');
+          [[40, 36, 1], [22, 30, 0.7], [58, 40, 0.65]].forEach(function(f){
+            c.save(); c.translate(f[0], f[1]); c.scale(f[2], f[2]);
+            for(i = 0; i < (spring ? 5 : 10); i++){
+              c.save(); c.rotate(i*Math.PI*2/(spring ? 5 : 10));
+              c.fillStyle = petD; c.beginPath(); c.ellipse(0, spring ? -11 : -15, spring ? 8 : 5, spring ? 11 : 10, 0, 0, Math.PI*2); c.fill();
+              c.fillStyle = pet; c.beginPath(); c.ellipse(0, spring ? -10.5 : -14, spring ? 6.5 : 4, spring ? 9.5 : 8.5, 0, 0, Math.PI*2); c.fill();
+              c.restore();
+            }
+            c.fillStyle = spring ? '#ffe680' : '#8a4a1c'; c.beginPath(); c.arc(0, 0, spring ? 5.5 : 8, 0, Math.PI*2); c.fill();
+            c.restore();
+          });
         }
       }
       url = o ? o.cv.toDataURL() : '';
     } catch(e){ url = ''; }
     return (ART[kind] = url);
+  }
+  /* The painted kit (assets/ui): used once it is known to load; until then,
+     and in the single-file web version, the drawn art above stands in. */
+  var KIT = false, KIT_BASE = 'assets/ui/';
+  (function(){
+    try {
+      var im = new Image();
+      im.onload = function(){ KIT = true; document.documentElement.classList.add('uikit'); if(UI && UI.refresh) UI.refresh(); };
+      im.src = KIT_BASE + 'icon_coin.webp';
+    } catch(e){}
+  })();
+  function pic(kind, coins){
+    if(KIT){
+      var f = {coins:coins >= 100 ? 'reward_coins_big' : 'reward_coins_small', chest:'reward_chest_open', chestClosed:'reward_chest_closed',
+               stars:'reward_stars', gift:'reward_gift', day1:'day_coins_1', day2:'day_coins_2', day3:'day_coins_3', check:'icon_check'}[kind];
+      if(!f && kind.indexOf('sprig-') === 0) f = 'deco_' + kind.slice(6);
+      if(f) return KIT_BASE + f + '.webp';
+    }
+    if(kind === 'chestClosed' || kind === 'gift') return art('chest');
+    if(/^day\d$/.test(kind)) return art('coins');
+    if(kind === 'check') return '';
+    return art(kind);
   }
   /* a maple leaf, the season's colour, for behind the coins and the ribbon's ends */
   function sprigLeaf(c, x, y, r, rot, col, deep){
@@ -13816,12 +13895,12 @@ window.SignLogic = (function(){
   /* The reward card: a ribbon with the season at its ends, the prize on a
      burst of light, the amount in a bubble, and one big button. */
   function rewardHTML(o){
-    var sid = C.season().id, sp = art('sprig-' + sid);
+    var sid = C.season().id, sp = pic('sprig-' + sid);
     return '<div class="rwc' + (o.tone ? ' ' + o.tone : '') + '">' +
-      '<div class="rib"><b>' + o.title + '</b>' + (sp ? '<i class="l" style="background-image:url(' + sp + ')"></i><i class="r" style="background-image:url(' + sp + ')"></i>' : '') + '</div>' +
+      '<div class="rib"><b' + (String(o.title).length > 13 ? ' class="long"' : '') + '>' + o.title + '</b>' + (sp ? '<i class="l" style="background-image:url(' + sp + ')"></i><i class="r" style="background-image:url(' + sp + ')"></i>' : '') + '</div>' +
       '<div class="show"><div class="rays"></div>' +
         (o.coins ? '<div class="bub"><b>+' + o.coins + '</b><i class="coin"></i></div>' : '') +
-        '<img alt="" src="' + art(o.art || 'coins') + '"></div>' +
+        '<img alt="" src="' + pic(o.art || 'coins', o.coins) + '"></div>' +
       (o.prize ? '<p class="prize">' + swatch(o.prize.l.hex, true) + '<span>' + C.t('newLook') + ' <b>' +
                  C.t('look_' + o.prize.slot + '_' + o.prize.l.id) + '</b> (' + C.t('slot_' + o.prize.slot).toLowerCase() + ')</span></p>' : '') +
       (o.note ? '<p class="small">' + o.note + '</p>' : '') +
@@ -13840,16 +13919,24 @@ window.SignLogic = (function(){
   }
 
   function showDaily(after){
-    var dd = daily(), s = st(), html = '<h2>' + C.t('dailyGift') + '</h2><p>' + C.t('dailyGiftSub') + '</p><div class="cal">';
+    var dd = daily(), s = st(), sp = pic('sprig-' + C.season().id);
+    var html = '<div class="rwc dly"><div class="rib"><b>' + C.t('dailyGift') + '</b>' +
+      (sp ? '<i class="l" style="background-image:url(' + sp + ')"></i><i class="r" style="background-image:url(' + sp + ')"></i>' : '') + '</div>' +
+      '<p class="small">' + C.t('dailyGiftSub') + '</p><div class="cal">';
     GIFTS.forEach(function(g, i){
       var state = i < dd.day ? 'got' : i === dd.day ? (dd.ready ? 'now' : 'got') : '';
-      html += '<span class="cd ' + state + '"><small>' + C.t('dayN').replace('{n}', i + 1) + '</small>' +
-              (g === 'chest' ? '<i class="mini-chest"></i>' : '<i class="coin"></i><b>' + g + '</b>') + '</span>';
+      var im = g === 'chest' ? pic('chestClosed') : pic(i < 2 ? 'day1' : i < 4 ? 'day2' : 'day3');
+      html += '<span class="cd ' + state + (g === 'chest' ? ' big' : '') + '"><small>' + C.t('dayN').replace('{n}', i + 1) + '</small>' +
+              (KIT ? '<img alt="" src="' + im + '">' : g === 'chest' ? '<i class="mini-chest"></i>' : '<i class="coin"></i>') +
+              (g === 'chest' ? '' : '<b>' + g + '</b>') +
+              (state === 'got' && KIT ? '<img class="ck" alt="" src="' + pic('check') + '">' : '') + '</span>';
     });
     html += '</div>';
-    if(dd.ready) html += '<div class="stack"><button class="btn" id="dgGo">' + C.t('collect') + '</button></div>';
-    else html += '<p class="small">' + C.t('dailyBack').replace('{x}', giftName(GIFTS[s.daily.day])) + '</p><div class="stack"><button class="btn" id="dgOk">' + C.t('done') + '</button></div>';
+    if(dd.ready) html += '<div class="stack"><button class="btn cont" id="dgGo">' + C.t('collect') + '</button></div></div>';
+    else html += '<p class="small">' + C.t('dailyBack').replace('{x}', giftName(GIFTS[s.daily.day])) + '</p><div class="stack"><button class="btn cont" id="dgOk">' + C.t('continueBtn') + '</button></div></div>';
     UI.open(html);
+    var dcard = document.querySelector('#overlay .card');
+    if(dcard) dcard.classList.add('rwcard');
     var go = document.getElementById('dgGo'), ok = document.getElementById('dgOk');
     if(ok) ok.onclick = function(){ UI.close(); if(after) after(); };
     if(go) go.onclick = function(){
@@ -13970,7 +14057,7 @@ window.SignLogic = (function(){
     event:event, bonusRate:bonusRate, daily:daily, hasNews:hasNews, starChestsReady:starChestsReady,
     showDaily:showDaily, showGoals:showGoals, showGarage:showGarage, outfit:outfit, nextGoalHTML:nextGoalHTML,
     missions:function(){ return st().missions; }, rank:function(){ return st().rank; }, LOOKS:LOOKS,
-    showReward:showReward, showWeek:showWeek, weekChip:weekChip, art:art
+    showReward:showReward, showWeek:showWeek, weekChip:weekChip, art:pic
   };
 })();
 </script>
@@ -14072,7 +14159,7 @@ window.SignLogic = (function(){
   var bg = document.createElement('canvas'), bgx = bg.getContext('2d');
   var mqReduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   var reduceMotion = mqReduce || !!C.save.calm;
-  var APP_VERSION = 37;
+  var APP_VERSION = 38;
   var dpr = 1, k = 1, bgDirty = true;
   var G = {W:420, H:800};
   var screen = 'map', game = null, gameStop = 0, paused = false;
@@ -15310,7 +15397,7 @@ window.SignLogic = (function(){
       if(window.Rewards && window.Rewards.showReward){
         setTimeout(function(){
           if(screen !== 'map' || !ov.hidden) return;
-          window.Rewards.showReward({title:C.t('zoneGift'), coins:n, art:'chest', note:C.t('zoneGiftNote').replace('{z}', C.t(zoneDef(ch.zone).key))});
+          window.Rewards.showReward({title:C.t('zoneGift'), coins:n, art:'chest', tone:'green', note:C.t('zoneGiftNote').replace('{z}', C.t(zoneDef(ch.zone).key))});
         }, 650);                                        // after the coins have burst out of the chest
       } else toast(C.t('chestGot').replace('{x}', n));
     } else if(st === 0){ C.sfx.bump(); toast(C.t('chestLocked').replace('{n}', ch.stop)); }
