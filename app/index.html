@@ -1033,6 +1033,18 @@ button:focus-visible{ outline-color:var(--pp-lav-ink); }
 .lvl #titleSub{ font-size:clamp(11px, 3.25vw, 12.5px); letter-spacing:-.1px; }
 .boost{ gap:6px; padding:8px 9px; }
 .boost .lbl{ font-size:clamp(13px, 3.75vw, 16px); letter-spacing:.2px; }
+
+/* The home Play button: the level on the left, a big PLAY pill on the right */
+.hm-play{ padding:12px 12px 12px 10px; }
+.pl-t b{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pl-t span{ white-space:normal; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; line-height:1.2; margin-top:2px; }
+.pl-go{ flex:0 0 auto; display:inline-flex; align-items:center; gap:6px; height:46px; padding:0 13px 0 16px; border-radius:23px;
+  font:400 19px "Lilita One","Nunito",sans-serif; letter-spacing:.8px; text-transform:uppercase; color:#fff;
+  background:linear-gradient(#ffa585, #f2775a); box-shadow:inset 0 2px 0 rgba(255,255,255,.45), 0 4px 0 #c4543c;
+  text-shadow:0 1px 0 rgba(0,0,0,.18); }
+.pl-go i{ font-style:normal; }
+@media (max-width:360px){ .pl-go{ height:42px; padding:0 11px 0 13px; font-size:17px; } }
+.pl-t span.nb{ display:inline; white-space:nowrap; text-shadow:none; }
 </style>
 <script src="lib/three.min.js"></script>
 <script src="lib/GLTFLoader.js"></script>
@@ -1073,7 +1085,7 @@ button:focus-visible{ outline-color:var(--pp-lav-ink); }
       </div>
       <div class="hm-bar"><i id="hmBar"></i></div>
       <button class="hm-route" id="hmRoute" aria-label="Map"></button>
-      <button class="hm-play" id="hmPlay"><span class="pl-ic" id="hmPlayIc"></span><span class="pl-t"><b id="hmPlayTxt">Play</b><span id="hmPlaySub"></span></span><span class="pl-go" aria-hidden="true">&#9654;</span></button>
+      <button class="hm-play" id="hmPlay"><span class="pl-ic" id="hmPlayIc"></span><span class="pl-t"><b id="hmPlayTxt">Play</b><span id="hmPlaySub"></span></span><span class="pl-go" aria-hidden="true"><i id="hmPlayGo">Play</i>&#9654;</span></button>
       <div class="hm-tiles">
         <button class="hm-tile" id="hmDaily"></button>
         <button class="hm-tile" id="hmRun"></button>
@@ -3011,7 +3023,7 @@ window.Core = (function(){
       dailyGift:'Daily gift', dailyGiftSub:'Come back every day: each day in a row pays more, and day 7 is a chest.',
       dayN:'Day {n}', collect:'Collect', dailyBack:'Come back tomorrow for {x}.', aChest:'a chest', coinsWord:'coins', tomorrow:'Tomorrow',
       garage:'Garage', slot_helmet:'Helmet', slot_shirt:'Shirt', slot_frame:'Bike', wearing:'Selected', wear:'Use',
-      chestOnly:'From chests', newLook:'New look:', albumBtn:'Postcards and photos',
+      chestOnly:'From chests', z1:'City streets', z2:'By the river', z3:'Green lanes', z4:'Islands and bridges', z5:'Festival nights', zoneN:'Zone {n}', zStops:'Stops {a} to {b}', chestGot:'Gift opened: +{x} coins!', chestLocked:'Finish stop {n} to open this gift.', chestDone:'You already opened this gift.', seasonTour:'By place', newLook:'New look:', albumBtn:'Postcards and photos',
       look_helmet_orange:'Détour orange', look_helmet_red:'Cherry red', look_helmet_blue:'Sky blue', look_helmet_mint:'Mint',
       look_helmet_night:'Midnight', look_helmet_chrome:'Chrome',
       look_shirt_teal:'Teal', look_shirt_maple:'Maple red', look_shirt_lemon:'Lemon', look_shirt_grape:'Grape', look_shirt_snow:'Snow white', look_shirt_navy:'Navy',
@@ -3038,7 +3050,7 @@ window.Core = (function(){
       music:'Music', effects:'Sound effects', ambience:'City sounds', mute:'Mute', unmute:'Turn on', off:'Off',
       hapticsSub:'A little buzz on taps and bumps',
       langSub:'English or French', hints:'Helping hand', hintsSub:'Shows where to tap when you get stuck',
-      seasonSub:'Auto follows the real calendar',
+      seasonSub:'Auto follows the real calendar, in every level too. By place puts each stop at its own time of year.',
       tutAgain:'Show tutorials again', tutAgainSub:'Each game explains itself again next time', tutAgainDone:'Done! The tutorials will show again.',
       gfxSub:'Auto picks the best look for this device',
       battery:'Battery saver', batterySub:'30 frames a second: cooler phone, longer battery',
@@ -3137,7 +3149,7 @@ window.Core = (function(){
       dailyGift:'Cadeau du jour', dailyGiftSub:'Reviens chaque jour : chaque jour de suite rapporte plus, et le jour 7 est un coffre.',
       dayN:'Jour {n}', collect:'Récupérer', dailyBack:'Reviens demain pour {x}.', aChest:'un coffre', coinsWord:'pièces', tomorrow:'Demain',
       garage:'Garage', slot_helmet:'Casque', slot_shirt:'Chandail', slot_frame:'Vélo', wearing:'Choisi', wear:'Choisir',
-      chestOnly:'Dans les coffres', newLook:'Nouveau style :', albumBtn:'Cartes postales et photos',
+      chestOnly:'Dans les coffres', z1:'Rues de la ville', z2:'Au bord du fleuve', z3:'Ruelles vertes', z4:'Îles et ponts', z5:'Soirs de festival', zoneN:'Zone {n}', zStops:'Arrêts {a} à {b}', chestGot:'Cadeau ouvert : +{x} pièces!', chestLocked:'Termine l’arrêt {n} pour ouvrir ce cadeau.', chestDone:'Tu as déjà ouvert ce cadeau.', seasonTour:'Par lieu', newLook:'Nouveau style :', albumBtn:'Cartes postales et photos',
       look_helmet_orange:'Orange Détour', look_helmet_red:'Rouge cerise', look_helmet_blue:'Bleu ciel', look_helmet_mint:'Menthe',
       look_helmet_night:'Minuit', look_helmet_chrome:'Chrome',
       look_shirt_teal:'Sarcelle', look_shirt_maple:'Rouge érable', look_shirt_lemon:'Citron', look_shirt_grape:'Raisin', look_shirt_snow:'Blanc neige', look_shirt_navy:'Marine',
@@ -3164,7 +3176,7 @@ window.Core = (function(){
       music:'Musique', effects:'Effets sonores', ambience:'Bruits de la ville', mute:'Couper', unmute:'Activer', off:'Coupé',
       hapticsSub:'Une petite vibration aux touches et aux chocs',
       langSub:'Français ou anglais', hints:'Coup de main', hintsSub:'Montre où toucher quand tu bloques',
-      seasonSub:'Auto suit le vrai calendrier',
+      seasonSub:'Auto suit le vrai calendrier, dans chaque niveau aussi. Par lieu place chaque arrêt à sa propre saison.',
       tutAgain:'Revoir les tutoriels', tutAgainSub:'Chaque jeu se réexplique la prochaine fois', tutAgainDone:'C’est fait! Les tutoriels vont réapparaître.',
       gfxSub:'Auto choisit le meilleur rendu pour cet appareil',
       battery:'Économie de batterie', batterySub:'30 images par seconde : téléphone plus frais, batterie plus longue',
@@ -3199,7 +3211,9 @@ window.Core = (function(){
     // the player: a name (a fun one until they pick their own), a colour, since when, and time played (seconds)
     name:'', named:0, avatar:-1, since:'', playS:0,
     // when this save was written (to pick the newest copy), and how much lighter the graphics run after unexpected closes
-    ts:0, safe:0, crashes:[], exitSeen:0, exits:[]
+    ts:0, safe:0, crashes:[], exitSeen:0, exits:[],
+    // gift chests on the map already opened, by the stop that closes their zone
+    chests:{}
   };
   /* The save lives in this browser's (or the app's) local storage. A second
      copy, the last one that loaded cleanly, is kept beside it: if the main
@@ -3698,10 +3712,12 @@ window.Core = (function(){
     c.translate(-w*0.12, -w*0.16); c.strokeStyle = 'rgba(255,255,255,.3)'; c.lineWidth = w*0.3; c.stroke();
     c.restore();
   }
-  function fitText(c,text,x,y,maxW){
+  function fitText(c,text,x,y,maxW,stroke){
     var w = c.measureText(text).width;
-    if(w <= maxW){ c.fillText(text,x,y); return; }
-    c.save(); c.translate(x,y); c.scale(maxW/w,1); c.fillText(text,0,0); c.restore();
+    if(w <= maxW && !stroke){ c.fillText(text,x,y); return; }
+    c.save(); c.translate(x,y); if(w > maxW) c.scale(maxW/w,1);
+    if(stroke) c.strokeText(text,0,0);
+    c.fillText(text,0,0); c.restore();
   }
   function shapePath(c,kind,x,y,r){
     if(kind === 'circle'){ c.beginPath(); c.arc(x,y,r,0,Math.PI*2); return; }
@@ -4022,14 +4038,16 @@ window.Core = (function(){
       bits:['#d9542e','#e8a33b','#c4692a','#b8452a']
     }
   };
-  /* Inside a level, the season is the level's place: every stop is set in
-     its own Montréal neighbourhood, at its own time of year. The map and the
-     home screen follow the calendar. */
+  /* Auto follows the calendar everywhere, levels included, so the game
+     changes with the real seasons. "By place" sets every stop in its own
+     neighbourhood at its own time of year instead; the map and the home
+     screen still follow the calendar. */
   var placeSeason = null;
   function setPlaceSeason(id){ placeSeason = id && SEASONS[id] ? id : null; }
   function seasonId(){
-    if(placeSeason) return placeSeason;
-    if(save.season && save.season !== 'auto' && SEASONS[save.season]) return save.season;
+    var pick = save.season || 'auto';
+    if(pick === 'tour' && placeSeason) return placeSeason;   // "By place": each stop at its own time of year
+    if(SEASONS[pick]) return pick;                           // one season chosen for everything
     var d = new Date(), m = d.getMonth() + 1, day = d.getDate();
     if(m === 12 || m <= 2) return 'winter';
     if(m === 3) return day < 21 ? 'winter' : 'spring';
@@ -8978,7 +8996,7 @@ window.SignLogic = (function(){
        '}'].join('\n'));
   }
   /* ---------- painted surfaces ----------
-     Twelve small greyscale textures, generated here at start-up (nothing to
+     Small greyscale textures (sixteen now, more with each update), generated here at start-up (nothing to
      download, nothing to license): brick, greystone, wooden siding, roof
      shingles, concrete slabs, grass, leaves, wood, glass curtain wall, roof
      gravel, asphalt and snow. They multiply the colour a surface already has,
@@ -8986,14 +9004,14 @@ window.SignLogic = (function(){
      The shader picks a projection from the surface's facing, so no model
      needs texture coordinates. Needs WebGL 2 (texture arrays); without it
      surfaces stay plain. */
-  var TEX = {brick:1, stone:2, siding:3, shingle:4, concrete:5, grass:6, leaf:7, wood:8, panel:9, gravel:10, asphalt:11, snow:12, glass:13, clay:14};
+  var TEX = {brick:1, stone:2, siding:3, shingle:4, concrete:5, grass:6, leaf:7, wood:8, panel:9, gravel:10, asphalt:11, snow:12, glass:13, clay:14, copper:15, cobble:16};
   var HAS_GL2 = (function(){ try { return !!document.createElement('canvas').getContext('webgl2'); } catch(e){ return false; } })();
   var texArr = null;
   function detailTextures(){
     if(texArr !== null) return texArr || null;
     texArr = false;
     if(!HAS_GL2 || !THREE.DataTexture2DArray) return null;
-    var S = 256, L = 14, data = new Uint8Array(S*S*L), x, y, l;
+    var S = 256, L = 16, data = new Uint8Array(S*S*L), x, y, l;
     // periodic value noise, so every texture tiles seamlessly
     function hash(i, j, s2){                      // integer hash: much faster than the classic sine trick on phones
       var h = (Math.imul(i | 0, 374761393) + Math.imul(j | 0, 668265263) + Math.imul(s2 | 0, 1442695041)) | 0;
@@ -9093,6 +9111,17 @@ window.SignLogic = (function(){
             }
           }
           break;
+        case 15:  // weathered copper: green patina in vertical streaks where rain runs down, paler blooms
+          v = 0.92 + (fbm(px, py, 71) - 0.5)*0.18 + (hash(Math.floor(px/5), 1, 73) - 0.5)*0.12*(0.5 + vnoise(px, py, 4, 75));
+          if(vnoise(px, py, 8, 77) > 0.66) v += 0.08;
+          v += grain(px, py, 79)*0.03;
+          break;
+        case 16:  // cobblestones: rounded setts in staggered rows, dark joints between them
+          r = Math.floor(py/32); u = (px + (r % 2)*16) % 256; k = Math.floor(u/32); q = py % 32; t = u % 32;
+          var cx2 = (t - 15.5)/14, cy2 = (q - 15.5)/13, dd2 = cx2*cx2*cx2*cx2 + cy2*cy2*cy2*cy2;
+          if(dd2 > 1){ v = 0.74 + grain(px, py, 81)*0.04; break; }
+          v = 0.9 + hash(k, r, 83)*0.16 + (1 - dd2)*0.08 - cy2*0.05 + grain(px, py, 85)*0.04;
+          break;
         case 13:  // window glass: darker at the bottom, two bright diagonal sheens
           var dg = (px + py*0.8) % 256;
           v = 0.82 + py/256*0.22 + (dg > 40 && dg < 70 ? 0.22 : 0) + (dg > 84 && dg < 94 ? 0.16 : 0);
@@ -9111,7 +9140,7 @@ window.SignLogic = (function(){
     texArr = t;
     STYLE.texK.value = 0;
     // the most visible surfaces first, shown as soon as each batch is done
-    var ORDER = [14, 1, 13, 5, 11, 6, 7, 2, 3, 4, 8, 9, 10, 12], row = 0, faded = false;
+    var ORDER = [14, 1, 13, 5, 11, 6, 7, 2, 3, 4, 8, 9, 10, 12, 15, 16], row = 0, faded = false;
     var now = window.performance ? function(){ return performance.now(); } : Date.now;
     // only the spare time between frames is used, a few milliseconds at a time, so the
     // animation never stutters while the pictures are being painted (phones included)
@@ -9194,14 +9223,14 @@ window.SignLogic = (function(){
       sh.fragmentShader = sh.fragmentShader
         .replace('#include <common>', '#include <common>\nvarying vec3 vStW; varying vec3 vStN; uniform vec3 stRimCol; uniform float stRimK; uniform float stAOK;\n' +
           '#ifdef ST_TEX\nuniform highp sampler2DArray stTexArr; uniform float stTexK; varying vec3 vStO; varying vec3 vStON; varying float vStT;\n' +
-          'const float stSc[15] = float[15](1.0, 1.5, 2.2, 1.6, 1.6, 3.0, 2.5, 1.2, 1.2, 6.0, 1.5, 2.5, 3.0, 1.6, 2.2);\n#endif')
+          'const float stSc[17] = float[17](1.0, 1.5, 2.2, 1.6, 1.6, 3.0, 2.5, 1.2, 1.2, 6.0, 1.5, 2.5, 3.0, 1.6, 2.2, 2.0, 1.6);\n#endif')
         .replace('#include <lights_physical_pars_fragment>', CLAY_LIGHT)
         .replace('#include <color_fragment>', '#include <color_fragment>\n' +
           '#ifdef ST_TEX\n' +
           '  int stId = int(vStT + 0.5);\n' +
           '  vec3 stAn = abs(vStON);\n' +
           '  vec2 stUV = stAn.y > max(stAn.x, stAn.z) ? vStO.xz : (stAn.x > stAn.z ? vStO.zy : vStO.xy);\n' +
-          '  float stV = texture(stTexArr, vec3(stUV/stSc[clamp(stId, 0, 14)], float(max(stId - 1, 0))), 0.7).r*1.3;\n' +   // a softer read: sculpted, not printed
+          '  float stV = texture(stTexArr, vec3(stUV/stSc[clamp(stId, 0, 16)], float(max(stId - 1, 0))), 0.7).r*1.3;\n' +   // a softer read: sculpted, not printed
           '  if(stId > 0) diffuseColor.rgb *= mix(1.0, stV, stTexK*0.85);\n' +
           '  float stC = texture(stTexArr, vec3(stUV/2.2, 13.0)).r*1.3;\n' +                                                 // fingerprints on everything
           '  diffuseColor.rgb *= mix(1.0, stC, stTexK);\n' +
@@ -9687,7 +9716,7 @@ window.SignLogic = (function(){
     var pat = o.pat == null ? hue : o.pat, ST = styleOf(o);
     var g = new THREE.Group(), w = 6, d = 5.5, h = 8.4, col = ST.walls[hue % ST.walls.length];
     var wall = lamT(col, ST.tex), trim = lam(ST.trim || tint(col, '#ffffff', .62)), iron = lam('#3a4658');
-    var warm = lam('#ffe9b0', '#7a6626'), pale = lamT('#a9c8e6', 'glass', '#1d2a3a');
+    var warm = lam('#ffe9b0', '#7a6626'), pale = lamT('#a9c8e6', 'glass', '#1d2a3a'), frameS = solidOf(trim);
     var roofCol = sn.snowRoof ? '#f8fcff' : '#3a4350';
     g.add(box(w, h, d, wall, 0, h/2, 0));
     g.add(box(w + 0.02, 0.5, d + 0.02, lamT(tint(col, '#000000', .28), 'stone'), 0, 0.25, 0));
@@ -9713,18 +9742,25 @@ window.SignLogic = (function(){
       for(c = 0; c < 2; c++){
         x = -1.5 + c*3;
         if(f === 0 && c === 0){ if(!o.noDoor) g.add(box(1.15, 2.1, 0.12, lamT('#6b4630', 'wood'), x, 1.05, fz)); continue; }
-        g.add(box(1.3, 1.5, 0.12, (f + c + pat) % 2 ? warm : pale, x, y + 0.1, fz));
+        // glass, frame and bars never wobble with the clay, or the glass pokes through the bars
+        g.add(box(1.3, 1.5, 0.12, solidOf((f + c + pat) % 2 ? warm : pale), x, y + 0.1, fz));
         g.add(box(1.5, 0.14, 0.2, trim, x, y - 0.72, fz));
-        if(DETAIL){                                                   // a frame and a glazing bar, so windows read as windows
-          g.add(box(1.46, 1.66, 0.06, trim, x, y + 0.1, fz - 0.05));
-          g.add(box(0.08, 1.5, 0.16, trim, x, y + 0.1, fz));
-          g.add(box(1.3, 0.07, 0.16, trim, x, y + 0.42, fz));
+        g.add(box(0.13, 1.5, 0.24, frameS, x, y + 0.1, fz + 0.03));             // the cross of glazing bars
+        g.add(box(1.3, 0.13, 0.24, frameS, x, y + 0.12, fz + 0.03));
+        if(DETAIL){                                                   // a full frame, so windows read as windows
+          g.add(box(1.5, 1.7, 0.06, frameS, x, y + 0.1, fz - 0.05));
+          g.add(box(1.5, 0.12, 0.22, frameS, x, y + 0.88, fz + 0.02));
+          [-0.71, 0.71].forEach(function(o){ g.add(box(0.12, 1.66, 0.22, frameS, x + o, y + 0.1, fz + 0.02)); });
         }
         if(ST.lintels) g.add(box(1.6, 0.3, 0.2, trim, x, y + 0.98, fz));     // the stone heads over greystone windows
       }
       // side windows, so the wall you see in three-quarter view is not blank
-      g.add(box(0.12, 1.4, 1.2, (f + pat) % 2 ? pale : warm, w/2 + 0.05, y + 0.1, -0.6));
-      g.add(box(0.12, 1.4, 1.2, (f + pat) % 2 ? warm : pale, -w/2 - 0.05, y + 0.1, -0.6));
+      [1, -1].forEach(function(sd, k){
+        var sxw = sd*(w/2 + 0.05);
+        g.add(box(0.12, 1.4, 1.2, solidOf((f + pat + k) % 2 ? pale : warm), sxw, y + 0.1, -0.6));
+        g.add(box(0.2, 1.4, 0.12, frameS, sxw + sd*0.03, y + 0.1, -0.6));
+        g.add(box(0.2, 0.12, 1.2, frameS, sxw + sd*0.03, y + 0.12, -0.6));
+      });
     }
     if(DETAIL && !sn.banks){                                      // flower boxes on the first balcony
       var FLW = ['#ff5f7e', '#ffd23f', '#ff8c42', '#c77dff', '#ff4d4d'];
@@ -9808,20 +9844,52 @@ window.SignLogic = (function(){
     g.add(ball(1.3, 1, lam('#fff6cf', '#d9c06a'), 0, h + 4.6, 0));
     return fuse(g);
   }
-  function block(w, h, d, hex, lit){                          // a far-off tower with a bit of roof detail
+  /* A far-off tower: a base, a set-back upper part on the taller ones, a
+     roof that says Montréal (a copper pyramid, a wooden water tank, an
+     antenna, or a plant room), and rows of windows, a few of them lit. */
+  function block(w, h, d, hex, lit){
     var g = new THREE.Group(), i, j, win = lam('#ffd98a', '#9b7d2c');
     var bluish = (function(){ var cc = new THREE.Color(hex); return cc.b > cc.r + 0.08; })();
-    g.add(box(w, h, d, lamT(hex, bluish ? 'panel' : 'brick'), 0, h/2, 0));
-    var cap = lam(tint(hex, '#ffffff', .25));
-    g.add(box(w + 0.4, 0.6, d + 0.4, cap, 0, h + 0.3, 0));
-    if(lit % 3 === 0) g.add(box(w*0.55, h*0.18, d*0.55, lam(tint(hex, '#000000', .1)), 0, h + h*0.09 + 0.6, 0));
-    else if(lit % 3 === 1) g.add(box(w*0.25, 1.6, d*0.3, lam('#c9d3de'), -w*0.2, h + 1.4, 0));
-    var dark = lam(tint(hex, '#0d1626', .45)), cols = Math.floor((w - 1)/2.4), sx = (w - (cols - 1)*2.4)/2;
-    for(i = 0; i < Math.floor((h - 2)/3.2); i++){
-      for(j = 0; j < cols; j++){
-        var on = ((i*7 + j*3 + lit*5) % 7) < 2;
-        g.add(box(1.3, 1.6, 0.1, on ? win : dark, -w/2 + sx + j*2.4, 2.4 + i*3.2, d/2 + 0.05));
+    var wallM = lamT(hex, bluish ? 'panel' : 'brick'), cap = lam(tint(hex, '#ffffff', .3));
+    var dark = lam(tint(hex, '#0d1626', .45)), kind = ((lit % 4) + 4) % 4;
+    var setback = h > 16 && (kind === 1 || kind === 3), h1 = setback ? h*0.66 : h;
+    g.add(box(w, h1, d, wallM, 0, h1/2, 0));
+    g.add(box(w + 0.4, 0.6, d + 0.4, cap, 0, h1 + 0.3, 0));
+    function windows(ww, y0, y1, zf, xoff){
+      var cols = Math.max(1, Math.floor((ww - 1)/2.4)), sx = (ww - (cols - 1)*2.4)/2;
+      for(i = 0; i < Math.floor((y1 - y0 - 1.4)/3.2); i++){
+        for(j = 0; j < cols; j++){
+          var on = ((i*7 + j*3 + lit*5) % 7) < 2;
+          g.add(box(1.3, 1.6, 0.1, on ? win : dark, xoff - ww/2 + sx + j*2.4, y0 + 1.8 + i*3.2, zf));
+        }
       }
+    }
+    windows(w, 0.6, h1, d/2 + 0.05, 0);
+    if(DETAIL) g.add(box(w + 0.1, 0.35, d + 0.1, cap, 0, 1.2, 0));          // a stone band low on the wall
+    var topY = h1 + 0.6, tw = w, td = d;
+    if(setback){
+      tw = w*0.7; td = d*0.7;
+      g.add(box(tw, h - h1, td, wallM, 0, topY + (h - h1)/2, 0));
+      g.add(box(tw + 0.3, 0.5, td + 0.3, cap, 0, topY + (h - h1) + 0.25, 0));
+      windows(tw, topY, topY + (h - h1), td/2 + 0.05, 0);
+      topY += (h - h1) + 0.5;
+    }
+    if(kind === 3){                                                  // a green copper pyramid, like the old towers downtown
+      var py = cyl(0, Math.max(tw, td)*0.62, Math.max(3, h*0.2), 4, lamT('#6aa893', 'copper'), 0, topY + Math.max(3, h*0.2)/2, 0);
+      py.rotation.y = Math.PI/4; g.add(py);
+      g.add(cyl(0.08, 0.1, 2.2, 5, lam('#c9d3de'), 0, topY + Math.max(3, h*0.2) + 1.0, 0));
+    } else if(kind === 0){                                           // a wooden water tank on legs
+      var tx = -tw*0.2;
+      [[-0.6, -0.6], [0.6, -0.6], [-0.6, 0.6], [0.6, 0.6]].forEach(function(q){ g.add(box(0.14, 1.2, 0.14, lam('#4a4f5a'), tx + q[0], topY + 0.6, q[1])); });
+      g.add(cyl(0.95, 0.95, 1.7, 9, lamT('#9a6a42', 'wood'), tx, topY + 2.05, 0));
+      g.add(cyl(0.05, 1.05, 0.8, 9, lam('#5a4636'), tx, topY + 3.3, 0));
+    } else if(kind === 1){                                           // an antenna with a red light
+      g.add(box(tw*0.35, 1.2, td*0.35, lam('#c9d3de'), 0, topY + 0.6, 0));
+      g.add(cyl(0.07, 0.12, Math.max(3, h*0.22), 5, lam('#d7dee6'), 0, topY + 1.2 + Math.max(3, h*0.22)/2, 0));
+      g.add(ball(0.22, 0, lam('#ff5a4a', '#a3271f'), 0, topY + 1.3 + Math.max(3, h*0.22), 0));
+    } else {                                                         // a plant room and a small mast
+      g.add(box(tw*0.5, 1.5, td*0.45, lam('#c9d3de'), -tw*0.12, topY + 0.75, 0));
+      g.add(box(tw*0.2, 0.6, td*0.2, lam('#aab5c2'), tw*0.25, topY + 0.3, td*0.15));
     }
     return fuse(g);
   }
@@ -9836,7 +9904,7 @@ window.SignLogic = (function(){
   function landmark(id, sn){
     var g = new THREE.Group(), i, x, y, z, a;
     var dark = lam('#3e4450'), win = lam('#2c3a4e'), lit = lam('#ffe2a0', '#9c7a2a');
-    var stoneCol = '#bdb3a0', stone = lam(stoneCol), pale = lam('#ddd6c8'), copper = lam('#5f9c8a');
+    var stoneCol = '#bdb3a0', stone = lam(stoneCol), pale = lam('#ddd6c8'), copper = lamT('#5f9c8a', 'copper');
     var tin = paint('#cfd8e0', true), snowy = sn && sn.snowRoof;
     function roofM(hex){ return lam(snowy ? '#eef4fa' : hex); }
     switch(id){
@@ -10343,8 +10411,9 @@ window.SignLogic = (function(){
       var k2 = box(0.16, 0.08, 50.16, kerb, q2[0]*(BOX + 0.08), 0.04, q2[1]*(BOX + 25.08)); k2.receiveShadow = true; scene.add(k2);
     });
     var road = where && where.ground === 'cobble' ? '#6f6a66' : '#59657a';     // Old Montréal's streets are cobbled
-    scene.add(ground(BOX*2, 120, road, 0, 0.004, 0, 'asphalt'));
-    scene.add(ground(120, BOX*2, road, 0, 0.005, 0, 'asphalt'));
+    var roadTx = where && where.ground === 'cobble' ? 'cobble' : 'asphalt';
+    scene.add(ground(BOX*2, 120, road, 0, 0.004, 0, roadTx));
+    scene.add(ground(120, BOX*2, road, 0, 0.005, 0, roadTx));
     var paintG = new THREE.Group(), yel = lam('#f6c945', '#5a4a12'), wht = lam('#ffffff', '#555555');
     function mark(w, dz, m, x, z){ var p = M(new THREE.PlaneGeometry(w, dz), m, x, 0.012, z); p.rotation.x = -Math.PI/2; paintG.add(p); }
     for(d = BOX + 0.8; d < 30; d += 0.85){
@@ -11325,7 +11394,7 @@ window.SignLogic = (function(){
        street, so the crossings line up across the road: crosswalks, traffic
        lights, a parked car and a building closing the view down the side street. */
     var BLOCK = 30, XST = 10, PERIOD = BLOCK + XST;
-    var asphM = lamT(asphalt, 'asphalt'), stripeM = lam('#eef2f6'), poleM = lam('#3c4654'), headM = lam('#262c35');
+    var asphM = lamT(asphalt, cobble ? 'cobble' : 'asphalt'), stripeM = lam('#eef2f6'), poleM = lam('#3c4654'), headM = lam('#262c35');
     var redOff = lam('#5a2322'), ambOff = lam('#5a4a1e'), greenOn = lam('#5dffa0'), walkOn = lam('#f4f7fb');
     function trafficLight(side){
       var g = new THREE.Group();
@@ -13719,11 +13788,11 @@ window.SignLogic = (function(){
   var bg = document.createElement('canvas'), bgx = bg.getContext('2d');
   var mqReduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   var reduceMotion = mqReduce || !!C.save.calm;
-  var APP_VERSION = 35;
+  var APP_VERSION = 36;
   var dpr = 1, k = 1, bgDirty = true;
   var G = {W:420, H:800};
   var screen = 'map', game = null, gameStop = 0, paused = false;
-  var map = {scroll:0, maxScroll:0, target:null, drag:null, time:0, flakes:C.makeSnow(26), pulse:0};
+  var map = {scroll:0, maxScroll:0, target:null, drag:null, time:0, flakes:C.makeSnow(26), pulse:0, burst:[]};
 
   function layout(){
     var r = stage.getBoundingClientRect();
@@ -13736,19 +13805,75 @@ window.SignLogic = (function(){
     else layoutMap();
     bgDirty = true;
   }
+  /* The map is five zones of five stops, each with its own look, joined by
+     one winding path. A gift chest closes every zone. */
+  var ZONES = [
+    {key:'z1', kind:'city',     col:'#ef8a6b', deep:'#c0603f'},
+    {key:'z2', kind:'river',    col:'#4fa3d9', deep:'#2f78ad'},
+    {key:'z3', kind:'park',     col:'#5bb36a', deep:'#3a8a49'},
+    {key:'z4', kind:'islands',  col:'#2fb3b0', deep:'#1d8583'},
+    {key:'z5', kind:'festival', col:'#c46ad0', deep:'#93439e'}
+  ];
+  var CHEST_COINS = [60, 80, 100, 120, 200];
+  var TAU = Math.PI*2;
+  function zoneOf(stop){ return Math.floor((Math.max(1, stop) - 1)/5); }
+  function zoneDef(z){ return ZONES[((z % ZONES.length) + ZONES.length) % ZONES.length]; }   // a longer route from the update server goes round the looks again
+  function chestCoins(z){ return CHEST_COINS[Math.min(z, CHEST_COINS.length - 1)]; }
+  function stopX(i){ return G.W/2 + Math.sin(i*0.82)*map.amp; }
+  function stopY0(i){ return map.bottom - (i - 1)*map.spacing - zoneOf(i)*map.gap; }   // before scrolling
+  function catmull(p0, p1, p2, p3, t){
+    var t2 = t*t, t3 = t2*t;
+    return {
+      x:0.5*(2*p1.x + (p2.x - p0.x)*t + (2*p0.x - 5*p1.x + 4*p2.x - p3.x)*t2 + (3*p1.x - p0.x - 3*p2.x + p3.x)*t3),
+      y:0.5*(2*p1.y + (p2.y - p0.y)*t + (2*p0.y - 5*p1.y + 4*p2.y - p3.y)*t2 + (3*p1.y - p0.y - 3*p2.y + p3.y)*t3)
+    };
+  }
   function layoutMap(){
-    var d = DISTRICTS[0];
-    map.spacing = Math.max(74, Math.min(96, G.H/6.2));
-    map.amp = Math.min(96, G.W*0.27);
-    map.bottom = G.H - 70;
-    map.contentH = d.stops*map.spacing + 200;
-    map.maxScroll = Math.max(0, map.contentH - G.H + 40);
+    var d = DISTRICTS[0], N = d.stops, i, z, s;
+    map.spacing = Math.max(100, Math.min(122, G.H/6.6));
+    map.gap = 118;                          // room between zones for the gift and the next zone's sign
+    map.amp = Math.min(112, G.W*0.27);
+    map.bottom = G.H - 92;
+    // the path: a smooth curve through every stop, from below the first one to the finish line
+    var pts = [{x:stopX(1) - 46, y:stopY0(1) + 190}];
+    for(i = 1; i <= N; i++) pts.push({x:stopX(i), y:stopY0(i)});
+    map.finish = {x:G.W/2, y:stopY0(N) - map.spacing*1.05};
+    pts.push(map.finish);
+    var curve = [];
+    for(i = 0; i < pts.length - 1; i++){
+      var p0 = pts[Math.max(0, i - 1)], p3 = pts[Math.min(pts.length - 1, i + 2)];
+      for(s = 0; s < 16; s++) curve.push(catmull(p0, pts[i], pts[i + 1], p3, s/16));
+    }
+    curve.push(pts[pts.length - 1]);
+    map.curve = curve;
+    map.pathD = null; map.zoneD = null;
+    if(typeof Path2D === 'function'){
+      map.pathD = new Path2D();
+      curve.forEach(function(q, k){ if(k) map.pathD.lineTo(q.x, q.y); else map.pathD.moveTo(q.x, q.y); });
+    }
+    // where each zone starts and ends, and the gift that closes it
+    map.zones = [];
+    for(z = 0; z*5 < N; z++){
+      var first = z*5 + 1, last = Math.min(N, z*5 + 5);
+      var bot = z === 0 ? map.bottom + 600 : map.zones[z - 1].top;
+      var top = last >= N ? map.finish.y - 1400 : stopY0(last) - (map.spacing + map.gap)*0.63;
+      map.zones.push({i:z, first:first, last:last, top:top, bot:bot});
+    }
+    map.chests = map.zones.map(function(zn){
+      var st = zn.last, yy = st >= N ? stopY0(st) - map.spacing*0.5 : stopY0(st) - (map.spacing + map.gap)*0.2;
+      var px = pathXAt(yy), side = px > G.W/2 ? -1 : 1;
+      return {stop:st, zone:zn.i, x:px + side*84, y:yy};
+    });
+    map.maxScroll = Math.max(0, 70 - (map.finish.y - 200));
     buildScenery();
   }
   function stopPos(i){            // i is 1-based
-    var x = G.W/2 + Math.sin(i*0.82)*map.amp;
-    var y = map.bottom - (i-1)*map.spacing + map.scroll;
-    return {x:x, y:y};
+    return {x:stopX(i), y:stopY0(i) + map.scroll};
+  }
+  function zoneAtY(yc){           // yc before scrolling
+    var zs = map.zones || [];
+    for(var z = 0; z < zs.length; z++) if(yc <= zs[z].bot && yc > zs[z].top) return z;
+    return zs.length && yc > zs[0].bot ? 0 : Math.max(0, zs.length - 1);
   }
 
   /* ---------- HUD ---------- */
@@ -14035,7 +14160,7 @@ window.SignLogic = (function(){
     Places.leave(); hidePlace(); C.setMusic('calm');
     tip(null); layoutMap();
     if(scrollToStop){
-      var want = (scrollToStop - 1)*map.spacing - G.H*0.45;
+      var want = map.bottom - stopY0(Math.min(scrollToStop, DISTRICTS[0].stops)) - G.H*0.42;
       map.scroll = C.clamp(want, 0, map.maxScroll);
     }
     buildBar(); bgDirty = true; refresh();
@@ -14216,23 +14341,115 @@ window.SignLogic = (function(){
     c.fillStyle = g; c.fillRect(0, 0, W, H);
   }
 
-  /* The city either side of the path. Positions are fixed for a given district,
+  /* The town either side of the path. Positions are fixed for a given district,
      so the map looks the same every time it is opened. */
   function pathXAt(contentY){
-    var i = C.clamp((map.bottom - contentY)/map.spacing + 1, 1, DISTRICTS[0].stops);
-    return G.W/2 + Math.sin(i*0.82)*map.amp;
+    var q = map.curve;
+    if(!q || !q.length) return G.W/2;
+    var n = q.length;
+    if(contentY >= q[0].y) return q[0].x;
+    if(contentY <= q[n - 1].y) return q[n - 1].x;
+    var lo = 0, hi = n - 1;
+    while(hi - lo > 1){ var mid = (lo + hi) >> 1; if(q[mid].y > contentY) lo = mid; else hi = mid; }
+    var A = q[lo], B = q[hi], f = (A.y - contentY)/((A.y - B.y) || 1);
+    return A.x + (B.x - A.x)*f;
   }
+  var ZONE_PROPS = {
+    city:     [['house',.30],['shop',.14],['mural',.05],['metro',.04],['tree',.12],['pine',.05],['lamp',.10],['car',.14],['cone',.06]],
+    river:    [['house',.20],['tree',.30],['pine',.18],['lamp',.16],['car',.10],['cone',.06]],
+    park:     [['pine',.34],['tree',.38],['lamp',.12],['bench',.10],['cone',.06]],
+    islands:  [],
+    festival: [['shop',.30],['house',.16],['mural',.10],['lamp',.18],['tree',.10],['car',.10],['cone',.06]]
+  };
+  function pickProp(list, r){
+    var acc = 0;
+    for(var k = 0; k < list.length; k++){ acc += list[k][1]; if(r < acc) return list[k][0]; }
+    return list[list.length - 1][0];
+  }
+  /* A wavy line where two zones meet, the same seen from either side. */
+  function edgeY(yb, b, x){ return yb + Math.sin(x*0.085 + b*1.7)*7 + Math.sin(x*0.031 + b)*4; }
+  function bandPath(top, bot, bTop, bBot){
+    if(typeof Path2D !== 'function') return null;
+    var P = new Path2D(), x, W = G.W;
+    P.moveTo(-10, bBot == null ? bot : edgeY(bot, bBot, -10));
+    for(x = -10; x <= W + 10; x += 14) P.lineTo(x, bBot == null ? bot : edgeY(bot, bBot, x));
+    for(x = W + 10; x >= -10; x -= 14) P.lineTo(x, bTop == null ? top : edgeY(top, bTop, x));
+    P.closePath();
+    return P;
+  }
+  function ellipsePath(P, e){ P.moveTo(e.x + e.rx, e.y); P.ellipse(e.x, e.y, e.rx, e.ry, 0, 0, TAU); }
   function buildScenery(){
-    var d = DISTRICTS[0], rng = window.DetourLogic.mulberry32(99173);
-    var items = [], yy, side, row = 0;
-    var bottom = map.bottom + 90;
-    var contentTop = map.bottom - d.stops*map.spacing - 200;
+    var d = DISTRICTS[0], rng = window.DetourLogic.mulberry32(99173), W = G.W;
+    var items = [], yy, side, row = 0, zs = map.zones, si, k;
+    var bottom = map.bottom + 90, contentTop = map.finish.y - 260;
+    var feat = map.feat = {rivers:[], waters:[], isles:[], garlands:[], ponds:[], dots:[]};
+    feat.rivers = []; feat.waters = [];
+    zs.forEach(function(zq){
+      var kindQ = zoneDef(zq.i).kind, x2, k2;
+      // a river crosses each riverside zone between its second and third stops
+      if(kindQ === 'river' && zq.last >= zq.first + 2){
+        var ry = (stopY0(zq.first + 1) + stopY0(zq.first + 2))/2, rv = {y:ry, h:34, D:null, boats:[{o:40 + zq.i*30, v:11, hue:0}, {o:250, v:-8, hue:1}]};
+        if(typeof Path2D === 'function'){
+          var RP = new Path2D();
+          RP.moveTo(-10, ry - 34 + Math.sin(-0.45)*5);
+          for(x2 = -10; x2 <= W + 10; x2 += 12) RP.lineTo(x2, ry - 34 + Math.sin(x2*0.045)*5);
+          for(x2 = W + 10; x2 >= -10; x2 -= 12) RP.lineTo(x2, ry + 34 + Math.sin(x2*0.045 + 1.3)*5);
+          RP.closePath(); rv.D = RP;
+        }
+        feat.rivers.push(rv);
+      }
+      // an islands zone is open water: one island under each stop, one under each landmark, and small islets
+      if(kindQ === 'islands'){
+        var isl = [], wq;
+        for(si = zq.first; si <= zq.last; si++){
+          var sx = stopX(si), sy = stopY0(si), pl = Places.forStop(si);
+          isl.push({x:sx, y:sy + 10, rx:86, ry:56});
+          if(pl && pl.lm && pl.lm !== 'garland') isl.push({x:sx > W/2 ? 50 : W - 50, y:sy + 4, rx:70, ry:52});
+        }
+        for(yy = zq.bot - 50; yy > zq.top + 50; yy -= 54){
+          for(side = 0; side < 2; side++){
+            if(rng() < 0.45) continue;
+            var e = {x:side ? W - 22 - rng()*46 : 22 + rng()*46, y:yy + (rng() - .5)*20, rx:24 + rng()*16, ry:17 + rng()*7};
+            var clash = Math.abs(e.x - pathXAt(e.y)) < e.rx + 40;
+            for(k2 = 0; k2 < isl.length && !clash; k2++){
+              var o = isl[k2];
+              if(Math.abs(o.x - e.x) < o.rx + e.rx + 8 && Math.abs(o.y - e.y) < o.ry + e.ry + 8) clash = true;
+            }
+            if(clash) continue;
+            isl.push(e);
+            items.push({kind:rng() < .55 ? 'pine' : 'tree', abs:true, x:e.x + (rng() - .5)*e.rx*0.6, y:e.y + 4, s:0.75 + rng()*0.2, hue:0, col:0});
+          }
+        }
+        wq = {zone:zq.i, top:zq.top, bot:zq.bot, isles:isl, D:null};
+        if(typeof Path2D === 'function'){
+          wq.D = bandPath(zq.top, zq.bot, zq.i < zs.length - 1 ? zq.i : null, zq.i > 0 ? zq.i - 1 : null);
+          isl.forEach(function(e2){ ellipsePath(wq.D, e2); });   // water with holes where the islands are
+        }
+        feat.waters.push(wq);
+        isl.forEach(function(e3){ feat.isles.push(e3); });
+      }
+      // strings of lights across the street at the festival
+      if(kindQ === 'festival') for(si = zq.first; si < zq.last; si += 2) feat.garlands.push({y:stopY0(si) - map.spacing*0.5, sag:22 + (si % 2)*8});
+      // a pond in each park zone
+      if(kindQ === 'park' && zq.last >= zq.first + 2){
+        var pyy = stopY0(zq.first + 2);
+        feat.ponds.push({x:pathXAt(pyy) > W/2 ? 82 : W - 82, y:pyy - map.spacing*0.5, rx:58, ry:30});
+      }
+    });
+    // little bits on the ground: tufts in the park, confetti at the festival
+    for(k = 0; k < 160; k++){
+      var gy = bottom - rng()*(bottom - contentTop), gx = rng()*W, gz = zoneAtY(gy);
+      if(Math.abs(gx - pathXAt(gy)) < 34) continue;
+      var gk = zoneDef(gz).kind;
+      if(gk === 'park' || gk === 'festival') feat.dots.push({x:gx, y:gy, z:gk === 'park' ? 2 : 4, c:Math.floor(rng()*5), r:rng()});
+    }
     for(yy = bottom; yy > contentTop; yy -= 66, row++){
+      var zn = zoneAtY(yy), znKind = zoneDef(zn).kind, list = ZONE_PROPS[znKind];
+      if(!list.length){ rng(); rng(); continue; }
+      if(feat.rivers.some(function(rv){ return Math.abs(yy - rv.y) < 62; })) continue;      // nothing stands in a river
       for(side = 0; side < 2; side++){
         if(rng() < 0.08) continue;
-        var r = rng();
-        var kind = r < .30 ? 'house' : r < .40 ? 'shop' : r < .45 ? 'mural' : r < .49 ? 'metro'
-                 : r < .63 ? 'pine' : r < .73 ? 'tree' : r < .79 ? 'lamp' : r < .93 ? 'car' : 'cone';
+        var kind = pickProp(list, rng());
         items.push({kind:kind, side:side, y:yy + (rng()-.5)*22, x:38 + rng()*22,
                     s:0.9 + rng()*0.3, hue:Math.floor(rng()*6), col:Math.floor(rng()*C.COLORS.length)});
         // small things fill the gap between a building and the kerb
@@ -14242,22 +14459,29 @@ window.SignLogic = (function(){
                       s:0.85 + rng()*0.2, hue:0, col:0});
         }
       }
-      if(row % 6 === 2){                  // a pocket park every few blocks
+      if(row % 6 === 2 && (znKind === 'city' || znKind === 'park')){      // a pocket park every few blocks
         items.push({kind:'park', side:(row % 12 === 2) ? 0 : 1, y:yy, x:56, s:1, hue:row});
       }
     }
     // each stop's landmark stands on the outside of the bend; clear room for it
     map.marks = [];
-    for(var si = 1; si <= d.stops; si++){
-      var pl = Places.forStop(si);
-      if(!pl || !pl.lm || pl.lm === 'garland') continue;
-      var sy0 = map.bottom - (si - 1)*map.spacing, sx0 = G.W/2 + Math.sin(si*0.82)*map.amp;
-      map.marks.push({stop:si, lm:pl.lm, side:sx0 > G.W/2 ? 0 : 1, y:sy0});
+    for(si = 1; si <= d.stops; si++){
+      var plc = Places.forStop(si);
+      if(!plc || !plc.lm || plc.lm === 'garland') continue;
+      map.marks.push({stop:si, lm:plc.lm, side:stopX(si) > W/2 ? 0 : 1, y:stopY0(si)});
     }
+    var keepOut = map.chests.map(function(ch){ return {x:ch.x, y:ch.y}; });
+    feat.ponds.forEach(function(p){ keepOut.push({x:p.x, y:p.y, r:70}); });
     items = items.filter(function(it){
-      for(var k = 0; k < map.marks.length; k++){
-        var mk = map.marks[k];
+      if(it.abs) return true;
+      for(var m = 0; m < map.marks.length; m++){
+        var mk = map.marks[m];
         if(it.kind !== 'park' && it.side === mk.side && Math.abs(it.y - mk.y) < 52) return false;
+      }
+      var ix = it.side ? W - it.x : it.x;
+      for(m = 0; m < keepOut.length; m++){
+        var ko = keepOut[m];
+        if(Math.abs(ix - ko.x) < (ko.r || 56) && Math.abs(it.y - ko.y) < 40) return false;
       }
       return true;
     });
@@ -14463,7 +14687,7 @@ window.SignLogic = (function(){
     });
     c.restore();
   }
-  var HALFW = {house:34, shop:30, mural:28, metro:26, pine:16, tree:16, lamp:6, cone:7};
+  var HALFW = {house:34, shop:30, mural:28, metro:26, pine:16, tree:16, lamp:6, cone:7, bench:12};
   /* Draw a prop as a picture of its 3D model when the device can make one.
      ppm is pixels per metre. Returns false so the caller draws the flat one. */
   function spr(c, kind, hue, dir, x, y, ppm){
@@ -14489,12 +14713,15 @@ window.SignLogic = (function(){
       if(it.kind === 'park') continue;
       y = it.y + map.scroll;
       if(y < -110 || y > G.H + 110) continue;
-      dir = it.side ? -1 : 1;                          // side faces lean toward the street
-      x = it.side ? W - it.x : it.x;
-      var px = pathXAt(it.y), hw = (HALFW[it.kind] || 12)*it.s;
-      if(it.kind === 'car') x = px + (it.side ? 48 : -48);
-      else if(!it.side) x = Math.min(x, px - 30 - hw);   // never under the road where it bends
-      else x = Math.max(x, px + 30 + hw);
+      if(it.abs){ x = it.x; dir = x > W/2 ? -1 : 1; }
+      else {
+        dir = it.side ? -1 : 1;                        // side faces lean toward the street
+        x = it.side ? W - it.x : it.x;
+        var px = pathXAt(it.y), hw = (HALFW[it.kind] || 12)*it.s;
+        if(it.kind === 'car') x = px + (it.side ? 52 : -52);
+        else if(!it.side) x = Math.min(x, px - 34 - hw);   // never under the path where it bends
+        else x = Math.max(x, px + 34 + hw);
+      }
       if(it.kind === 'house') drawHouse(c, x, y, it.s*0.72, it.hue, dir);
       else if(it.kind === 'shop') drawShop(c, x, y, it.s*0.74, it.hue, dir);
       else if(it.kind === 'mural') drawMural(c, x, y, it.s*0.76, it.hue, dir);
@@ -14503,127 +14730,441 @@ window.SignLogic = (function(){
       else if(it.kind === 'tree') drawTree(c, x, y, it.s);
       else if(it.kind === 'lamp') drawLamp(c, x, y, it.s);
       else if(it.kind === 'car') drawCar34(c, x, y, it.s*0.62, it.col, dir);
+      else if(it.kind === 'bench') spr(c, 'bench', it.hue % 3, dir, x, y, 15*it.s);
       else if(!spr(c, 'cone', 0, 1, x, y, 18*it.s)) C.drawCone(c, x, y, 26*it.s, 0);
     }
   }
-  /* A point anywhere along the street, plus the direction it runs. */
-  function pathPoint(t){
-    var i = Math.max(1, Math.min(DISTRICTS[0].stops - 1, Math.floor(t)));
-    var a = stopPos(i), b2 = stopPos(i + 1), f = t - i;
-    var dx = b2.x - a.x, dy = b2.y - a.y, L = Math.hypot(dx, dy) || 1;
-    return {x:a.x + dx*f, y:a.y + dy*f, nx:-dy/L, ny:dx/L};
-  }
+  /* Plowed snow piles along the path, in winter. */
   function drawSnowbanks(c){
-    var d = DISTRICTS[0], t, side, p, i = 0, sn = C.season();
-    if(!sn.banks) return;                  // plowed snow piles are a winter thing
-    for(t = 1; t <= d.stops; t += 0.16, i++){
-      p = pathPoint(t);
-      if(p.y < -60 || p.y > G.H + 60) continue;
+    var sn = C.season(), q = map.curve, i, side;
+    if(!sn.banks || !q) return;
+    for(i = 2; i < q.length - 2; i += 3){
+      var y = q[i].y + map.scroll;
+      if(y < -60 || y > G.H + 60) continue;
+      if(onWater(q[i].x, q[i].y)) continue;
+      var dx = q[i + 1].x - q[i - 1].x, dy = q[i + 1].y - q[i - 1].y, L = Math.hypot(dx, dy) || 1;
+      var nx = -dy/L, ny = dx/L;
       for(side = -1; side <= 1; side += 2){
-        var r = (sn.banks ? 9 : 6) + ((i*5) % 5);
-        var cx = p.x + p.nx*side*22, cy = p.y + p.ny*side*22;
+        var r = 9 + ((i*5) % 5);
+        var cx = q[i].x + nx*side*31, cy = y + ny*side*31;
         c.fillStyle = sn.vergeShade;
-        c.beginPath(); c.ellipse(cx, cy + 2.5, r, r*0.62, 0, 0, Math.PI*2); c.fill();
+        c.beginPath(); c.ellipse(cx, cy + 2.5, r, r*0.62, 0, 0, TAU); c.fill();
         c.fillStyle = sn.verge;
-        c.beginPath(); c.ellipse(cx, cy, r, r*0.6, 0, 0, Math.PI*2); c.fill();
+        c.beginPath(); c.ellipse(cx, cy, r, r*0.6, 0, 0, TAU); c.fill();
       }
     }
   }
+  function onWater(x, y){
+    var f = map.feat, k, j;
+    if(!f) return false;
+    for(k = 0; k < f.rivers.length; k++) if(Math.abs(y - f.rivers[k].y) < f.rivers[k].h + 4) return true;
+    for(k = 0; k < f.waters.length; k++){
+      var wq = f.waters[k];
+      if(y >= wq.bot || y <= wq.top) continue;
+      for(j = 0; j < wq.isles.length; j++){
+        var e = wq.isles[j], u = (x - e.x)/e.rx, v = (y - e.y)/e.ry;
+        if(u*u + v*v < 1) return false;
+      }
+      return true;
+    }
+    return false;
+  }
+  /* ---- the ground of each zone ---- */
+  function waterCols(){
+    return C.season().id === 'winter' ? {w:'#cfe6f3', d:'#b4d6ea', hi:'rgba(255,255,255,.85)'}
+                                      : {w:'#86c9e6', d:'#66b2d6', hi:'rgba(255,255,255,.6)'};
+  }
+  function zoneGround(kind, sn){
+    if(kind === 'river') return mixHex(sn.ground, sn.grass, 0.35);
+    if(kind === 'park') return sn.grass;
+    if(kind === 'festival') return mixHex(sn.ground, '#f2cfe0', 0.42);
+    return sn.ground;
+  }
+  function drawGrounds(c, top, bot){        // top and bot: what is on screen, before scrolling
+    var sn = C.season(), zs = map.zones, f = map.feat, z, k, wc = waterCols();
+    if(!map.zoneD){
+      map.zoneD = zs.map(function(zn, zi2){
+        return bandPath(zn.top, zn.bot, zi2 < zs.length - 1 ? zi2 : null, zi2 > 0 ? zi2 - 1 : null);
+      });
+    }
+    for(z = 0; z < zs.length; z++){
+      var zn = zs[z];
+      if(zn.top > bot + 20 || zn.bot < top - 20) continue;
+      if(!map.zoneD[z]) continue;
+      var zk = zoneDef(z).kind;
+      c.fillStyle = zk === 'islands' ? wc.w : zoneGround(zk, sn);
+      c.fill(map.zoneD[z]);
+      if(zk === 'city' || zk === 'festival'){      // paving stones in town, faint
+        c.fillStyle = zk === 'festival' ? 'rgba(196,106,208,.07)' : 'rgba(120,96,70,.06)';
+        for(k = 0; k < 14; k++){
+          var py = zn.bot - 40 - ((k*157) % Math.max(60, zn.bot - zn.top - 60)), px2 = (k*97) % G.W;
+          if(py < top - 30 || py > bot + 30) continue;
+          C.rrect(c, px2 - 26, py - 9, 52, 18, 7); c.fill();
+        }
+      }
+    }
+    if(!f) return;
+    // rivers, with their banks, ripples and a boat or two
+    f.rivers.forEach(function(rv){
+      if(!rv.D || rv.y < top - 80 || rv.y > bot + 80) return;
+      c.save();
+      c.translate(0, 5); c.fillStyle = 'rgba(70,80,60,.18)'; c.fill(rv.D);
+      c.translate(0, -5); c.fillStyle = wc.w; c.fill(rv.D);
+      c.clip(rv.D);
+      c.strokeStyle = wc.hi; c.lineWidth = 2; c.lineCap = 'round';
+      for(var k3 = 0; k3 < 9; k3++){
+        var rx = ((k3*71 + map.time*(k3 % 2 ? 9 : -7)) % (G.W + 60) + G.W + 60) % (G.W + 60) - 30;
+        var ryy = rv.y - 18 + (k3*13) % 36;
+        c.beginPath(); c.moveTo(rx - 9, ryy); c.quadraticCurveTo(rx, ryy - 3, rx + 9, ryy); c.stroke();
+      }
+      c.restore();
+      if(sn.id !== 'winter') rv.boats.forEach(function(b2){ drawBoat(c, b2, rv.y); });
+    });
+    // islands in open water
+    var sand = sn.id === 'winter' ? '#f4f8fc' : '#f2deb0', cliff = sn.id === 'winter' ? '#c9d8e6' : '#d2ad74';
+    f.waters.forEach(function(wq){
+      if(wq.top > bot + 40 || wq.bot < top - 40) return;
+      c.save();
+      if(map.zoneD[wq.zone]) c.clip(map.zoneD[wq.zone]);
+      c.strokeStyle = wc.hi; c.lineWidth = 2; c.lineCap = 'round';
+      for(var k4 = 0; k4 < 26; k4++){
+        var wy = wq.bot - 30 - ((k4*83) % Math.max(60, wq.bot - wq.top - 40)), wx = ((k4*131 + map.time*6*(k4 % 2 ? 1 : -1)) % (G.W + 40) + G.W + 40) % (G.W + 40) - 20;
+        if(wy < top - 20 || wy > bot + 20) continue;
+        c.beginPath(); c.moveTo(wx - 8, wy); c.quadraticCurveTo(wx, wy - 3, wx + 8, wy); c.stroke();
+      }
+      c.restore();
+      wq.isles.forEach(function(e){
+        if(e.y + e.ry < top - 20 || e.y - e.ry > bot + 30) return;
+        c.fillStyle = 'rgba(40,90,110,.18)'; c.beginPath(); c.ellipse(e.x, e.y + 9, e.rx + 4, e.ry + 3, 0, 0, TAU); c.fill();
+        c.fillStyle = cliff; c.beginPath(); c.ellipse(e.x, e.y + 5, e.rx, e.ry, 0, 0, TAU); c.fill();
+        c.fillStyle = sand; c.beginPath(); c.ellipse(e.x, e.y, e.rx, e.ry, 0, 0, TAU); c.fill();
+        c.fillStyle = sn.grass; c.beginPath(); c.ellipse(e.x, e.y - 3, e.rx - 9, e.ry - 8, 0, 0, TAU); c.fill();
+      });
+    });
+    // ponds
+    f.ponds.forEach(function(p){
+      if(p.y < top - 60 || p.y > bot + 60) return;
+      c.fillStyle = sn.vergeShade; c.beginPath(); c.ellipse(p.x, p.y + 3, p.rx + 6, p.ry + 5, 0, 0, TAU); c.fill();
+      c.fillStyle = wc.w; c.beginPath(); c.ellipse(p.x, p.y, p.rx, p.ry, 0, 0, TAU); c.fill();
+      c.fillStyle = wc.hi; c.beginPath(); c.ellipse(p.x - p.rx*0.3, p.y - p.ry*0.35, p.rx*0.35, p.ry*0.18, 0, 0, TAU); c.fill();
+      if(sn.id !== 'winter'){                    // lily pads
+        c.fillStyle = '#5fae5a';
+        [[0.35, 0.2], [-0.15, 0.35], [0.5, -0.25]].forEach(function(q){
+          c.beginPath(); c.arc(p.x + q[0]*p.rx, p.y + q[1]*p.ry, 5, 0.3, TAU - 0.3); c.lineTo(p.x + q[0]*p.rx, p.y + q[1]*p.ry); c.fill();
+        });
+      }
+    });
+    // tufts of grass in the park, confetti at the festival
+    var CONF = ['#ff7b8a', '#ffd34d', '#6fd08c', '#6aa8ff', '#c98bff'];
+    f.dots.forEach(function(dd){
+      if(dd.y < top - 10 || dd.y > bot + 10) return;
+      if(dd.z === 2){
+        c.strokeStyle = 'rgba(40,90,40,.22)'; c.lineWidth = 1.6; c.lineCap = 'round';
+        c.beginPath(); c.moveTo(dd.x - 4, dd.y - 5); c.lineTo(dd.x - 1, dd.y); c.lineTo(dd.x + 2, dd.y - 6); c.moveTo(dd.x - 1, dd.y); c.lineTo(dd.x + 5, dd.y - 3); c.stroke();
+        if(dd.r < .3 && (sn.blossom || sn.id === 'summer')){ c.fillStyle = sn.blossom || '#ffe066'; c.beginPath(); c.arc(dd.x + 4, dd.y - 7, 2.4, 0, TAU); c.fill(); }
+      } else {
+        c.fillStyle = CONF[dd.c]; c.save(); c.translate(dd.x, dd.y); c.rotate(dd.r*6); c.fillRect(-3, -1.5, 6, 3); c.restore();
+      }
+    });
+  }
+  function drawBoat(c, b, ry){
+    var span = G.W + 90, x = ((b.o + map.time*b.v) % span + span) % span - 45, y = ry + (b.hue ? 12 : -10);
+    var dir = b.v > 0 ? 1 : -1;
+    c.save(); c.translate(x, y + Math.sin(map.time*2 + b.o)*1.2); c.scale(dir, 1);
+    c.fillStyle = 'rgba(255,255,255,.5)'; c.beginPath(); c.ellipse(-16, 5, 10, 2, 0, 0, TAU); c.fill();
+    c.fillStyle = b.hue ? '#e8613c' : '#3a6fb0';
+    c.beginPath(); c.moveTo(-14, 0); c.lineTo(14, 0); c.lineTo(9, 7); c.lineTo(-10, 7); c.closePath(); c.fill();
+    c.fillStyle = '#fff'; c.beginPath(); c.moveTo(1, -2); c.lineTo(1, -24); c.lineTo(13, -3); c.closePath(); c.fill();
+    c.fillStyle = '#ffe6c4'; c.beginPath(); c.moveTo(-1, -3); c.lineTo(-1, -20); c.lineTo(-11, -3); c.closePath(); c.fill();
+    c.restore();
+  }
+  /* ---- the path ---- */
+  function drawPath(c){
+    var P = map.pathD, f = map.feat;
+    if(!P) return;
+    var sn = C.season(), winter = sn.id === 'winter';
+    c.save(); c.lineCap = 'round'; c.lineJoin = 'round';
+    c.translate(0, 5); c.strokeStyle = 'rgba(60,46,30,.16)'; c.lineWidth = 52; c.stroke(P);
+    c.translate(0, -5);
+    c.strokeStyle = winter ? '#c4cfdb' : '#dcbc8c'; c.lineWidth = 48; c.stroke(P);
+    c.strokeStyle = winter ? '#fbfdff' : '#fff1d2'; c.lineWidth = 38; c.stroke(P);
+    c.strokeStyle = winter ? 'rgba(170,190,210,.55)' : 'rgba(220,186,130,.55)'; c.lineWidth = 5;
+    c.setLineDash([1, 15]); c.stroke(P); c.setLineDash([]);
+    // over water the path becomes a wooden bridge
+    var clips = [];
+    if(f){ f.rivers.forEach(function(rv){ if(rv.D) clips.push([rv.D, 'nonzero']); }); f.waters.forEach(function(wq){ if(wq.D) clips.push([wq.D, 'evenodd']); }); }
+    clips.forEach(function(cl){
+      var clipD = cl[0];
+      c.save();
+      c.clip(clipD, cl[1]);
+      c.strokeStyle = '#7a4f2c'; c.lineWidth = 50; c.stroke(P);
+      c.strokeStyle = '#b07a48'; c.lineWidth = 40; c.stroke(P);
+      c.strokeStyle = '#c99462'; c.lineWidth = 40; c.setLineDash([9, 4]); c.stroke(P); c.setLineDash([]);
+      c.restore();
+    });
+    // the finish line
+    var fx = map.finish.x, fy = map.finish.y;
+    c.fillStyle = '#8d6a48'; c.fillRect(fx - 40, fy - 58, 6, 60); c.fillRect(fx + 34, fy - 58, 6, 60);
+    for(var k = 0; k < 10; k++){
+      c.fillStyle = k % 2 ? '#2f3644' : '#ffffff'; c.fillRect(fx - 40 + k*8, fy - 62, 8, 8);
+      c.fillStyle = k % 2 ? '#ffffff' : '#2f3644'; c.fillRect(fx - 40 + k*8, fy - 54, 8, 8);
+    }
+    c.restore();
+  }
+  /* Strings of coloured lights over the festival zone. */
+  function drawGarlands(c){
+    var f = map.feat, BUL = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#c77dff'];
+    if(!f) return;
+    f.garlands.forEach(function(g, gi){
+      var y = g.y + map.scroll;
+      if(y < -40 || y > G.H + 60) return;
+      c.strokeStyle = 'rgba(60,60,70,.55)'; c.lineWidth = 1.5;
+      c.beginPath(); c.moveTo(-4, y - 16); c.quadraticCurveTo(G.W/2, y + g.sag*2 - 16, G.W + 4, y - 16); c.stroke();
+      for(var k = 1; k < 18; k++){
+        var t = k/18, bx = -4 + (G.W + 8)*t, by = (1 - t)*(1 - t)*(y - 16) + 2*(1 - t)*t*(y + g.sag*2 - 16) + t*t*(y - 16) + 4;
+        var tw = 0.55 + 0.45*Math.sin(map.time*3 + k*1.7 + gi);
+        c.fillStyle = BUL[(k + gi) % BUL.length];
+        c.globalAlpha = 0.25*tw; c.beginPath(); c.arc(bx, by, 7, 0, TAU); c.fill();
+        c.globalAlpha = 1; c.beginPath(); c.arc(bx, by, 3.4, 0, TAU); c.fill();
+      }
+    });
+    c.globalAlpha = 1;
+  }
+  /* A zone's sign, hung across the path where the zone begins. */
+  function drawRibbon(c, zi, y){
+    var Z = zoneDef(zi), zn = map.zones[zi], locked = zn.first > C.save.reached;
+    var txt = C.t('zoneN').replace('{n}', zi + 1) + ' · ' + C.t(Z.key);
+    c.save();
+    c.font = '17px "Lilita One", Nunito, sans-serif';
+    var w = Math.min(G.W - 70, c.measureText(txt).width + (locked ? 66 : 44)), h = 34, x = G.W/2 - w/2;
+    var col = locked ? mixHex(Z.col, '#9aa6b4', 0.55) : Z.col, deep = locked ? mixHex(Z.deep, '#7d8795', 0.55) : Z.deep;
+    // folded tails
+    c.fillStyle = deep;
+    C.poly(c, [[x + 8, y - h/2 + 8], [x - 22, y - h/2 + 8], [x - 10, y + 4 + 8], [x - 22, y + h/2 + 8], [x + 8, y + h/2 + 8]]); c.fill();
+    C.poly(c, [[x + w - 8, y - h/2 + 8], [x + w + 22, y - h/2 + 8], [x + w + 10, y + 4 + 8], [x + w + 22, y + h/2 + 8], [x + w - 8, y + h/2 + 8]]); c.fill();
+    c.fillStyle = 'rgba(30,30,50,.2)'; C.rrect(c, x, y - h/2 + 4, w, h, 8); c.fill();
+    c.fillStyle = col; C.rrect(c, x, y - h/2, w, h, 8); c.fill();
+    c.fillStyle = 'rgba(255,255,255,.22)'; C.rrect(c, x + 4, y - h/2 + 3, w - 8, h*0.4, 6); c.fill();
+    c.fillStyle = '#fff'; c.textAlign = 'center'; c.textBaseline = 'middle';
+    var tx = G.W/2 + (locked ? 12 : 0);
+    c.lineWidth = 3; c.strokeStyle = deep; c.lineJoin = 'round';
+    C.fitText(c, txt, tx, y + 1, w - (locked ? 50 : 24), true);
+    if(locked) drawPadlock(c, x + 22, y + 1, 0.8);
+    c.restore();
+  }
+  function drawPadlock(c, x, y, s){
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.strokeStyle = '#7f8996'; c.lineWidth = 3.2; c.lineCap = 'round';
+    c.beginPath(); c.arc(0, -4, 5.5, Math.PI, 0); c.lineTo(5.5, 0); c.moveTo(-5.5, -4); c.lineTo(-5.5, 0); c.stroke();
+    c.fillStyle = '#f2c14e'; C.rrect(c, -8, -1, 16, 12, 3); c.fill();
+    c.strokeStyle = '#b8891f'; c.lineWidth = 1.4; C.rrect(c, -8, -1, 16, 12, 3); c.stroke();
+    c.fillStyle = '#7a5a12'; c.beginPath(); c.arc(0, 4, 1.8, 0, TAU); c.fill(); c.fillRect(-0.8, 4, 1.6, 4);
+    c.restore();
+  }
+  /* ---- gifts ---- */
+  function chestState(ch){ return C.save.chests && C.save.chests[ch.stop] ? 2 : starsAt(ch.stop) ? 1 : 0; }
+  function drawChest(c, ch){
+    var st = chestState(ch), x = ch.x, y = ch.y + map.scroll;
+    if(y < -60 || y > G.H + 60) return;
+    c.save(); c.translate(x, y);
+    c.fillStyle = 'rgba(30,36,48,.22)'; c.beginPath(); c.ellipse(0, 15, 27, 8, 0, 0, TAU); c.fill();
+    if(st === 1){                                    // ready: it glows and hops
+      var gl = c.createRadialGradient(0, -6, 4, 0, -6, 52);
+      gl.addColorStop(0, 'rgba(255,224,110,.75)'); gl.addColorStop(1, 'rgba(255,224,110,0)');
+      c.fillStyle = gl; c.beginPath(); c.arc(0, -6, 52, 0, TAU); c.fill();
+      c.translate(0, -Math.abs(Math.sin(map.time*4))*7);
+    }
+    var grey = st === 0;
+    var wood = grey ? '#bdb2a6' : '#d08a4a', woodD = grey ? '#9a8f84' : '#9c5f2c', woodL = grey ? '#cfc6bc' : '#e3a464';
+    var band = grey ? '#dcd6ce' : '#f6c744', bandD = grey ? '#b9b2a8' : '#c9961c';
+    c.fillStyle = woodD; C.rrect(c, -23, -9, 46, 25, 6); c.fill();               // body
+    c.fillStyle = wood; C.rrect(c, -23, -11, 46, 22, 6); c.fill();
+    c.fillStyle = band; c.fillRect(-16, -11, 5, 22); c.fillRect(11, -11, 5, 22);
+    if(st === 2){                                    // open: lid thrown back, empty inside
+      c.fillStyle = '#5c3a1d'; C.rrect(c, -20, -15, 40, 8, 3); c.fill();
+      c.fillStyle = woodD; C.rrect(c, -24, -33, 48, 16, 7); c.fill();
+      c.fillStyle = woodL; C.rrect(c, -24, -35, 48, 14, 7); c.fill();
+      c.fillStyle = band; c.fillRect(-16, -35, 5, 14); c.fillRect(11, -35, 5, 14);
+    } else {
+      c.fillStyle = woodD; C.rrect(c, -24, -25, 48, 17, 8); c.fill();             // lid
+      c.fillStyle = woodL; C.rrect(c, -24, -27, 48, 16, 8); c.fill();
+      c.fillStyle = band; c.fillRect(-16, -27, 5, 16); c.fillRect(11, -27, 5, 16);
+      c.fillStyle = bandD; C.rrect(c, -5, -15, 10, 11, 2); c.fill();             // lock plate
+      c.fillStyle = band; C.rrect(c, -4, -14, 8, 9, 2); c.fill();
+      c.fillStyle = '#5c3a1d'; c.beginPath(); c.arc(0, -11, 1.6, 0, TAU); c.fill(); c.fillRect(-0.7, -11, 1.4, 4);
+      c.fillStyle = 'rgba(255,255,255,.3)'; C.rrect(c, -20, -25, 40, 4, 2); c.fill();
+    }
+    if(st === 1){                                    // sparkles and the prize
+      for(var k = 0; k < 4; k++){
+        var a = map.time*1.6 + k*TAU/4, sx = Math.cos(a)*32, sy = -10 + Math.sin(a)*20, sr = 3 + 1.5*Math.sin(map.time*5 + k);
+        c.fillStyle = '#fff6c8'; C.shapePath(c, 'star', sx, sy, sr); c.fill();
+      }
+      var lbl = '+' + chestCoins(ch.zone);
+      c.font = '15px "Lilita One", Nunito, sans-serif';
+      var lw = c.measureText(lbl).width + 30;
+      c.fillStyle = 'rgba(30,36,48,.18)'; C.rrect(c, -lw/2, -60, lw, 22, 11); c.fill();
+      c.fillStyle = '#fffaf0'; C.rrect(c, -lw/2, -62, lw, 22, 11); c.fill();
+      c.fillStyle = '#f5b621'; c.beginPath(); c.arc(-lw/2 + 12, -51, 6.5, 0, TAU); c.fill();
+      c.strokeStyle = '#b8860b'; c.lineWidth = 1.4; c.stroke();
+      c.fillStyle = '#3a4556'; c.textAlign = 'left'; c.textBaseline = 'middle';
+      c.fillText(lbl, -lw/2 + 22, -50.5);
+    }
+    if(grey) drawPadlock(c, 0, 2, 0.75);
+    c.restore();
+  }
+  function tapChest(ch){
+    var st = chestState(ch), n = chestCoins(ch.zone);
+    if(st === 1){
+      C.save.chests = C.save.chests || {};
+      C.save.chests[ch.stop] = 1;
+      addCoins(n, true); C.persist();
+      C.sfx.coin(); C.haptic([15, 30, 15]);
+      for(var k = 0; k < 16; k++){
+        var a = -Math.PI/2 + (Math.random() - .5)*2.2, v = 160 + Math.random()*170;
+        map.burst.push({x:ch.x, y:ch.y - 16, vx:Math.cos(a)*v, vy:Math.sin(a)*v, t:0, r:4 + Math.random()*2.5});
+      }
+      toast(C.t('chestGot').replace('{x}', n));
+    } else if(st === 0){ C.sfx.bump(); toast(C.t('chestLocked').replace('{n}', ch.stop)); }
+    else { C.sfx.tap(); toast(C.t('chestDone')); }
+  }
+  function drawBurst(c){
+    map.burst.forEach(function(b){
+      var y = b.y + map.scroll, a = Math.max(0, 1 - b.t/1.1);
+      c.globalAlpha = a;
+      c.fillStyle = '#f5b621'; c.beginPath(); c.ellipse(b.x, y, b.r*Math.abs(Math.cos(b.t*9)) + 1, b.r, 0, 0, TAU); c.fill();
+      c.strokeStyle = '#b8860b'; c.lineWidth = 1.2; c.stroke();
+    });
+    c.globalAlpha = 1;
+  }
+  /* ---- stops ---- */
+  var RING = {bus:['#2f6fe0','#1c469c'], signs:['#ff8a1f','#b65a06'],
+              traffic:['#36b44a','#1f7a31'], find:['#9a5fd0','#6a3a9a'],
+              metro:['#e8413c','#a3271f'], plow:['#26a3c2','#167a93'], run:['#ee5fae','#a92d70']};
+  function stopRadius(i){ var cur = Math.min(C.save.reached, DISTRICTS[0].stops); return i === cur ? 31 : i <= cur ? 28 : 24; }
+  /* A chunky clay button: a coloured face on a darker base, the stop's number
+     big on it, the game as a badge, stars on a plaque below. Locked stops are
+     grey stone with a padlock. */
+  function drawStop(c, i, x, y){
+    var N = DISTRICTS[0].stops, reached = C.save.reached, cur = Math.min(reached, N);
+    var open = i <= reached, current = i === cur, stars = starsAt(i);
+    var R = stopRadius(i), ext = open ? 8 : 6;
+    var col = !open ? ['#c6ccd4', '#99a2ae'] : isFinale(i) ? ['#f5b621', '#b8860b'] : (RING[gameFor(i)] || RING.bus);
+    c.fillStyle = 'rgba(30,36,48,.22)';
+    c.beginPath(); c.ellipse(x, y + ext + R*0.5, R*1.05, R*0.42, 0, 0, TAU); c.fill();
+    if(current){
+      var pul = (Math.sin(map.time*3.2) + 1)/2;
+      c.strokeStyle = 'rgba(255,255,255,' + (.35 + .4*pul) + ')'; c.lineWidth = 4 + pul*4;
+      c.beginPath(); c.arc(x, y + ext*0.5, R + 8 + pul*5, 0, TAU); c.stroke();
+    }
+    c.fillStyle = col[1];                                   // the base, so the button has depth
+    c.beginPath(); c.arc(x, y + ext, R, 0, TAU); c.fill();
+    c.fillRect(x - R, y, R*2, ext);
+    var g = c.createRadialGradient(x - R*0.35, y - R*0.45, R*0.1, x, y, R*1.05);
+    g.addColorStop(0, mixHex(col[0], '#ffffff', 0.5)); g.addColorStop(0.55, col[0]); g.addColorStop(1, mixHex(col[0], col[1], 0.45));
+    c.fillStyle = g; c.beginPath(); c.arc(x, y, R, 0, TAU); c.fill();
+    c.strokeStyle = 'rgba(255,255,255,.45)'; c.lineWidth = 2;
+    c.beginPath(); c.arc(x, y, R - 3, 0, TAU); c.stroke();
+    c.fillStyle = 'rgba(255,255,255,.35)';
+    c.beginPath(); c.ellipse(x - R*0.25, y - R*0.52, R*0.5, R*0.2, -0.35, 0, TAU); c.fill();
+    if(!open){
+      c.fillStyle = 'rgba(110,120,134,.25)';                // stone speckles
+      for(var k = 0; k < 5; k++){ var a = i*1.9 + k*1.3; c.beginPath(); c.arc(x + Math.cos(a)*R*0.55, y + Math.sin(a)*R*0.5, 1.6 + (k % 2), 0, TAU); c.fill(); }
+      drawPadlock(c, x, y - 1, 1);
+      return;
+    }
+    c.font = Math.round(R*0.98) + 'px "Lilita One", Nunito, sans-serif';
+    c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.lineJoin = 'round'; c.lineWidth = 5; c.strokeStyle = col[1];
+    c.strokeText(String(i), x, y + 2); c.fillStyle = '#fff'; c.fillText(String(i), x, y + 2);
+    var bx = x + R*0.74, by = y - R*0.7;                    // the game, as a badge
+    c.fillStyle = col[1]; c.beginPath(); c.arc(bx, by + 1.5, 12, 0, TAU); c.fill();
+    c.fillStyle = '#fff'; c.beginPath(); c.arc(bx, by, 12, 0, TAU); c.fill();
+    if(isFinale(i)){ c.fillStyle = '#f5b621'; C.shapePath(c, 'star', bx, by, 7.5); c.fill(); }
+    else gameIcon(c, gameFor(i), bx, by, 8.5);
+    if(stars){
+      var py = y + R + ext - 2;
+      c.fillStyle = 'rgba(80,60,30,.16)'; C.rrect(c, x - 30, py + 2, 60, 20, 10); c.fill();
+      c.fillStyle = '#fff8e8'; C.rrect(c, x - 30, py, 60, 20, 10); c.fill();
+      for(var s = 0; s < 3; s++) starShape(c, x + (s - 1)*17, py + 10 + (s === 1 ? -2 : 1), 6.8, s < stars);
+    }
+  }
+  /* You are here: a pin with your colour and initial, hovering over the stop to play. */
+  function drawToken(c, x, y, R){
+    var bob = Math.sin(map.time*3)*4, tip = y - R - 6 + bob, cy = tip - 25;
+    var col = C.AVATARS[C.save.avatar] || C.AVATARS[0];
+    c.fillStyle = 'rgba(30,36,48,.18)'; c.beginPath(); c.ellipse(x, y - R*0.2, 9 - bob*0.4, 3, 0, 0, TAU); c.fill();
+    c.fillStyle = 'rgba(30,36,48,.22)';
+    c.beginPath(); c.arc(x + 1.5, cy + 2, 18, Math.PI*0.8, Math.PI*2.2); c.lineTo(x + 1.5, tip + 2); c.closePath(); c.fill();
+    c.fillStyle = '#ffffff';
+    c.beginPath(); c.arc(x, cy, 18, Math.PI*0.8, Math.PI*2.2); c.lineTo(x, tip); c.closePath(); c.fill();
+    c.fillStyle = col; c.beginPath(); c.arc(x, cy, 13.5, 0, TAU); c.fill();
+    c.fillStyle = '#3a4556'; c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.font = '16px "Lilita One", Nunito, sans-serif';
+    var nm = String(C.save.name || '').trim();
+    c.fillText(nm ? nm.charAt(0).toUpperCase() : '★', x, cy + 1);
+  }
+  /* ---- the header: which zone you are looking at ---- */
+  function drawHeader(c){
+    var zs = map.zones; if(!zs || !zs.length) return;
+    var zi = zoneAtY(G.H*0.55 - map.scroll), zn = zs[zi], Z = zoneDef(zi), i;
+    var x = 10, y = 8, w = G.W - 20, h = 48;
+    c.save();
+    c.fillStyle = 'rgba(40,40,70,.14)'; C.rrect(c, x, y + 4, w, h, 16); c.fill();
+    c.fillStyle = '#fffaf2'; C.rrect(c, x, y, w, h, 16); c.fill();
+    c.strokeStyle = mixHex(Z.col, '#ffffff', 0.5); c.lineWidth = 2; C.rrect(c, x + 1, y + 1, w - 2, h - 2, 15); c.stroke();
+    c.fillStyle = Z.deep; c.beginPath(); c.arc(x + 27, y + 26, 16, 0, TAU); c.fill();
+    c.fillStyle = Z.col; c.beginPath(); c.arc(x + 27, y + 24, 16, 0, TAU); c.fill();
+    c.fillStyle = '#fff'; c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.font = '18px "Lilita One", Nunito, sans-serif'; c.fillText(String(zi + 1), x + 27, y + 25);
+    var done = 0, all = 0;
+    for(i = 1; i <= DISTRICTS[0].stops; i++) if(starsAt(i)) all++;
+    for(i = zn.first; i <= zn.last; i++) if(starsAt(i)) done++;
+    c.textAlign = 'left'; c.fillStyle = '#3a4556';
+    c.font = '18px "Lilita One", Nunito, sans-serif';
+    C.fitText(c, C.t(Z.key), x + 52, y + 18, w - 150);
+    c.font = '800 11.5px Nunito, sans-serif'; c.fillStyle = '#7a8494';
+    C.fitText(c, C.t('zStops').replace('{a}', zn.first).replace('{b}', zn.last) + '  ·  ' + done + '/' + (zn.last - zn.first + 1), x + 52, y + 35, w - 150);
+    // the whole route so far: a little flag and a count
+    var rx = x + w - 16;
+    c.textAlign = 'right'; c.fillStyle = '#3a4556';
+    c.font = '18px "Lilita One", Nunito, sans-serif';
+    c.fillText(all + '/' + DISTRICTS[0].stops, rx, y + 25);
+    var tw = c.measureText(all + '/' + DISTRICTS[0].stops).width;
+    var fx = rx - tw - 18;
+    c.fillStyle = '#8d6a48'; c.fillRect(fx, y + 12, 2.5, 22);
+    c.fillStyle = Z.col; C.poly(c, [[fx + 2.5, y + 12], [fx + 15, y + 16.5], [fx + 2.5, y + 21]]); c.fill();
+    c.restore();
+  }
   function drawMap(c){
     var d = DISTRICTS[0], i;
-    // snowy ground band the street runs along
-    c.save();
-    c.fillStyle = C.season().ground;
-    c.beginPath();
-    var first = stopPos(1), lastP = stopPos(d.stops);
-    c.moveTo(0, Math.min(G.H + 40, first.y + 70));
-    c.lineTo(G.W, Math.min(G.H + 40, first.y + 70));
-    c.lineTo(G.W, Math.max(-40, lastP.y - 150));
-    c.lineTo(0, Math.max(-40, lastP.y - 150));
-    c.closePath(); c.fill();
+    if(!map.feat) buildScenery();
+    var top = -map.scroll - 40, bot = G.H - map.scroll + 40;      // what is on screen, before scrolling
+    c.save(); c.translate(0, map.scroll);
+    drawGrounds(c, top, bot);
     c.restore();
     drawScenery(c);
     drawMarks(c);
     drawSnowbanks(c);
-    // the path
-    c.save();
-    c.lineCap = 'round'; c.lineJoin = 'round';
-    c.beginPath();
-    for(i = 1; i <= d.stops; i++){ var p = stopPos(i); i === 1 ? c.moveTo(p.x, p.y) : c.lineTo(p.x, p.y); }
-    c.strokeStyle = 'rgba(70,86,105,.16)'; c.lineWidth = 42; c.stroke();   // kerb shadow
-    c.strokeStyle = C.season().verge; c.lineWidth = 38; c.stroke();        // sidewalk
-    c.strokeStyle = '#5c687a'; c.lineWidth = 26; c.stroke();               // asphalt
-    c.strokeStyle = 'rgba(255,255,255,.1)'; c.lineWidth = 22; c.stroke();
-    c.setLineDash([9, 13]); c.strokeStyle = '#f6c945'; c.lineWidth = 3; c.stroke();
+    c.save(); c.translate(0, map.scroll);
+    drawPath(c);
     c.restore();
-    // landmark above the last stop
-    var last = stopPos(d.stops);
-    if(last.y > -200 && last.y < G.H + 200) drawLandmark(c, G.W/2, last.y - map.spacing*1.1, Math.min(1, G.W/420));
-    // stops
-    var reached = C.save.reached;
-    for(i = 1; i <= d.stops; i++){
-      var pos = stopPos(i);
-      if(pos.y < -60 || pos.y > G.H + 60) continue;
-      var stars = starsAt(i), open = i <= reached, current = i === reached;
-      var r = open ? 25 : 18;
-      var RING = {bus:['#2f6fe0','#1c469c'], signs:['#ff8a1f','#b65a06'],
-                  traffic:['#36b44a','#1f7a31'], find:['#9a5fd0','#6a3a9a'],
-                  metro:['#e8413c','#a3271f'], plow:['#26a3c2','#167a93'], run:['#ee5fae','#a92d70']};
-      var rc = isFinale(i) ? ['#f5b621','#b8860b'] : (RING[gameFor(i)] || RING.bus);
-      var ring = !open ? '#9aa6b4' : rc[0];
-      var ringDeep = !open ? '#7d8795' : rc[1];
-      var bob = current ? Math.sin(map.time*3.2)*3 : 0;
-      var py = pos.y + bob;
-      c.fillStyle = 'rgba(15,22,34,.2)';
-      c.beginPath(); c.ellipse(pos.x, pos.y + 13, r*.9, r*.34, 0, 0, Math.PI*2); c.fill();
-      if(current){
-        var pul = (Math.sin(map.time*3.2) + 1)/2;
-        c.strokeStyle = 'rgba(255,138,31,' + (.18 + .34*pul) + ')'; c.lineWidth = 5 + pul*5;
-        c.beginPath(); c.arc(pos.x, py, r + 9 + pul*5, 0, Math.PI*2); c.stroke();
-      }
-      c.beginPath(); c.arc(pos.x, py + 6, r, 0, Math.PI*2);     // the node has height too
-      c.fillStyle = ringDeep; c.fill();
-      c.beginPath(); c.arc(pos.x, py, r, 0, Math.PI*2);
-      c.fillStyle = ring; c.fill();
-      c.beginPath(); c.arc(pos.x, py, r - 4, 0, Math.PI*2);
-      c.fillStyle = !open ? '#dde4ec' : '#ffffff'; c.fill();
-      c.save(); c.beginPath(); c.arc(pos.x, py, r - 4, 0, Math.PI*2); c.clip();
-      c.fillStyle = 'rgba(255,255,255,.9)'; c.beginPath();
-      c.ellipse(pos.x, py - r*.5, r*.8, r*.45, 0, 0, Math.PI*2); c.fill(); c.restore();
-      pos = {x:pos.x, y:py};
-      if(!open){
-        c.strokeStyle = 'rgba(96,108,122,.85)'; c.lineWidth = 2.2;
-        c.beginPath(); c.arc(pos.x, pos.y - 2, 4, Math.PI, 0); c.stroke();
-        c.fillStyle = 'rgba(96,108,122,.85)'; C.rrect(c, pos.x - 6, pos.y - 2, 12, 9, 2); c.fill();
-      } else {
-        gameIcon(c, gameFor(i), pos.x, pos.y - 3, 15);
-        c.fillStyle = 'rgba(68,80,96,.55)'; c.textAlign = 'center'; c.textBaseline = 'middle';
-        c.font = '800 10px Nunito, sans-serif';
-        c.fillText(String(i), pos.x, pos.y + 14);
-      }
-      if(stars){
-        for(var s = 0; s < 3; s++){
-          var sx = pos.x + (s-1)*14, sy = pos.y + r + 9;
-          starShape(c, sx, sy, 6.5, s < stars);
-        }
-      }
-      if(open) placeLabel(c, i, pos.x, pos.y, r);
+    drawGarlands(c);
+    for(i = 0; i < map.zones.length - 1; i++){
+      var ry = map.zones[i].top + map.scroll;
+      if(ry > -40 && ry < G.H + 40) drawRibbon(c, i + 1, ry);
     }
-    // district banner
-    var bg2 = c.createLinearGradient(10, 8, G.W - 10, 52);
-    bg2.addColorStop(0, '#d2550c'); bg2.addColorStop(1, '#ff8a2b');
-    c.fillStyle = 'rgba(15,22,34,.22)'; C.rrect(c, 10, 12, G.W - 20, 44, 14); c.fill();
-    c.fillStyle = bg2; C.rrect(c, 10, 8, G.W - 20, 44, 14); c.fill();
-    c.fillStyle = '#fff'; c.textAlign = 'left'; c.textBaseline = 'middle';
-    c.font = '20px "Lilita One", Nunito, sans-serif';
-    c.fillText(C.t(d.nameKey), 22, 24);
-    c.font = '800 12px Nunito, sans-serif'; c.fillStyle = 'rgba(255,255,255,.85)';
-    C.fitText(c, C.t(d.subKey), 22, 41, G.W - 150);
-    var doneStops = 0;
-    for(i = 1; i <= d.stops; i++) if(starsAt(i)) doneStops++;
-    c.textAlign = 'right'; c.fillStyle = '#fff4cf';
-    c.font = '18px "Lilita One", Nunito, sans-serif';
-    c.fillText(doneStops + '/' + d.stops, G.W - 22, 30);
+    map.chests.forEach(function(ch){ drawChest(c, ch); });
+    var cur = Math.min(C.save.reached, d.stops), curPos = null;
+    for(i = d.stops; i >= 1; i--){                // the top row first, so lower stops sit in front
+      var pos = stopPos(i);
+      if(pos.y < -70 || pos.y > G.H + 70) continue;
+      drawStop(c, i, pos.x, pos.y);
+      if(i <= C.save.reached) placeLabel(c, i, pos.x, pos.y, stopRadius(i));
+      if(i === cur) curPos = pos;
+    }
+    if(curPos) drawToken(c, curPos.x, curPos.y, stopRadius(cur));
+    drawBurst(c);
+    drawHeader(c);
     C.drawSnow(c, map.flakes);
   }
   /* Each stop's landmark, standing beside the road: the route is a tour of
@@ -14739,6 +15280,10 @@ window.SignLogic = (function(){
   function update(dt){
     if(screen === 'map'){
       map.time += dt;
+      for(var bi = map.burst.length - 1; bi >= 0; bi--){
+        var bb = map.burst[bi]; bb.t += dt; bb.vy += 620*dt; bb.x += bb.vx*dt; bb.y += bb.vy*dt;
+        if(bb.t > 1.1) map.burst.splice(bi, 1);
+      }
       C.stepSnow(map.flakes, dt, G.W, G.H);
       if(map.target != null && !map.drag){
         map.scroll += (map.target - map.scroll)*(1 - Math.exp(-dt*9));
@@ -14899,11 +15444,12 @@ window.SignLogic = (function(){
     $('#hmRoute').innerHTML = html;
     var nid = gameFor(next), gname = C.t(Games[nid].titleKey);
     $('#hmPlayIc').innerHTML = '<img alt="" src="' + stopIcon(next) + '">';
-    $('#hmPlayTxt').textContent = brandNew ? C.t('play') : C.t('level') + ' ' + next;
+    $('#hmPlayTxt').textContent = C.t('level') + ' ' + next;
+    $('#hmPlayGo').textContent = C.t('play');
     // what you will play, and where in the city
-    $('#hmPlaySub').textContent = (brandNew ? C.t('level') + ' 1 · ' : '') +
-      (isFinale(next) ? C.t('finale') : gname) + (isHardStop(next) && !isFinale(next) ? ' · ' + C.t('hard') : '') +
-      ' · ' + Places.name(Places.forStop(next));
+    $('#hmPlaySub').innerHTML =
+      esc((isFinale(next) ? C.t('finale') : gname) + (isHardStop(next) && !isFinale(next) ? ' · ' + C.t('hard') : '')) +
+      ' · <span class="nb">' + esc(Places.name(Places.forStop(next))) + '</span>';     // a place name never breaks at its hyphen
     updateDailyTile(); updateRunTile();
     $('#hmMapBtn').innerHTML = tileHTML(mapIcon(), '#2f6fe0', C.t('mapBtn'), doneStops + '/' + d.stops);
     if(window.Rewards){
@@ -15278,7 +15824,7 @@ window.SignLogic = (function(){
   }
   function seasonSeg(){
     var cur = C.save.season || 'auto';
-    var opts = [['auto', C.t('seasonAuto')]];
+    var opts = [['auto', C.t('seasonAuto')], ['tour', C.t('seasonTour')]];
     ['winter','spring','summer','fall'].forEach(function(k){
       opts.push([k, C.save.lang === 'fr' ? C.SEASONS[k].nameFr : C.SEASONS[k].nameEn]);
     });
@@ -15909,9 +16455,15 @@ window.SignLogic = (function(){
       var fling = p.lt && performance.now() - p.lt < 80 ? C.clamp((p.v || 0)*260, -900, 900) : 0;
       map.target = C.clamp(map.scroll + fling, 0, map.maxScroll);
       if(p.moved < 9){
+        for(var ci = 0; ci < map.chests.length; ci++){
+          var ch = map.chests[ci];
+          if(Math.hypot(ch.x - p.x, ch.y + map.scroll - 8 - p.y) < 34){ tapChest(ch); return; }
+        }
+        var curS = Math.min(C.save.reached, DISTRICTS[0].stops), cp = stopPos(curS);
+        if(Math.hypot(cp.x - p.x, cp.y - stopRadius(curS) - 31 - p.y) < 22){ C.sfx.tap(); startStop(curS); return; }
         for(var i = 1; i <= DISTRICTS[0].stops; i++){
           var pos = stopPos(i);
-          if(Math.hypot(pos.x - p.x, pos.y - p.y) < 30){
+          if(Math.hypot(pos.x - p.x, pos.y - p.y) < stopRadius(i) + 8){
             if(i <= C.save.reached){ C.sfx.tap(); startStop(i); }
             else { toast(C.t('locked')); C.sfx.bump(); }
             return;
@@ -16023,6 +16575,12 @@ window.SignLogic = (function(){
     state:function(){ return game ? game.state : null; },
     inst:function(){ return game; },
     mapScroll:function(){ return map.target != null ? map.target : map.scroll; },
+    mapInfo:function(){
+      var out = {zones:(map.zones || []).length, maxScroll:map.maxScroll, scroll:map.scroll, stops:[], chests:[]};
+      for(var i = 1; i <= DISTRICTS[0].stops; i++){ var p = stopPos(i); out.stops.push({x:p.x, y:p.y, r:stopRadius(i)}); }
+      (map.chests || []).forEach(function(ch){ out.chests.push({stop:ch.stop, x:ch.x, y:ch.y + map.scroll, state:chestState(ch)}); });
+      return out;
+    },
     screen:function(){ return screen; },
     stop:function(){ return gameStop; },
     update:function(dt){ update(dt); },
