@@ -1,0 +1,32 @@
+{
+ "v": 1,
+ "id": "downtown-25",
+ "about": "Détour! levels. Each entry is [game, how hard]: games are bus, metro, signs, traffic, run, plow, find; how hard is 1 to 40. Add entries at the end to add levels; the last one is the finale. Never remove entries.",
+ "route": [
+  ["bus",1],
+  ["metro",1],
+  ["signs",1],
+  ["traffic",1],
+  ["run",1],
+  ["plow",1],
+  ["find",1],
+  ["metro",2],
+  ["bus",3],
+  ["signs",3],
+  ["traffic",3],
+  ["plow",5],
+  ["metro",4],
+  ["run",2],
+  ["find",4],
+  ["signs",5],
+  ["traffic",4],
+  ["metro",6],
+  ["bus",5],
+  ["plow",6],
+  ["signs",6],
+  ["run",3],
+  ["metro",10],
+  ["find",6],
+  ["bus",6]
+ ]
+}

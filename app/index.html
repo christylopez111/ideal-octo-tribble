@@ -10508,7 +10508,7 @@ window.SignLogic = (function(){
     var masc = new THREE.Group(), mbody = cone(true);
     mbody.scale.setScalar(3.0); masc.add(mbody); put(masc, 1.2, 12.2, 0);
     var cousinA = put(cone(false), -2.6, 13.0, 0.3, 1.45), cousinB = put(cone(false), 4.4, 12.9, -0.2, 1.3);
-    put(vehicle('car', C.COLORS[6], 4.3, 1.9, true), -10, 9.7, 0);
+    var parked = put(vehicle('car', C.COLORS[6], 4.3, 1.9, true), -10, 9.7, 0);   // moved fully into view in resize()
     // Montréal drives on the right: the near lane heads right (east), the far lane heads left (west)
     var bus = put(vehicle('bus', C.COLORS[1], 11.5, 2.6, true), 0, 4.1, Math.PI);
     var car = put(vehicle('car', C.COLORS[0], 4.3, 1.9, true), 0, 7.9, 0);
@@ -10535,7 +10535,8 @@ window.SignLogic = (function(){
       if(key === bandKey) return;
       bandKey = key; W = w; H = h; canvas.width = w; canvas.height = h;
       var a = w/h, tall = C.clamp((1.25 - a)/0.8, 0, 1);       // 1 on a phone, 0 on a wide screen
-      var yaw = 0.16 + tall*0.36, pitch = 0.05;            // nearly level, so the horizon sits behind the street
+      // looking a little down onto the street, so passing traffic shows above Ti-Cône and its cousins
+      var yaw = 0.16 + tall*0.36, pitch = 0.11;
       cam.aspect = a; cam.fov = 30;
       look.set(masc.position.x, 3.2, 4.5);
       // fit: from the roof line behind Ti-Cône down to its feet, inside the band
@@ -10558,6 +10559,14 @@ window.SignLogic = (function(){
       var hz = v.set(look.x - Math.sin(yaw)*3000, cam.position.y, look.z - Math.cos(yaw)*3000).project(cam);
       horizon = C.clamp((1 - hz.y)/2, 0.15, 0.9);
       [cousinA, cousinB].forEach(function(cz, k){ cz.rotation.y = face + (k ? -0.4 : 0.5); });
+      // the parked car sits wholly inside the picture, left of the cousins, whatever the screen shape
+      var fit = null;
+      for(var px = -4.5; px > -14; px -= 0.5){
+        v.set(px - 2.4, 0.5, 9.7).project(cam);
+        if(v.x < -0.96) break;
+        fit = px;
+      }
+      parked.visible = fit !== null; if(fit !== null) parked.position.x = Math.min(fit, -6);
       // the far things, spread across what the camera can see at their distance
       var fx = Math.sin(yaw), fz = Math.cos(yaw), rx = Math.cos(yaw), rz = -Math.sin(yaw);
       function at(dist2, across){
@@ -10592,6 +10601,7 @@ window.SignLogic = (function(){
         band.top = C.clamp(top, 0, 0.9); band.bottom = C.clamp(bottom, band.top + 0.05, 1);
         band.left = C.clamp(left == null ? 0 : left, 0, 0.9); band.right = C.clamp(right == null ? 1 : right, band.left + 0.1, 1);
       },
+      seek:function(t){ t0 = t; },                                  // for tests: jump to a moment of the traffic
       draw:function(dt){
         if(!available()) return false;
         resize(); t0 += dt;
@@ -11772,6 +11782,15 @@ window.SignLogic = (function(){
   window.Kit3D = {
     setQuality:function(level, lock){ q.level = level; q.locked = !!lock; },
     lost:function(){ return !!(shared && shared.lost); },
+    // the graphics chip, for the crash notes ("Adreno (TM) 640, WebGL 2")
+    gpu:function(){
+      try{
+        if(!shared || !shared.renderer) return '';
+        var gl = shared.renderer.getContext(), ext = gl.getExtension('WEBGL_debug_renderer_info');
+        var name = ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
+        return String(name).slice(0, 60) + ', WebGL ' + (shared.renderer.capabilities.isWebGL2 ? 2 : 1);
+      }catch(e){ return ''; }
+    },
     quality:function(){ return q.level; },
     onQuality:function(fn){ q.onChange = fn; },
     available:available, vehicle:vehicle, cone:cone, house:house, tower:tower, STYLE:STYLE, lotView:lotView, trafficView:trafficView, homeView:homeView, findView:findView, runView:runView, bmxRider:bmxRider, riderPreview:riderPreview,
@@ -13608,6 +13627,50 @@ window.SignLogic = (function(){
   var ROUTE = [['bus',1],['metro',1],['signs',1],['traffic',1],['run',1],['plow',1],['find',1],['metro',2],['bus',3],['signs',3],
                ['traffic',3],['plow',5],['metro',4],['run',2],['find',4],['signs',5],['traffic',4],['metro',6],['bus',5],['plow',6],
                ['signs',6],['run',3],['metro',10],['find',6],['bus',6]];
+  /* Levels from the update server. The route above is built in; a newer one
+     can come from levels.json in the update repo. The game fetches it quietly,
+     checks every entry, keeps it, and plays it from the next start. So levels
+     can be added or retuned without a new version of the game. The file:
+       {"v":1, "route":[["bus",1],["metro",1], ...]}
+     Each entry is a game (bus, metro, signs, traffic, run, plow, find) and how
+     hard it is (1 to 40). The last stop is the finale. The route never gets
+     shorter than the built-in one, so nobody loses a level they reached. */
+  var BUILT_IN_STOPS = DISTRICTS[0].stops, LEVELS_KEY = 'detour-levels';
+  var LEVEL_GAMES = ['bus', 'metro', 'signs', 'traffic', 'run', 'plow', 'find'];
+  function levelsCheck(o){
+    if(!o || o.v !== 1 || !Array.isArray(o.route) || o.route.length < BUILT_IN_STOPS || o.route.length > 400) return null;
+    var route = [];
+    for(var i = 0; i < o.route.length; i++){
+      var r = o.route[i];
+      if(!Array.isArray(r) || LEVEL_GAMES.indexOf(r[0]) < 0 || !(r[1] === (r[1] | 0)) || r[1] < 1 || r[1] > 40) return null;
+      route.push([r[0], r[1]]);
+    }
+    return {route:route, stops:route.length, id:String(o.id || '').slice(0, 40)};
+  }
+  function levelsUse(L){
+    ROUTE.length = 0; L.route.forEach(function(r){ ROUTE.push(r); });
+    DISTRICTS[0].stops = L.stops;
+  }
+  (function(){
+    try{ var L = levelsCheck(JSON.parse(localStorage.getItem(LEVELS_KEY) || 'null')); if(L) levelsUse(L); }catch(e){}
+  })();
+  // a player who had finished the old last stop gets the next one when the route grows
+  function levelsUnlock(){
+    if(C.save.reached < DISTRICTS[0].stops && C.save.stars[C.save.reached]) C.save.reached++;
+  }
+  levelsUnlock();
+  function levelsFetch(){
+    var urls = ['https://raw.githubusercontent.com/christylopez111/ideal-octo-tribble/main/levels.json',
+                'https://christylopez111.github.io/ideal-octo-tribble/levels.json'], k = 0;
+    (function next(){
+      if(k >= urls.length || !window.fetch) return;
+      fetch(urls[k++] + '?t=' + Date.now(), {cache:'no-store'}).then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(o){
+        var L = levelsCheck(o); if(!L) return;
+        try{ localStorage.setItem(LEVELS_KEY, JSON.stringify({v:1, route:L.route, id:L.id})); }catch(e){}
+      }).catch(next);
+    })();
+  }
+
   /* A hard stop: a game's fifth or tenth level, or the finale. */
   function isHardStop(stop){
     var id = gameFor(stop), n = levelNumFor(stop);
@@ -13633,7 +13696,7 @@ window.SignLogic = (function(){
   var bg = document.createElement('canvas'), bgx = bg.getContext('2d');
   var mqReduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   var reduceMotion = mqReduce || !!C.save.calm;
-  var APP_VERSION = 33;
+  var APP_VERSION = 34;
   var dpr = 1, k = 1, bgDirty = true;
   var G = {W:420, H:800};
   var screen = 'map', game = null, gameStop = 0, paused = false;
@@ -13929,7 +13992,8 @@ window.SignLogic = (function(){
       if(r.e === 'lose') o.lost++;
       if(r.e === 'quit' || r.e === 'retry') o.quit++;
     });
-    out.push('Détour play log (' + new Date().toISOString().slice(0, 10) + ', version ' + APP_VERSION + ', graphics ' + (C.save.gfx || 'auto') + (C.save.safe ? ' lighter x' + C.save.safe : '') + ')');
+    out.push('Détour play log (' + new Date().toISOString().slice(0, 10) + ', version ' + APP_VERSION + ', graphics ' + (C.save.gfx || 'auto') + (C.save.safe ? ' lighter x' + C.save.safe : '') +
+             (window.Kit3D && window.Kit3D.gpu ? ', ' + window.Kit3D.gpu() : '') + ', ' + navigator.userAgent.replace(/^.*?\(([^)]*)\).*?(Chrome\/[\d.]+)?.*$/, '$1 $2') + ')');
     (C.save.crashes || []).forEach(function(c){ out.push('closed unexpectedly ' + c.at + ' v' + c.v + ': ' + c.how + '; ' + c.where + '; graphics ' + c.gfx + (c.why ? '; ' + c.why : '')); });
     out.push('stop, game, tries, wins, lost, gave up, stalled (hand shown), skipped, best stars, seconds to win');
     Object.keys(by).sort(function(a, b){ return a - b; }).forEach(function(s){
@@ -14943,6 +15007,7 @@ window.SignLogic = (function(){
   /* The home scene: a live 3D Montréal street when the device can draw it,
      the illustrated postcard when it cannot. */
   var homeArt = null, homeRaf = 0, homeLast = 0, homeSeason = '';
+  var COARSE = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);   // a phone or tablet
   function startHomeArt(){
     var box = document.getElementById('hmArt');
     var want3d = window.Kit3D && window.Kit3D.available();
@@ -14968,7 +15033,7 @@ window.SignLogic = (function(){
     homeLast = performance.now();
     function tick(now){
       if(!homeArt || homeEl.hidden){ homeRaf = 0; return; }
-      if(C.save.battery && now - homeLast < 1000/30 - 4){ homeRaf = requestAnimationFrame(tick); return; }
+      if((C.save.battery || COARSE) && now - homeLast < 1000/30 - 4){ homeRaf = requestAnimationFrame(tick); return; }
       var dt = Math.min(0.05, (now - homeLast)/1000); homeLast = now;
       if(!homeArt.draw(reduceMotion ? 0 : dt)){ stopHomeArt(); startHomeArt(); return; }
       homeRaf = requestAnimationFrame(tick);
@@ -15562,7 +15627,7 @@ window.SignLogic = (function(){
     var K = window.Kit3D, inGame = screen === 'game' && game;
     return JSON.stringify({v:APP_VERSION, t:Date.now(), clean:clean ? 1 : 0, s:screen || '',
       l:inGame ? gameStop : 0, g:inGame ? (game.isEndless ? 'endless' : game.isDaily ? 'daily' : gameFor(gameStop)) : '',
-      tier:K && K.fx ? K.fx() : '', q:K && K.quality ? K.quality() : 0, up:Math.round((Date.now() - steady.t0)/1000),
+      tier:K && K.fx ? K.fx() : '', q:K && K.quality ? K.quality() : 0, up:Math.round((Date.now() - steady.t0)/1000), gpu:K && K.gpu ? K.gpu() : '',
       heap:window.performance && performance.memory ? Math.round(performance.memory.usedJSHeapSize/1048576) : 0});
   }
   function crumb(clean){ if(Nat) try{ Nat.note(statusLine(clean)); }catch(e){} }
@@ -15582,7 +15647,7 @@ window.SignLogic = (function(){
     var L = C.save.crashes || (C.save.crashes = []);
     L.push({at:new Date().toISOString().slice(0, 16), v:APP_VERSION, how:how,
             where:prev ? (prev.s === 'game' ? 'level ' + prev.l + ' (' + prev.g + ')' : prev.s) + ', ' + Math.round((prev.up || 0)/60) + ' min in' : '',
-            gfx:prev ? prev.tier + ' q' + prev.q : '', why:ex ? (EXIT_WHY[ex.reason] || 'reason ' + ex.reason) + (ex.desc && ex.desc !== 'null' ? ': ' + ex.desc.slice(0, 120) : '') +
+            gfx:prev ? prev.tier + ' q' + prev.q + (prev.gpu ? ' on ' + prev.gpu : '') : '', why:ex ? (EXIT_WHY[ex.reason] || 'reason ' + ex.reason) + (ex.desc && ex.desc !== 'null' ? ': ' + ex.desc.slice(0, 120) : '') +
             (ex.pss ? ', memory ' + Math.round(ex.pss/1024) + ' MB' : '') : ''});
     if(L.length > 8) L.splice(0, L.length - 8);
     // one step lighter: Best becomes Good; on Auto, each close steps further down
@@ -15622,6 +15687,7 @@ window.SignLogic = (function(){
   });
 
   steadyStart();
+  setTimeout(levelsFetch, 5000);
 
   /* ---------- updates over the air (the Android app only) ----------
      Inside the app, window.DetourNative is the app's update helper. A few
@@ -15630,7 +15696,11 @@ window.SignLogic = (function(){
      differ from the ones it already has, checks each against its SHA-256 and
      hands it to the app. The app switches to the new set on the next launch,
      and goes back by itself if that launch does not start. */
-  var OTA_URL = 'https://christylopez111.github.io/ideal-octo-tribble/';
+  /* Where updates live: the GitHub repo itself (raw files, no website needed),
+     and the GitHub Pages site as a second address if Pages is ever turned on. */
+  var OTA_URLS = ['https://raw.githubusercontent.com/christylopez111/ideal-octo-tribble/main/',
+                  'https://christylopez111.github.io/ideal-octo-tribble/'];
+  var OTA_URL = OTA_URLS[0];
   var Native = window.DetourNative || null, ota = {state:'idle'};
   function otaGet(){ try{ return JSON.parse(localStorage.getItem('detour-ota') || '{}') || {}; }catch(e){ return {}; } }
   function otaSet(o){ try{ localStorage.setItem('detour-ota', JSON.stringify(o)); }catch(e){} }
@@ -15659,7 +15729,12 @@ window.SignLogic = (function(){
     if(!force && st.at && age >= 0 && age < 4*3600e3) return Promise.resolve(ota.state);
     if(Native.pending && Native.pending()){ ota.state = 'ready'; return Promise.resolve('ready'); }
     st.at = now; otaSet(st); ota.state = 'busy'; paintUpd();
-    return fetchOk(OTA_URL + 'ota-manifest.json?t=' + now, 'json').then(function(m){
+    // the first address that answers is used for everything in this check
+    function manifestFrom(k){
+      return fetchOk(OTA_URLS[k] + 'ota-manifest.json?t=' + now, 'json').then(function(m){ OTA_URL = OTA_URLS[k]; return m; },
+        function(e){ if(k + 1 < OTA_URLS.length) return manifestFrom(k + 1); throw e; });
+    }
+    return manifestFrom(0).then(function(m){
       remote = m;
       var badNative = 0; try{ badNative = Native.bad ? +Native.bad() || 0 : 0; }catch(e){}
       if(!m || !m.files || !(m.version > APP_VERSION) || m.version === st.bad || m.version === badNative) throw 'none';
@@ -15876,6 +15951,7 @@ window.SignLogic = (function(){
     home:showHome,
     state:function(){ return game ? game.state : null; },
     inst:function(){ return game; },
+    homeArt:function(){ return homeArt; },
     screen:function(){ return screen; },
     stop:function(){ return gameStop; },
     update:function(dt){ update(dt); },
