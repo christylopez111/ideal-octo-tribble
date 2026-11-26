@@ -3199,7 +3199,7 @@ window.Core = (function(){
     // the player: a name (a fun one until they pick their own), a colour, since when, and time played (seconds)
     name:'', named:0, avatar:-1, since:'', playS:0,
     // when this save was written (to pick the newest copy), and how much lighter the graphics run after unexpected closes
-    ts:0, safe:0, crashes:[], exitSeen:0
+    ts:0, safe:0, crashes:[], exitSeen:0, exits:[]
   };
   /* The save lives in this browser's (or the app's) local storage. A second
      copy, the last one that loaded cleanly, is kept beside it: if the main
@@ -8750,6 +8750,7 @@ window.SignLogic = (function(){
   'use strict';
   var C = window.Core;
   var shared = null;
+  var CFG = {gl1:false, aa:true};          // set once, before the first 3D frame (see configure)
   var HOUSE = ['#d9574e','#e2a33b','#3fa3a3','#8f5fa8','#4a7fc1','#c96f3f'];
   var AWNING = ['#e04a4a','#2f8f6f','#3769c4','#e09a22'];
 
@@ -8759,8 +8760,10 @@ window.SignLogic = (function(){
     if(shared === false) return false;
     if(shared) return !shared.lost && q.level < QUALITY.length;
     try {
-      var cv = document.createElement('canvas');
-      var r = new THREE.WebGLRenderer({canvas:cv, antialias:true, alpha:true});
+      var cv = document.createElement('canvas'), ro = {canvas:cv, antialias:CFG.aa, alpha:true};
+      // a safety step after unexpected closes: the older WebGL 1 (some phones' WebGL 2 drivers misbehave)
+      if(CFG.gl1){ var c1 = cv.getContext('webgl', {antialias:CFG.aa, alpha:true}) || cv.getContext('experimental-webgl', {antialias:CFG.aa, alpha:true}); if(c1) ro.context = c1; }
+      var r = new THREE.WebGLRenderer(ro);
       r.setPixelRatio(1); r.setClearColor(0x000000, 0);
       r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFShadowMap;   // (in r128 only this type honours shadow.radius: soft clay edges)
       shared = {renderer:r, canvas:cv, w:0, h:0, lost:false};
@@ -8777,7 +8780,7 @@ window.SignLogic = (function(){
   var TOUCH = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
   var QUALITY = TOUCH ? [{px:1.1e6, map:1024}, {px:0.75e6, map:1024}, {px:0.45e6, map:0}]
                       : [{px:1.5e6, map:2048}, {px:0.9e6, map:1024}, {px:0.5e6, map:0}];
-  var q = {level:0, locked:false, last:0, sum:0, n:0, skip:14, onChange:null};
+  var q = {level:0, locked:false, last:0, sum:0, n:0, skip:14, onChange:null, cap:0};
   function quality(){ return QUALITY[Math.min(q.level, QUALITY.length - 1)]; }
   function watchFrames(){
     var now = performance.now(), gap = now - q.last; q.last = now;
@@ -8786,7 +8789,8 @@ window.SignLogic = (function(){
     q.sum += gap; q.n++;
     if(q.n < 40) return;
     var avg = q.sum/q.n; q.sum = 0; q.n = 0;
-    if(avg > 36 && q.level < QUALITY.length){
+    // a screen that draws every other frame on purpose (30 a second) is not slow
+    if(avg > Math.max(36, q.cap + 14) && q.level < QUALITY.length){
       q.level++; q.skip = 14;
       if(q.onChange) setTimeout(q.onChange, 0);
     }
@@ -9159,7 +9163,7 @@ window.SignLogic = (function(){
     var tex = detailTextures();
     if(tex){ m.defines = m.defines || {}; m.defines.ST_TEX = 1; if(attr) m.defines.ST_ATTR = 1; }
     // three caches shader programs by this key: the moving figures need their own program
-    m.customProgramCacheKey = function(){ return 'clay' + (m.userData.rigid ? '-rigid' : ''); };
+    m.customProgramCacheKey = function(){ return 'clay' + (m.userData.solid ? '-solid' : m.userData.rigid ? '-rigid' : ''); };
     m.onBeforeCompile = function(sh){
       sh.uniforms.stRimCol = STYLE.rimCol; sh.uniforms.stRimK = STYLE.rimK; sh.uniforms.stAOK = STYLE.aoK;
       sh.uniforms.stTexK = STYLE.texK; sh.uniforms.stTexArr = {value:detailTextures()}; sh.uniforms.stTexId = {value:m.userData.tex || 0};
@@ -9168,8 +9172,9 @@ window.SignLogic = (function(){
         .replace('#include <common>', '#include <common>\nvarying vec3 vStW; varying vec3 vStN; uniform float stWobK;\n' +
           '#ifdef ST_TEX\nvarying vec3 vStO; varying vec3 vStON; varying float vStT;\n' +
           '#ifdef ST_ATTR\nattribute float aTex;\n#else\nuniform float stTexId;\n#endif\n#endif')
-        .replace('#include <begin_vertex>', '#include <begin_vertex>\n' +
+        .replace('#include <begin_vertex>', '#include <begin_vertex>\n' + (m.userData.solid ? '' :
           // hand-pressed: every shape a little uneven, fixed to the model so it never shimmers
+          // (not on vehicles: their windows, stripes and doors sit closer to the body than the wobble)
           '  vec3 stQ = transformed*0.85 + vec3(0.37, 1.13, 2.71);\n' +
           '  float stK = stWobK' + (m.userData.rigid ? '*0.6' : '') + ';\n' +
           // scenery lying flat on the ground stays flat: road paint, kerbs and lawns keep their layering
@@ -9179,7 +9184,7 @@ window.SignLogic = (function(){
           '  stK *= smoothstep(0.03, 0.3, (modelMatrix*stWp).y);\n') +
           '  transformed += stK*vec3(sin(stQ.y*1.7 + stQ.z*1.3) + 0.5*sin(stQ.z*3.9 + stQ.x*2.3),\n' +
           '                          sin(stQ.z*1.9 + stQ.x*1.1) + 0.5*sin(stQ.x*3.3 + stQ.y*2.9),\n' +
-          '                          sin(stQ.x*1.5 + stQ.y*1.2) + 0.5*sin(stQ.y*3.7 + stQ.z*2.1));')
+          '                          sin(stQ.x*1.5 + stQ.y*1.2) + 0.5*sin(stQ.y*3.7 + stQ.z*2.1));'))
         .replace('#include <fog_vertex>', '#include <fog_vertex>\n' +
           '  vec4 stW = vec4(transformed, 1.0);\n' +
           '  #ifdef USE_INSTANCING\n  stW = instanceMatrix*stW;\n  #endif\n' +
@@ -9435,6 +9440,19 @@ window.SignLogic = (function(){
 
   /* Melt a model down to one mesh per material. A triplex goes from about
      sixty draw calls to six, which is what makes whole streets affordable. */
+  /* The same material without the hand-pressed wobble, for vehicles: built
+     things with fine details close to their surface (see stylize). */
+  function solidOf(m){
+    if(!FX.pbr || !m || !m.userData || !m.userData.styled || m.userData.solid) return m;
+    var key = 's' + m.uuid;
+    if(!mats[key]){
+      var c = m.clone();
+      c.userData = {solid:1, tex:m.userData.tex, glow:m.userData.glow};
+      c.onBeforeCompile = function(){};
+      mats[key] = stylize(c);
+    }
+    return mats[key];
+  }
   function fuse(group){
     group.updateMatrixWorld(true);
     var buckets = {}, order = [], out = new THREE.Group();
@@ -9531,6 +9549,7 @@ window.SignLogic = (function(){
     var ly = h*0.33, lz = wid*0.3;
     g.add(box(h*0.04, h*0.1, h*0.2, lampM, len/2, ly, lz));  g.add(box(h*0.04, h*0.1, h*0.2, lampM, len/2, ly, -lz));
     g.add(box(h*0.04, h*0.09, h*0.18, tailM, -len/2, ly, lz)); g.add(box(h*0.04, h*0.09, h*0.18, tailM, -len/2, ly, -lz));
+    g.traverse(function(o){ if(o.isMesh) o.material = solidOf(o.material); });     // clean shapes: no wobble on vehicles
     var out = fuse(g);
     out.userData.roof = ROOF[kind] ? ROOF[kind]*h : h*0.78;
     return out;
@@ -11781,6 +11800,10 @@ window.SignLogic = (function(){
 
   window.Kit3D = {
     setQuality:function(level, lock){ q.level = level; q.locked = !!lock; },
+    locked:function(){ return q.locked; },
+    frameCap:function(ms){ if(q.cap !== (ms || 0)){ q.cap = ms || 0; q.sum = 0; q.n = 0; q.skip = 6; } },
+    configure:function(o){ if(shared) return false; if(o.gl1 != null) CFG.gl1 = !!o.gl1; if(o.aa != null) CFG.aa = !!o.aa; return true; },
+    config:function(){ return {gl1:CFG.gl1, aa:CFG.aa}; },
     lost:function(){ return !!(shared && shared.lost); },
     // the graphics chip, for the crash notes ("Adreno (TM) 640, WebGL 2")
     gpu:function(){
@@ -13696,7 +13719,7 @@ window.SignLogic = (function(){
   var bg = document.createElement('canvas'), bgx = bg.getContext('2d');
   var mqReduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   var reduceMotion = mqReduce || !!C.save.calm;
-  var APP_VERSION = 34;
+  var APP_VERSION = 35;
   var dpr = 1, k = 1, bgDirty = true;
   var G = {W:420, H:800};
   var screen = 'map', game = null, gameStop = 0, paused = false;
@@ -13993,8 +14016,11 @@ window.SignLogic = (function(){
       if(r.e === 'quit' || r.e === 'retry') o.quit++;
     });
     out.push('Détour play log (' + new Date().toISOString().slice(0, 10) + ', version ' + APP_VERSION + ', graphics ' + (C.save.gfx || 'auto') + (C.save.safe ? ' lighter x' + C.save.safe : '') +
-             (window.Kit3D && window.Kit3D.gpu ? ', ' + window.Kit3D.gpu() : '') + ', ' + navigator.userAgent.replace(/^.*?\(([^)]*)\).*?(Chrome\/[\d.]+)?.*$/, '$1 $2') + ')');
+             (window.Kit3D && window.Kit3D.gpu ? ', ' + window.Kit3D.gpu() : '') + ', ' + ((navigator.userAgent.match(/\(([^)]*)\)/) || [])[1] || '') +
+             ', ' + ((navigator.userAgent.match(/Chrome\/[\d.]+/) || [''])[0]) + ')');
     (C.save.crashes || []).forEach(function(c){ out.push('closed unexpectedly ' + c.at + ' v' + c.v + ': ' + c.how + '; ' + c.where + '; graphics ' + c.gfx + (c.why ? '; ' + c.why : '')); });
+    (C.save.exits || []).forEach(function(e){ out.push('android exit ' + e.at + ': ' + e.why + ' (code ' + e.reason + ', status ' + e.status + ', importance ' + e.imp + ', ' + e.mb + ' MB)' + (e.desc && e.desc !== 'null' ? ': ' + e.desc : '')); });
+    if(C.save.safe) out.push('lighter graphics step ' + C.save.safe + (window.Kit3D && window.Kit3D.config ? (window.Kit3D.config().gl1 ? ', WebGL 1' : '') + (window.Kit3D.config().aa ? '' : ', no antialias') : ''));
     out.push('stop, game, tries, wins, lost, gave up, stalled (hand shown), skipped, best stars, seconds to win');
     Object.keys(by).sort(function(a, b){ return a - b; }).forEach(function(s){
       var o = by[s]; out.push([s, o.g, o.tries, o.wins, o.lost, o.quit, o.hints, o.skip, o.stars, o.secs.join(' ')].join(', '));
@@ -14744,6 +14770,7 @@ window.SignLogic = (function(){
   var lastT = performance.now();
   function frame(now){
     requestAnimationFrame(frame);
+    if(window.Kit3D && window.Kit3D.frameCap) window.Kit3D.frameCap(C.save.battery ? 1000/30 : 0);
     if(C.save.battery && now - lastT < 1000/30 - 4) return;         // battery saver: every other frame
     var dt = Math.min(.05, Math.max(0, (now - lastT)/1000)); lastT = now;
     try{ update(dt); render(); }catch(err){ console.error(err); }
@@ -15033,7 +15060,9 @@ window.SignLogic = (function(){
     homeLast = performance.now();
     function tick(now){
       if(!homeArt || homeEl.hidden){ homeRaf = 0; return; }
-      if((C.save.battery || COARSE) && now - homeLast < 1000/30 - 4){ homeRaf = requestAnimationFrame(tick); return; }
+      var capped = C.save.battery || COARSE;
+      if(window.Kit3D && window.Kit3D.frameCap) window.Kit3D.frameCap(capped ? 1000/30 : 0);
+      if(capped && now - homeLast < 1000/30 - 4){ homeRaf = requestAnimationFrame(tick); return; }
       var dt = Math.min(0.05, (now - homeLast)/1000); homeLast = now;
       if(!homeArt.draw(reduceMotion ? 0 : dt)){ stopHomeArt(); startHomeArt(); return; }
       homeRaf = requestAnimationFrame(tick);
@@ -15261,11 +15290,17 @@ window.SignLogic = (function(){
      scenes, Good keeps the realistic materials and lighting without it, Fast
      is the original matte look. Auto picks Best on computers and strong
      phones, Good on everything else. */
+  /* After the app closed unexpectedly, each time one step lighter:
+       1  no shadows and fewer pixels (quality held at its third step)
+       2  also the older WebGL 1, without antialiasing (from the next start)
+       3  no 3D at all: the flat drawing
+     Choosing graphics in Settings starts the steps over. */
+  if(window.Kit3D && window.Kit3D.configure && (C.save.safe || 0) >= 2) window.Kit3D.configure({gl1:true, aa:false});
   function autoTier(){
     var K = window.Kit3D;
     if(!K || !K.available()) return 'off';
     var coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches, safe = C.save.safe || 0;
-    if(safe >= 3) return 'off';                        // after unexpected closes, lighter each time
+    if(safe >= 3) return 'off';                        // after unexpected closes, lighter each time (see safeSteps)
     if(!coarse) return safe ? 'high' : 'console';
     // phones: Good. Best (post-processing on moving scenes) stays a choice in Settings,
     // because a phone's graphics memory is shared and running out of it closes the app
@@ -15274,9 +15309,17 @@ window.SignLogic = (function(){
   function applyGraphics(){
     var K = window.Kit3D;
     if(!K || !K.setFX) return;
-    var g = C.save.gfx || 'auto', tier = g === 'best' ? 'console' : g === 'good' ? 'high' : g === 'fast' ? 'off' : autoTier();
-    if(g === 'auto' && (C.save.safe || 0) >= 2 && K.quality && K.quality() < 1 && K.setQuality) K.setQuality(1);
-    if(!K.setFX(tier)) return;
+    var g = C.save.gfx || 'auto';
+    // Fast is the same clay look, only lighter (no shadows, fewer pixels); the plain old-style drawing is a last resort
+    var tier = g === 'best' ? 'console' : (g === 'good' || g === 'fast') ? 'high' : autoTier();
+    var qBefore = K.quality ? K.quality() : 0, safe = C.save.safe || 0;
+    var lock = g === 'fast' || (safe >= 1 && safe < 3) ? 2 : -1;
+    if(K.setQuality){
+      if(lock >= 0) K.setQuality(Math.max(qBefore, lock), true);
+      else if(K.locked && K.locked()) K.setQuality(0, false);
+    }
+    var fxChanged = K.setFX(tier);
+    if(!fxChanged && !(K.quality && K.quality() !== qBefore)) return;
     bgDirty = true;
     if(screen === 'game' && game) game.layout(G);
     else layoutMap();
@@ -15632,15 +15675,29 @@ window.SignLogic = (function(){
   }
   function crumb(clean){ if(Nat) try{ Nat.note(statusLine(clean)); }catch(e){} }
   // the newest way the app ended that we have not looked at yet (Android 11 and up)
+  /* Android lists how the app's processes ended: the app itself, and the
+     separate process that draws the page (that one usually ends as "isolated
+     not needed" right after the app goes). Every new one is kept for the
+     report; the most telling one (a crash, low memory, not responding) is
+     the reason given. */
   function lastExitNew(){
     var raw = ''; try{ raw = Nat.lastExit ? Nat.lastExit() || '' : ''; }catch(e){}
-    var best = null;
+    var seen = C.save.exitSeen || 0, fresh = [], RANK = {5:9, 4:8, 6:7, 3:6, 9:5, 2:4, 13:1};
     raw.split('\n').forEach(function(line){
       var f = line.split('|'); if(f.length < 7) return;
-      var e = {t:+f[0], reason:+f[1], imp:+f[3], pss:+f[4], rss:+f[5], desc:f.slice(6).join('|')};
-      if(e.t > (C.save.exitSeen || 0) && (!best || e.t > best.t)) best = e;
+      var e = {t:+f[0], reason:+f[1], status:+f[2], imp:+f[3], pss:+f[4], rss:+f[5], desc:f.slice(6).join('|')};
+      if(e.t > seen) fresh.push(e);
     });
-    if(best){ C.save.exitSeen = best.t; }
+    if(!fresh.length) return null;
+    var L = C.save.exits || (C.save.exits = []);
+    fresh.sort(function(a, b){ return a.t - b.t; }).forEach(function(e){
+      L.push({at:new Date(e.t).toISOString().slice(0, 19), reason:e.reason, why:EXIT_WHY[e.reason] || 'reason ' + e.reason, status:e.status, imp:e.imp,
+              mb:Math.round((e.pss || 0)/1024), desc:(e.desc || '').slice(0, 140)});
+      C.save.exitSeen = Math.max(C.save.exitSeen || 0, e.t);
+    });
+    if(L.length > 10) L.splice(0, L.length - 10);
+    var best = fresh[0];
+    fresh.forEach(function(e){ if((RANK[e.reason] || 2) > (RANK[best.reason] || 2)) best = e; });
     return best;
   }
   function safer(prev, how, ex){
@@ -15652,7 +15709,7 @@ window.SignLogic = (function(){
     if(L.length > 8) L.splice(0, L.length - 8);
     // one step lighter: Best becomes Good; on Auto, each close steps further down
     if(C.save.gfx === 'best') C.save.gfx = 'good';
-    else if(C.save.gfx === 'auto' || !C.save.gfx) C.save.safe = Math.min(3, (C.save.safe || 0) + 1);
+    else if(C.save.gfx !== 'fast') C.save.safe = Math.min(3, (C.save.safe || 0) + 1);
     C.persist();
     applyGraphics();
     setTimeout(function(){ toast(C.t('safeMode')); }, 1600);
@@ -15663,7 +15720,7 @@ window.SignLogic = (function(){
     try{ prev = JSON.parse(Nat.prev() || 'null'); }catch(e){}
     try{ gone = Nat.gone() || ''; }catch(e){}
     ex = lastExitNew();
-    var hard = ex && [3, 4, 5, 6, 9].indexOf(ex.reason) >= 0 && ex.imp && ex.imp <= 200;
+    var hard = ex && [3, 4, 5, 6, 9].indexOf(ex.reason) >= 0;
     if(gone) safer(prev, 'the game view was ' + (gone.indexOf('crash') === 0 ? 'crashed' : 'closed for memory') + ' and restarted', ex);
     else if(prev && !prev.clean && (prev.up || 0) > 3) safer(prev, 'the app closed while open', ex);
     else if(hard) safer(prev, 'the app closed', ex);
@@ -15813,6 +15870,12 @@ window.SignLogic = (function(){
       game.pointer('down', ptr.x, ptr.y);
     }
   });
+  cv.addEventListener('wheel', function(e){
+    if(screen !== 'map') return;
+    e.preventDefault();
+    var base = map.target != null ? map.target : map.scroll;
+    map.target = C.clamp(base - e.deltaY/k, 0, map.maxScroll);
+  }, {passive:false});
   cv.addEventListener('pointermove', function(e){
     if(!ptr) return;
     var dy = e.clientY - ptr.sy, dx = e.clientX - ptr.sx;
@@ -15823,7 +15886,10 @@ window.SignLogic = (function(){
       return;
     }
     if(screen === 'map' && map.drag){
-      map.scroll = C.clamp(ptr.scroll0 - dy/k, -30, map.maxScroll + 30);
+      // the map follows the finger (drag down to see the stops further along), and remembers how fast it moved
+      var t = performance.now(), ns = C.clamp(ptr.scroll0 + dy/k, -30, map.maxScroll + 30);
+      if(ptr.lt){ var dt2 = Math.max(1, t - ptr.lt); ptr.v = 0.7*(ptr.v || 0) + 0.3*(ns - map.scroll)/dt2; }
+      ptr.lt = t; map.scroll = ns;
     }
   });
   function endPointer(e){
@@ -15839,7 +15905,9 @@ window.SignLogic = (function(){
     }
     if(screen === 'map'){
       map.drag = false;
-      map.target = C.clamp(map.scroll, 0, map.maxScroll);
+      // a flick keeps the map gliding a little in the same direction
+      var fling = p.lt && performance.now() - p.lt < 80 ? C.clamp((p.v || 0)*260, -900, 900) : 0;
+      map.target = C.clamp(map.scroll + fling, 0, map.maxScroll);
       if(p.moved < 9){
         for(var i = 1; i <= DISTRICTS[0].stops; i++){
           var pos = stopPos(i);
@@ -15894,7 +15962,10 @@ window.SignLogic = (function(){
   document.getElementById('hmGear').onclick = function(){ C.ensureAudio(); showSettings(); };
   // Play goes straight into the next stop: the route strip above it already
   // shows what is coming, so players see the variety without a detour.
-  document.getElementById('hmPlay').onclick = function(){ leaveHome(function(){ startStop(Math.max(1, C.save.reached)); }); };
+  document.getElementById('hmPlay').onclick = function(){
+    var played = Object.keys(C.save.stars).length > 0 || C.save.reached > 1;
+    leaveHome(function(){ if(played) goMap(C.save.reached); else startStop(1); });
+  };
   document.getElementById('hmMapBtn').onclick = function(){ leaveHome(function(){ goMap(C.save.reached); }); };
   document.getElementById('hmStars').onclick = function(){ showProfile(); };
   // the street is re-framed whenever the logo or the panel changes size (fonts, pictures, rotation)
@@ -15951,7 +16022,7 @@ window.SignLogic = (function(){
     home:showHome,
     state:function(){ return game ? game.state : null; },
     inst:function(){ return game; },
-    homeArt:function(){ return homeArt; },
+    mapScroll:function(){ return map.target != null ? map.target : map.scroll; },
     screen:function(){ return screen; },
     stop:function(){ return gameStop; },
     update:function(dt){ update(dt); },
