@@ -1045,6 +1045,74 @@ button:focus-visible{ outline-color:var(--pp-lav-ink); }
 .pl-go i{ font-style:normal; }
 @media (max-width:360px){ .pl-go{ height:42px; padding:0 11px 0 13px; font-size:17px; } }
 .pl-t span.nb{ display:inline; white-space:nowrap; text-shadow:none; }
+
+/* ---- reward card: a ribbon with the season at its ends, the prize on a burst of light ---- */
+.card.rwcard{ overflow:visible; padding-top:22px; }
+.card.rwcard::before{ inset:16px 10px 12px; }
+.rwc{ position:relative; text-align:center; }
+.rwc .rib{ position:relative; margin:-50px -24px 4px; height:56px; z-index:3; }
+.rwc .rib b{ position:relative; z-index:2; display:block; height:56px; line-height:54px; border-radius:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding:0 18px;
+  font:400 27px "Lilita One","Nunito",sans-serif; color:#fff; letter-spacing:1px; text-transform:uppercase;
+  background:linear-gradient(#8fd3f6, #4aa3dc); border:3px solid #ffc46b;
+  -webkit-text-stroke:1.2px rgba(25,70,125,.55); paint-order:stroke fill;
+  text-shadow:0 3px 0 rgba(20,60,110,.55); box-shadow:inset 0 3px 0 rgba(255,255,255,.4), 0 5px 0 #2f7cb8, 0 10px 18px rgba(30,40,80,.25); }
+.rwc .rib::before, .rwc .rib::after{ content:""; position:absolute; z-index:1; top:16px; width:44px; height:48px; background:#2f86c4; }
+.rwc .rib::before{ left:-18px; -webkit-clip-path:polygon(0 0,100% 0,100% 100%,0 100%,14px 50%); clip-path:polygon(0 0,100% 0,100% 100%,0 100%,14px 50%); }
+.rwc .rib::after{ right:-18px; -webkit-clip-path:polygon(0 0,100% 0,calc(100% - 14px) 50%,100% 100%,0 100%); clip-path:polygon(0 0,100% 0,calc(100% - 14px) 50%,100% 100%,0 100%); }
+.rwc .rib i{ position:absolute; z-index:4; top:-24px; width:58px; height:58px; background:center/contain no-repeat; pointer-events:none; }
+.rwc .rib i.l{ left:-22px; transform:rotate(-16deg); }
+.rwc .rib i.r{ right:-20px; transform:scaleX(-1) rotate(-12deg); }
+.rwc.red .rib b{ background:linear-gradient(#ff9e8c, #e85d52); -webkit-text-stroke:1.2px rgba(130,35,30,.55); text-shadow:0 3px 0 rgba(120,30,30,.55); box-shadow:inset 0 3px 0 rgba(255,255,255,.4), 0 5px 0 #b8403a, 0 10px 18px rgba(80,30,30,.25); }
+.rwc.red .rib::before, .rwc.red .rib::after{ background:#c8453d; }
+.rwc .show{ position:relative; height:196px; margin:4px 0 2px; }
+.rwc .show.short{ height:150px; }
+.rwc .rays{ position:absolute; left:50%; top:52%; width:330px; height:330px; margin:-165px 0 0 -165px; border-radius:50%; pointer-events:none;
+  background:repeating-conic-gradient(rgba(255,214,120,.55) 0deg 9deg, rgba(255,255,255,0) 9deg 20deg);
+  -webkit-mask-image:radial-gradient(circle, #000 18%, transparent 66%); mask-image:radial-gradient(circle, #000 18%, transparent 66%);
+  animation:rwSpin 26s linear infinite; }
+@keyframes rwSpin{ to{ transform:rotate(360deg); } }
+.rwc .show img{ position:absolute; left:50%; bottom:0; width:210px; margin-left:-105px; }
+.rwc .show.short img{ width:190px; margin-left:-95px; }
+.rwc .bub{ position:absolute; z-index:2; left:50%; top:2px; transform:translateX(-50%); display:flex; align-items:center; gap:6px;
+  padding:4px 10px 4px 14px; border-radius:16px; background:#fffdf7; box-shadow:0 3px 0 rgba(170,130,80,.25), 0 6px 14px rgba(120,80,30,.16);
+  font:400 30px "Lilita One","Nunito",sans-serif; color:#5a3a1c; animation:rwPop .5s cubic-bezier(.3,1.6,.5,1) both .15s; }
+.rwc .bub::after{ content:""; position:absolute; left:50%; bottom:-8px; margin-left:-8px; border:8px solid transparent; border-bottom:0; border-top-color:#fffdf7; }
+.rwc .bub .coin{ width:28px; height:28px; }
+@keyframes rwPop{ from{ transform:translateX(-50%) scale(.4); opacity:0; } to{ transform:translateX(-50%) scale(1); opacity:1; } }
+.rwc p.small{ margin:6px 4px 12px; }
+.rwc .prize{ margin:4px 0 8px; }
+.card .btn.cont{ background:linear-gradient(#fffefb, #fff0db); color:#8a4a1c; border:3px solid #ffffff; text-shadow:none;
+  font-family:"Lilita One","Nunito",sans-serif; font-size:24px; letter-spacing:1px; text-transform:uppercase;
+  box-shadow:inset 0 -3px 0 rgba(220,180,130,.35), 0 6px 0 #e2c29a, 0 12px 18px rgba(110,70,30,.2); }
+.card .btn.cont:active{ transform:translateY(4px); box-shadow:0 2px 0 #e2c29a; }
+.rwc .wk-say{ margin:0 6px 10px; font-size:17px; font-weight:900; line-height:1.3; }
+.rwc .wk-prize{ position:relative; margin:0 8px; height:96px; border-radius:16px; background:linear-gradient(#fff6e4, #ffe9c6);
+  box-shadow:inset 0 2px 6px rgba(150,100,40,.18); display:flex; align-items:center; justify-content:center; gap:4px; }
+.rwc .wk-prize img{ height:88px; }
+.rwc .wk-prize b{ font:400 30px "Lilita One","Nunito",sans-serif; color:#fff; -webkit-text-stroke:1.5px #b8640f; paint-order:stroke fill; text-shadow:0 3px 0 #b8640f; }
+.rwc .wk-time{ display:inline-flex; align-items:center; gap:6px; margin:-10px 0 10px; position:relative; padding:3px 12px; border-radius:12px;
+  background:#b8403a; color:#fff; font-weight:900; font-size:14px; }
+.rwc .wk-time i{ width:14px; height:14px; border-radius:50%; border:2px solid #fff; position:relative; }
+.rwc .wk-time i::after{ content:""; position:absolute; left:4px; top:1px; width:2px; height:5px; background:#fff; box-shadow:2px 3px 0 -0px #fff; }
+.rwc .wk-bar{ display:flex; align-items:center; gap:6px; margin:0 8px 14px; }
+.rwc .wk-bar img{ width:58px; flex:none; margin-right:-18px; position:relative; z-index:2; }
+.rwc .wk-bar span{ flex:1; height:24px; border-radius:12px; background:#e9dccd; box-shadow:inset 0 2px 4px rgba(90,60,30,.25); overflow:hidden; }
+.rwc .wk-bar span i{ display:block; height:100%; border-radius:12px; background:linear-gradient(#8fe08a, #4fb84a); }
+.rwc .wk-bar b{ flex:none; min-width:44px; font:400 20px "Lilita One","Nunito",sans-serif; color:#5a3a1c; }
+
+/* the 3-Star Week badge on the home street */
+.hm-stage{ position:relative; }
+.hm-event{ position:absolute; left:12px; bottom:12px; z-index:3; pointer-events:auto; display:flex; align-items:center; gap:4px;
+  padding:4px 12px 4px 4px; border-radius:20px; border:2px solid rgba(255,255,255,.9); cursor:pointer; text-align:left;
+  background:linear-gradient(#fffaf2, #ffeedd); box-shadow:0 4px 0 #e0bf98, 0 8px 14px rgba(40,30,60,.25); color:#5a3a1c; }
+.hm-event[hidden]{ display:none; }
+.hm-event img{ width:46px; height:auto; }
+.hm-event span{ display:flex; flex-direction:column; line-height:1.1; }
+.hm-event b{ font:400 15px "Lilita One","Nunito",sans-serif; letter-spacing:.3px; }
+.hm-event small{ font:900 11.5px "Nunito",sans-serif; color:#8a6a4a; }
+.hm-event.ready{ animation:evGlow 1.6s ease-in-out infinite; }
+.hm-event.ready small{ color:#e85d52; }
+@keyframes evGlow{ 50%{ box-shadow:0 4px 0 #e0bf98, 0 0 0 7px rgba(255,200,90,.45); } }
 </style>
 <script src="lib/three.min.js"></script>
 <script src="lib/GLTFLoader.js"></script>
@@ -1077,7 +1145,7 @@ button:focus-visible{ outline-color:var(--pp-lav-ink); }
       <h1 class="hm-title">D<span class="hm-e">é</span>tour!</h1>
       <p class="hm-tag" id="hmTag"></p>
     </div>
-    <div class="hm-stage" id="hmStage"></div>
+    <div class="hm-stage" id="hmStage"><button class="hm-event" id="hmEvent" hidden></button></div>
     <div class="hm-panel" id="hmPanel">
       <div class="hm-dist">
         <div class="hm-dname"><b id="hmDist"></b><span id="hmDistSub"></span></div>
@@ -3023,7 +3091,7 @@ window.Core = (function(){
       dailyGift:'Daily gift', dailyGiftSub:'Come back every day: each day in a row pays more, and day 7 is a chest.',
       dayN:'Day {n}', collect:'Collect', dailyBack:'Come back tomorrow for {x}.', aChest:'a chest', coinsWord:'coins', tomorrow:'Tomorrow',
       garage:'Garage', slot_helmet:'Helmet', slot_shirt:'Shirt', slot_frame:'Bike', wearing:'Selected', wear:'Use',
-      chestOnly:'From chests', z1:'City streets', z2:'By the river', z3:'Green lanes', z4:'Islands and bridges', z5:'Festival nights', zoneN:'Zone {n}', zStops:'Stops {a} to {b}', chestGot:'Gift opened: +{x} coins!', chestLocked:'Finish stop {n} to open this gift.', chestDone:'You already opened this gift.', seasonTour:'By place', newLook:'New look:', albumBtn:'Postcards and photos',
+      chestOnly:'From chests', weekTitle:'3-Star Week', weekBody:'Win {n} levels with 3 stars this week to get your reward!', weekReady:'You did it! Collect your reward.', weekGot:'Reward collected. A new week starts on Monday.', weekTick:'{a}/{b} three-star wins this week', tDH:'{d}d {h}h left', tHM:'{h}h {m}m left', continueBtn:'Continue', zoneGift:'Zone gift', zoneGiftNote:'You finished {z}!', z1:'City streets', z2:'By the river', z3:'Green lanes', z4:'Islands and bridges', z5:'Festival nights', zoneN:'Zone {n}', zStops:'Stops {a} to {b}', chestGot:'Gift opened: +{x} coins!', chestLocked:'Finish stop {n} to open this gift.', chestDone:'You already opened this gift.', seasonTour:'By place', newLook:'New look:', albumBtn:'Postcards and photos',
       look_helmet_orange:'Détour orange', look_helmet_red:'Cherry red', look_helmet_blue:'Sky blue', look_helmet_mint:'Mint',
       look_helmet_night:'Midnight', look_helmet_chrome:'Chrome',
       look_shirt_teal:'Teal', look_shirt_maple:'Maple red', look_shirt_lemon:'Lemon', look_shirt_grape:'Grape', look_shirt_snow:'Snow white', look_shirt_navy:'Navy',
@@ -3149,7 +3217,7 @@ window.Core = (function(){
       dailyGift:'Cadeau du jour', dailyGiftSub:'Reviens chaque jour : chaque jour de suite rapporte plus, et le jour 7 est un coffre.',
       dayN:'Jour {n}', collect:'Récupérer', dailyBack:'Reviens demain pour {x}.', aChest:'un coffre', coinsWord:'pièces', tomorrow:'Demain',
       garage:'Garage', slot_helmet:'Casque', slot_shirt:'Chandail', slot_frame:'Vélo', wearing:'Choisi', wear:'Choisir',
-      chestOnly:'Dans les coffres', z1:'Rues de la ville', z2:'Au bord du fleuve', z3:'Ruelles vertes', z4:'Îles et ponts', z5:'Soirs de festival', zoneN:'Zone {n}', zStops:'Arrêts {a} à {b}', chestGot:'Cadeau ouvert : +{x} pièces!', chestLocked:'Termine l’arrêt {n} pour ouvrir ce cadeau.', chestDone:'Tu as déjà ouvert ce cadeau.', seasonTour:'Par lieu', newLook:'Nouveau style :', albumBtn:'Cartes postales et photos',
+      chestOnly:'Dans les coffres', weekTitle:'Semaine 3 étoiles', weekBody:'Gagne {n} niveaux avec 3 étoiles cette semaine pour ta récompense!', weekReady:'Bravo! Récupère ta récompense.', weekGot:'Récompense reçue. Une nouvelle semaine commence lundi.', weekTick:'{a}/{b} victoires à 3 étoiles cette semaine', tDH:'encore {d} j {h} h', tHM:'encore {h} h {m} min', continueBtn:'Continuer', zoneGift:'Cadeau de zone', zoneGiftNote:'Tu as fini : {z}!', z1:'Rues de la ville', z2:'Au bord du fleuve', z3:'Ruelles vertes', z4:'Îles et ponts', z5:'Soirs de festival', zoneN:'Zone {n}', zStops:'Arrêts {a} à {b}', chestGot:'Cadeau ouvert : +{x} pièces!', chestLocked:'Termine l’arrêt {n} pour ouvrir ce cadeau.', chestDone:'Tu as déjà ouvert ce cadeau.', seasonTour:'Par lieu', newLook:'Nouveau style :', albumBtn:'Cartes postales et photos',
       look_helmet_orange:'Orange Détour', look_helmet_red:'Rouge cerise', look_helmet_blue:'Bleu ciel', look_helmet_mint:'Menthe',
       look_helmet_night:'Minuit', look_helmet_chrome:'Chrome',
       look_shirt_teal:'Sarcelle', look_shirt_maple:'Rouge érable', look_shirt_lemon:'Citron', look_shirt_grape:'Raisin', look_shirt_snow:'Blanc neige', look_shirt_navy:'Marine',
@@ -9522,7 +9590,10 @@ window.SignLogic = (function(){
      so the same builder serves the bus lot (in pixels) and the junction (in
      lanes). The roof keeps the vehicle's colour, because seen from above the
      roof is most of what the player reads. */
-  var ROOF = {car:0.78, van:0.98, bus:0.98, truck:1.06};
+  var ROOF = {car:0.78, taxi:0.78, pickup:0.78, suv:0.85, van:0.98, bus:0.98, truck:1.06};
+  /* Parked and passing cars come in a few body styles; the puzzles keep plain cars. */
+  var CAR_STYLES = ['car', 'suv', 'car', 'taxi', 'pickup'];
+  function carStyle(seed){ return CAR_STYLES[((seed | 0) % CAR_STYLES.length + CAR_STYLES.length) % CAR_STYLES.length]; }
   /* The flat top of each vehicle, as shares of its length and width, so a 2D
      overlay (an arrow, the seat dots) can be painted exactly on the roof. */
   var ROOFBOX = {car:{cx:-0.07, l:0.46, w:0.8}, van:{cx:-0.05, l:0.86, w:0.95},
@@ -9562,10 +9633,41 @@ window.SignLogic = (function(){
       g.add(slab(len*0.34, wid*0.98, h*0.08, r*0.6, body, len*0.32, h*0.73, 0, b));
       g.add(slab(len*0.62, wid*1.02, h*0.84, r*0.25, lam('#f4f6fa'), -len*0.185, h*0.22, 0, b));
       g.add(box(len*0.62, h*0.07, wid*0.9, dark, -len*0.185, h*0.185, 0));
+    } else if(kind === 'suv'){                                                          // taller and boxier, with roof rails
+      g.add(slab(len, wid, h*0.42, r, body, 0, h*0.13, 0, b));
+      g.add(slab(len*0.66, wid*0.88, h*0.27, r*0.7, glass, -len*0.08, h*0.53, 0));
+      g.add(slab(len*0.64, wid*0.84, h*0.07, r*0.7, body, -len*0.08, h*0.78, 0, b));
+      [-1, 1].forEach(function(sd){ g.add(box(len*0.5, h*0.035, wid*0.05, dark, -len*0.08, h*0.87, sd*wid*0.35)); });
+    } else if(kind === 'pickup'){                                                       // a short cab and an open bed
+      g.add(slab(len, wid, h*0.37, r, body, 0, h*0.13, 0, b));
+      g.add(slab(len*0.3, wid*0.86, h*0.27, r*0.7, glass, len*0.1, h*0.48, 0));
+      g.add(slab(len*0.28, wid*0.8, h*0.07, r*0.7, body, len*0.1, h*0.72, 0, b));
+      g.add(box(len*0.4, h*0.02, wid*0.84, dark, -len*0.25, h*0.505, 0));
+      [-1, 1].forEach(function(sd){ g.add(box(len*0.42, h*0.13, wid*0.07, body, -len*0.25, h*0.56, sd*wid*0.44)); });
+      g.add(box(len*0.04, h*0.13, wid*0.92, body, -len*0.465, h*0.56, 0));
     } else {
       g.add(slab(len, wid, h*0.37, r, body, 0, h*0.13, 0, b));
       g.add(slab(len*0.52, wid*0.86, h*0.27, r*0.8, glass, -len*0.06, h*0.48, 0));
       g.add(slab(len*0.46, wid*0.8, h*0.07, r*0.8, body, -len*0.07, h*0.72, 0, b));
+      if(kind === 'taxi'){                                                              // the lit TAXI sign on the roof
+        g.add(box(len*0.17, h*0.03, wid*0.38, dark, -len*0.07, h*0.805, 0));
+        g.add(slab(len*0.15, wid*0.34, h*0.1, h*0.03, lam('#fff2c2', '#b8963a'), -len*0.07, h*0.82, 0));
+      }
+    }
+    // small things that make a car read as a car: mirrors, door lines and handles, bumpers, a grille
+    var CARLIKE = {car:1, taxi:1, suv:1, pickup:1};
+    var MIRX = {car:0.2, taxi:0.2, suv:0.25, pickup:0.25, van:0.38, amb:0.43, truck:0.47}[kind];
+    if(MIRX != null){
+      [-1, 1].forEach(function(sd){ g.add(box(len*0.04, h*0.07, wid*0.09, kind === 'amb' ? lam('#f6f8fb') : body, len*MIRX, h*0.53, sd*(wid/2 + wid*0.035))); });
+    }
+    if(CARLIKE[kind]){
+      var seamM = lam(tint(col.c, '#000000', .35)), bump = lam('#c9d1db');
+      g.add(box(len*0.008, h*0.24, wid*1.008, seamM, kind === 'pickup' ? len*0.0 : -len*0.04, h*0.3, 0));     // the door line
+      [kind === 'pickup' ? len*0.14 : len*0.09, kind === 'pickup' ? null : -len*0.16].forEach(function(hx){
+        if(hx != null) g.add(box(len*0.05, h*0.025, wid*1.014, bump, hx, h*0.43, 0));     // door handles
+      });
+      [-1, 1].forEach(function(sd){ g.add(box(len*0.03, h*0.09, wid*0.94, bump, sd*(len/2 + len*0.004), h*0.2, 0)); });
+      g.add(box(len*0.012, h*0.08, wid*0.36, dark, len/2 + len*0.004, h*0.33, 0));       // the grille
     }
     g.add(box(len*0.96, h*0.06, wid*0.9, dark, 0, h*0.13, 0));                           // the dark sill
     var wr = h*0.165;
@@ -10596,12 +10698,12 @@ window.SignLogic = (function(){
     var masc = new THREE.Group(), mbody = cone(true);
     mbody.scale.setScalar(3.0); masc.add(mbody); put(masc, 1.2, 12.2, 0);
     var cousinA = put(cone(false), -2.6, 13.0, 0.3, 1.45), cousinB = put(cone(false), 4.4, 12.9, -0.2, 1.3);
-    var parked = put(vehicle('car', C.COLORS[6], 4.3, 1.9, true), -10, 9.7, 0);   // moved fully into view in resize()
+    var parked = put(vehicle('suv', C.COLORS[6], 4.3, 1.9, true), -10, 9.7, 0);   // moved fully into view in resize()
     // Montréal drives on the right: the near lane heads right (east), the far lane heads left (west)
     var bus = put(vehicle('bus', C.COLORS[1], 11.5, 2.6, true), 0, 4.1, Math.PI);
     var car = put(vehicle('car', C.COLORS[0], 4.3, 1.9, true), 0, 7.9, 0);
     var van = put(vehicle('van', C.COLORS[2], 6.2, 2.1, true), 0, 4.1, Math.PI);
-    var car2 = put(vehicle('car', C.COLORS[5], 4.3, 1.9, true), 0, 7.9, 0);
+    var car2 = put(vehicle('taxi', C.COLORS[5], 4.3, 1.9, true), 0, 7.9, 0);
     var movers = [bus, car, van, car2];
 
     var W = 0, H = 0, ctx = canvas.getContext('2d'), look = new THREE.Vector3(), v = new THREE.Vector3();
@@ -10768,7 +10870,8 @@ window.SignLogic = (function(){
       var kind = which === 'B' && it.kindB ? it.kindB : it.kind;
       var hue = which === 'B' && it.hueB != null ? it.hueB : it.hue;
       var aw = which === 'B' && it.awB != null ? it.awB : it.aw;
-      var key = [kind, hue, it.pat, aw, it.v, it.coat, it.skin].join('|'), sc = 1;
+      var cs = kind === 'car' ? carStyle(Math.round(Math.abs(it.x || 0)*7)) : '';
+      var key = [kind, hue, it.pat, aw, it.v, it.coat, it.skin, cs].join('|'), sc = 1;
       if(!protos[key]){
         var o;
         switch(kind){
@@ -10791,7 +10894,7 @@ window.SignLogic = (function(){
           case 'cone': o = cone(false); break;
           case 'ticone': o = cone(true); break;
           case 'van': o = vehicle('van', C.COLORS[hue % C.COLORS.length], 6.2, 2.1, true); break;
-          default: o = vehicle('car', C.COLORS[hue % C.COLORS.length], 4.3, 1.9, true);
+          default: o = vehicle(cs || 'car', C.COLORS[hue % C.COLORS.length], 4.3, 1.9, true);
         }
         protos[key] = o;
       }
@@ -10962,7 +11065,7 @@ window.SignLogic = (function(){
       else if(kind === 'cone'){ obj = cone(false); ppu = 60; }
       else if(kind === 'ticone'){ obj = cone(true); ppu = 90; az = 0.25; el = 0.3; }
       else if(kind === 'car'){
-        obj = vehicle('car', C.COLORS[hue % C.COLORS.length], 4.3, 1.9, false); az = side < 0 ? -0.95 : 0.95; el = 0.5; ppu = 24;
+        obj = vehicle(carStyle(hue), C.COLORS[hue % C.COLORS.length], 4.3, 1.9, false); az = side < 0 ? -0.95 : 0.95; el = 0.5; ppu = 24;
       }
       else if(kind === 'sign'){ obj = streetSign(hue); az = side < 0 ? -0.35 : 0.35; el = 0.35; ppu = 40; }
       else if(kind === 'bench'){ obj = bench(hue); el = 0.45; ppu = 48; }
@@ -11483,7 +11586,7 @@ window.SignLogic = (function(){
         // a traffic light at the near corner, hanging over the road
         var tl = trafficLight(side); tl.position.set(side*(RUN.road + 0.5), 0.12, -(BLOCK - 0.5)); g.add(tl);
         // a car parked down the side street
-        var pc = vehicle('car', C.COLORS[(hue*3 + k) % C.COLORS.length], 4.3, 1.85, true);
+        var pc = vehicle(carStyle(hue + k), C.COLORS[(hue*3 + k) % C.COLORS.length], 4.3, 1.85, true);
         pc.position.set(side*(RUN.walk + 6.5), 0, cz + 2.2); pc.rotation.y = 0; g.add(pc);   // parked facing the traffic on its side (right-hand)
       }
       // a building closing the view down the side street
@@ -13512,6 +13615,7 @@ window.SignLogic = (function(){
   /* Something happened in the game. Returns the missions it finished. */
   function event(k, v){
     var s = st(), done = [];
+    if(k === 'stars3') weekTick();
     if(k === 'win') s.run = (s.run || 0) + 1;
     if(k === 'lose') s.run = 0;
     s.missions.forEach(function(m){
@@ -13535,7 +13639,52 @@ window.SignLogic = (function(){
     if(d.last === t) return {ready:false, day:d.day};
     return {ready:true, day:d.last === today(-1) ? d.day : 0};          // a missed day starts the calendar again
   }
-  function hasNews(totalStars){ return daily().ready || st().setReady || starChestsReady(totalStars) > 0; }
+  function hasNews(totalStars){ return daily().ready || st().setReady || starChestsReady(totalStars) > 0 || weekReady(); }
+
+  /* ---------- the 3-Star Week ----------
+     Every week, Monday to Sunday: win a number of levels with three stars
+     (replays count) to earn a reward. The clock on the card shows the time left. */
+  var WEEK = {goal:8, coins:150};
+  function weekStart(){ var d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - (d.getDay() + 6) % 7); return d; }
+  function week(){
+    var s = st(), k = weekStart(), key = k.getFullYear() + '-' + (k.getMonth() + 1) + '-' + k.getDate();
+    if(!s.wk || s.wk.key !== key) s.wk = {key:key, n:0, got:false, just:false};
+    return s.wk;
+  }
+  function weekTick(){
+    var w = week();
+    if(w.n < WEEK.goal){ w.n++; w.just = true; }
+  }
+  function weekReady(){ var w = week(); return w.n >= WEEK.goal && !w.got; }
+  function weekLeft(){
+    var end = weekStart(); end.setDate(end.getDate() + 7);
+    var m = Math.max(0, Math.floor((end - new Date())/60000)), d = Math.floor(m/1440), h = Math.floor((m % 1440)/60);
+    return d > 0 ? C.t('tDH').replace('{d}', d).replace('{h}', h) : C.t('tHM').replace('{h}', h).replace('{m}', m % 60);
+  }
+  function weekChip(){
+    var w = week();
+    return {n:w.n, goal:WEEK.goal, ready:weekReady(), got:w.got, left:weekLeft()};
+  }
+  function showWeek(after){
+    var w = week(), ready = weekReady(), pct = Math.round(Math.min(1, w.n/WEEK.goal)*100), sid = C.season().id, sp = art('sprig-' + sid);
+    var html = '<div class="rwc red">' +
+      '<div class="rib"><b>' + C.t('weekTitle') + '</b>' + (sp ? '<i class="l" style="background-image:url(' + sp + ')"></i><i class="r" style="background-image:url(' + sp + ')"></i>' : '') + '</div>' +
+      '<div class="show short"><div class="rays"></div><img alt="" src="' + art('stars') + '"></div>' +
+      '<p class="wk-say">' + (w.got ? C.t('weekGot') : ready ? C.t('weekReady') : C.t('weekBody').replace('{n}', WEEK.goal)) + '</p>' +
+      '<div class="wk-prize"><img alt="" src="' + art('coins') + '"><b>+' + WEEK.coins + '</b></div>' +
+      '<div class="wk-time"><i></i>' + weekLeft() + '</div>' +
+      '<div class="wk-bar"><img alt="" src="' + art('stars') + '"><span><i style="width:' + pct + '%"></i></span><b>' + Math.min(w.n, WEEK.goal) + '/' + WEEK.goal + '</b></div>' +
+      '<div class="stack"><button class="btn cont" id="wkGo">' + (ready ? C.t('collect') : C.t('continueBtn')) + '</button></div></div>';
+    UI.open(html);
+    var card = document.querySelector('#overlay .card');
+    if(card) card.classList.add('rwcard');
+    document.getElementById('wkGo').onclick = function(){
+      C.sfx.tap();
+      if(!weekReady()){ if(after) after(); else { UI.close(); UI.refresh(); } return; }
+      w.got = true; UI.addCoins(WEEK.coins, true); C.persist(); C.sfx.clear(); C.haptic([20, 40, 30]);
+      showReward({title:C.t('weekTitle'), coins:WEEK.coins, art:'coins', note:C.t('weekGot')}, after);
+    };
+  }
 
   /* A chest: coins, and a look you do not own yet when one is left. */
   function openChest(coins, exclusive){
@@ -13554,14 +13703,142 @@ window.SignLogic = (function(){
 
   /* ---------- screens ---------- */
   function swatch(hex, big){ return '<i class="sw' + (big ? ' big' : '') + '" style="background:' + hex + '"></i>'; }
-  function chestHTML(title, got, next){
-    return '<h2>' + title + '</h2>' +
-      '<div class="chest"><div class="glow"></div><div class="box"></div><div class="lid"></div></div>' +
-      '<div class="earn"><i class="coin"></i>+' + got.coins + '</div>' +
-      (got.prize ? '<p class="prize">' + swatch(got.prize.l.hex, true) + '<span>' + C.t('newLook') + ' <b>' +
-                   C.t('look_' + got.prize.slot + '_' + got.prize.l.id) + '</b> (' + C.t('slot_' + got.prize.slot).toLowerCase() + ')</span></p>' : '') +
-      (next ? '<p class="small">' + next + '</p>' : '');
+  /* ---------- reward art, drawn once and kept ----------
+     A pile of clay coins, an open chest, three stars, and a little sprig of
+     the season for the ribbon's ends. Drawn on a canvas, so nothing to load. */
+  var ART = {};
+  function canvas2(w, h){ var cv = document.createElement('canvas'); cv.width = w*2; cv.height = h*2; var c = cv.getContext('2d'); c.scale(2, 2); return {cv:cv, c:c}; }
+  function starPath(c, x, y, r, sy){
+    c.beginPath();
+    for(var i = 0; i < 10; i++){ var a = -Math.PI/2 + i*Math.PI/5, rr = i % 2 ? r*0.48 : r; c[i ? 'lineTo' : 'moveTo'](x + Math.cos(a)*rr, y + Math.sin(a)*rr*(sy || 1)); }
+    c.closePath();
   }
+  function sparkle(c, x, y, r){
+    c.fillStyle = '#ffffff'; c.beginPath();
+    c.moveTo(x, y - r); c.quadraticCurveTo(x, y, x + r, y); c.quadraticCurveTo(x, y, x, y + r); c.quadraticCurveTo(x, y, x - r, y); c.quadraticCurveTo(x, y, x, y - r); c.fill();
+  }
+  function coinFlat(c, x, y, rx, ry, th){                   // a coin lying down, seen from above at an angle
+    c.fillStyle = '#c98a10'; c.beginPath(); c.ellipse(x, y + th, rx, ry, 0, 0, Math.PI*2); c.fill();
+    c.fillRect(x - rx, y, rx*2, th);
+    c.fillStyle = 'rgba(255,255,255,.18)'; for(var k = -3; k <= 3; k++) c.fillRect(x + k*rx/4 - 1, y + 2, 2, th - 2);
+    var g = c.createRadialGradient(x - rx*0.35, y - ry*0.5, 2, x, y, rx);
+    g.addColorStop(0, '#fff3b0'); g.addColorStop(0.5, '#ffd34d'); g.addColorStop(1, '#eba918');
+    c.fillStyle = g; c.beginPath(); c.ellipse(x, y, rx, ry, 0, 0, Math.PI*2); c.fill();
+    c.strokeStyle = '#d99a12'; c.lineWidth = 2; c.beginPath(); c.ellipse(x, y, rx*0.78, ry*0.74, 0, 0, Math.PI*2); c.stroke();
+  }
+  function coinUp(c, x, y, r, tilt){                      // a coin standing on its edge, star to the front
+    c.save(); c.translate(x, y); c.rotate(tilt);
+    c.fillStyle = '#c98a10'; c.beginPath(); c.ellipse(4, 0, r*0.86, r, 0, 0, Math.PI*2); c.fill();
+    var g = c.createRadialGradient(-r*0.35, -r*0.45, 2, 0, 0, r);
+    g.addColorStop(0, '#fff3b0'); g.addColorStop(0.55, '#ffd34d'); g.addColorStop(1, '#eba918');
+    c.fillStyle = g; c.beginPath(); c.ellipse(0, 0, r*0.86, r, 0, 0, Math.PI*2); c.fill();
+    c.strokeStyle = '#d99a12'; c.lineWidth = 2.2; c.beginPath(); c.ellipse(0, 0, r*0.68, r*0.8, 0, 0, Math.PI*2); c.stroke();
+    starPath(c, 0, 0, r*0.5); c.fillStyle = '#ffe680'; c.fill(); c.strokeStyle = '#d99a12'; c.lineWidth = 1.6; c.stroke();
+    c.restore();
+  }
+  function art(kind){
+    if(ART[kind]) return ART[kind];
+    var o, c, i, url = '';
+    try {
+      if(kind === 'coins'){
+        o = canvas2(220, 170); c = o.c;
+        c.fillStyle = 'rgba(120,80,20,.16)'; c.beginPath(); c.ellipse(112, 150, 82, 13, 0, 0, Math.PI*2); c.fill();
+        sprigLeaf(c, 52, 96, 34, -0.7);
+        for(i = 0; i < 6; i++) coinFlat(c, 96 + (i % 2 ? 3 : -2), 132 - i*14, 44, 15, 10);
+        starPath(c, 97, 62, 15, 0.38); c.fillStyle = '#ffe680'; c.fill(); c.strokeStyle = '#d99a12'; c.lineWidth = 1.4; c.stroke();
+        coinUp(c, 158, 112, 32, 0.28);
+        sparkle(c, 70, 70, 7); sparkle(c, 128, 88, 5); sparkle(c, 178, 76, 6); sparkle(c, 120, 138, 4);
+      } else if(kind === 'chest'){
+        o = canvas2(220, 170); c = o.c;
+        c.fillStyle = 'rgba(120,80,20,.16)'; c.beginPath(); c.ellipse(110, 150, 80, 13, 0, 0, Math.PI*2); c.fill();
+        function rr(x, y, w, h, r){ c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+        c.fillStyle = '#8f5a2a'; rr(46, 34, 128, 40, 18); c.fill();                    // the lid, open
+        c.fillStyle = '#c98a4b'; rr(46, 30, 128, 38, 18); c.fill();
+        c.fillStyle = '#f6c744'; c.fillRect(70, 30, 12, 38); c.fillRect(138, 30, 12, 38);
+        c.fillStyle = '#5c3a1d'; rr(50, 72, 120, 20, 6); c.fill();                     // inside
+        for(i = 0; i < 7; i++) coinFlat(c, 62 + i*16, 80 - (i % 3)*4, 12, 5, 4);       // coins heaped inside
+        c.fillStyle = '#9c5f2c'; rr(44, 84, 132, 62, 10); c.fill();                    // the body
+        c.fillStyle = '#d08a4a'; rr(44, 80, 132, 60, 10); c.fill();
+        c.fillStyle = '#f6c744'; c.fillRect(70, 80, 12, 60); c.fillRect(138, 80, 12, 60);
+        c.fillStyle = '#c9961c'; rr(100, 92, 20, 22, 4); c.fill(); c.fillStyle = '#f6c744'; rr(102, 94, 16, 18, 3); c.fill();
+        c.fillStyle = '#5c3a1d'; c.beginPath(); c.arc(110, 101, 3, 0, Math.PI*2); c.fill(); c.fillRect(109, 101, 2, 7);
+        sparkle(c, 56, 58, 7); sparkle(c, 168, 50, 6); sparkle(c, 120, 64, 5);
+      } else if(kind === 'stars'){
+        o = canvas2(220, 150); c = o.c;
+        [[58, 88, 34, -0.25], [162, 88, 34, 0.25], [110, 72, 48, 0]].forEach(function(p){
+          c.save(); c.translate(p[0], p[1]); c.rotate(p[3]);
+          starPath(c, 3, 6, p[2]); c.fillStyle = '#d18a0e'; c.fill();
+          var g = c.createLinearGradient(0, -p[2], 0, p[2]); g.addColorStop(0, '#ffe680'); g.addColorStop(1, '#f5b621');
+          starPath(c, 0, 0, p[2]); c.fillStyle = g; c.fill();
+          c.lineJoin = 'round'; c.lineWidth = 3; c.strokeStyle = '#e6a216'; c.stroke();
+          c.fillStyle = 'rgba(255,255,255,.5)'; c.beginPath(); c.ellipse(-p[2]*0.18, -p[2]*0.32, p[2]*0.28, p[2]*0.12, -0.5, 0, Math.PI*2); c.fill();
+          c.restore();
+        });
+        sparkle(c, 40, 44, 7); sparkle(c, 184, 48, 6); sparkle(c, 112, 16, 5);
+      } else if(kind.indexOf('sprig-') === 0){
+        o = canvas2(64, 64); c = o.c;
+        var sid = kind.slice(6);
+        if(sid === 'winter'){                                // a snowflake
+          c.translate(32, 32); c.strokeStyle = '#ffffff'; c.lineCap = 'round';
+          for(var pass = 0; pass < 2; pass++){
+            c.lineWidth = pass ? 3 : 6.5; c.strokeStyle = pass ? '#ffffff' : '#8cc4ea';
+            for(i = 0; i < 6; i++){ c.save(); c.rotate(i*Math.PI/3); c.beginPath(); c.moveTo(0, 0); c.lineTo(0, -24); c.moveTo(0, -14); c.lineTo(-7, -20); c.moveTo(0, -14); c.lineTo(7, -20); c.stroke(); c.restore(); }
+          }
+        } else if(sid === 'fall'){
+          sprigLeaf(c, 32, 34, 26, -0.3, '#e0572e', '#a83a1c');
+          sprigLeaf(c, 22, 42, 16, 0.6, '#f2a33a', '#b86f14');
+        } else {                                             // a flower: pink in spring, yellow in summer
+          var pet = sid === 'spring' ? '#ffb8d2' : '#ffd23f', petD = sid === 'spring' ? '#e889ad' : '#e0a812';
+          c.translate(32, 32);
+          for(i = 0; i < 6; i++){ c.save(); c.rotate(i*Math.PI/3); c.fillStyle = petD; c.beginPath(); c.ellipse(0, -15, 8, 14, 0, 0, Math.PI*2); c.fill();
+            c.fillStyle = pet; c.beginPath(); c.ellipse(0, -14, 6.5, 12, 0, 0, Math.PI*2); c.fill(); c.restore(); }
+          c.fillStyle = sid === 'spring' ? '#ffe680' : '#b8661a'; c.beginPath(); c.arc(0, 0, 7.5, 0, Math.PI*2); c.fill();
+        }
+      }
+      url = o ? o.cv.toDataURL() : '';
+    } catch(e){ url = ''; }
+    return (ART[kind] = url);
+  }
+  /* a maple leaf, the season's colour, for behind the coins and the ribbon's ends */
+  function sprigLeaf(c, x, y, r, rot, col, deep){
+    var sn = C.season(), P = [[0,-1],[0.16,-0.6],[0.45,-0.78],[0.38,-0.38],[0.86,-0.5],[0.66,-0.14],[0.82,0.04],[0.36,0.12],[0.44,0.42],[0.06,0.26],[0.04,0.72]];
+    col = col || (sn.id === 'fall' ? '#e2703a' : sn.id === 'winter' ? '#5fae7a' : '#6cc04a');
+    deep = deep || (sn.id === 'fall' ? '#b04a20' : '#3f8a4a');
+    c.save(); c.translate(x, y); c.rotate(rot || 0);
+    c.beginPath();
+    P.forEach(function(p, k){ c[k ? 'lineTo' : 'moveTo'](p[0]*r, p[1]*r); });
+    for(var k = P.length - 2; k >= 0; k--) c.lineTo(-P[k][0]*r, P[k][1]*r);
+    c.closePath(); c.fillStyle = col; c.fill(); c.strokeStyle = deep; c.lineWidth = 1.5; c.stroke();
+    c.beginPath(); c.moveTo(0, r*0.7); c.lineTo(0, -r*0.8); c.moveTo(0, -r*0.1); c.lineTo(r*0.6, -r*0.4); c.moveTo(0, -r*0.1); c.lineTo(-r*0.6, -r*0.4);
+    c.strokeStyle = deep; c.lineWidth = 1.2; c.stroke();
+    c.restore();
+  }
+  /* The reward card: a ribbon with the season at its ends, the prize on a
+     burst of light, the amount in a bubble, and one big button. */
+  function rewardHTML(o){
+    var sid = C.season().id, sp = art('sprig-' + sid);
+    return '<div class="rwc' + (o.tone ? ' ' + o.tone : '') + '">' +
+      '<div class="rib"><b>' + o.title + '</b>' + (sp ? '<i class="l" style="background-image:url(' + sp + ')"></i><i class="r" style="background-image:url(' + sp + ')"></i>' : '') + '</div>' +
+      '<div class="show"><div class="rays"></div>' +
+        (o.coins ? '<div class="bub"><b>+' + o.coins + '</b><i class="coin"></i></div>' : '') +
+        '<img alt="" src="' + art(o.art || 'coins') + '"></div>' +
+      (o.prize ? '<p class="prize">' + swatch(o.prize.l.hex, true) + '<span>' + C.t('newLook') + ' <b>' +
+                 C.t('look_' + o.prize.slot + '_' + o.prize.l.id) + '</b> (' + C.t('slot_' + o.prize.slot).toLowerCase() + ')</span></p>' : '') +
+      (o.note ? '<p class="small">' + o.note + '</p>' : '') +
+      '<div class="stack"><button class="btn cont" id="' + (o.id || 'rwOk') + '">' + (o.btn || C.t('continueBtn')) + '</button></div></div>';
+  }
+  /* Show a reward card; after() runs when the player taps the button. */
+  function showReward(o, after){
+    UI.open(rewardHTML(o), true);
+    var card = document.querySelector('#overlay .card');
+    if(card) card.classList.add('rwcard');
+    var b = document.getElementById(o.id || 'rwOk');
+    if(b) b.onclick = function(){ C.sfx.tap(); if(after) after(); else { UI.close(); UI.refresh(); } };
+  }
+  function gotCard(title, got, next, isChest, after){
+    showReward({title:title, coins:got.coins, art:isChest ? 'chest' : 'coins', prize:got.prize, note:next}, after);
+  }
+
   function showDaily(after){
     var dd = daily(), s = st(), html = '<h2>' + C.t('dailyGift') + '</h2><p>' + C.t('dailyGiftSub') + '</p><div class="cal">';
     GIFTS.forEach(function(g, i){
@@ -13580,9 +13857,8 @@ window.SignLogic = (function(){
       s.daily.last = today(); s.daily.day = (dd.day + 1) % 7; C.persist();
       got = g === 'chest' ? openChest(200, true) : (UI.addCoins(g, true), {coins:g, prize:null});
       C.sfx.clear(); C.haptic(30);
-      UI.open(chestHTML(C.t('dayN').replace('{n}', dd.day + 1), got, C.t('dailyBack').replace('{x}', giftName(GIFTS[s.daily.day]))) +
-              '<div class="stack"><button class="btn" id="dgOk2">' + C.t('done') + '</button></div>', true);
-      document.getElementById('dgOk2').onclick = function(){ UI.close(); UI.refresh(); if(after) after(); };
+      gotCard(C.t('dailyGift'), got, C.t('dayN').replace('{n}', dd.day + 1) + ' · ' + C.t('dailyBack').replace('{x}', giftName(GIFTS[s.daily.day])), g === 'chest',
+              function(){ UI.close(); UI.refresh(); if(after) after(); });
     };
   }
   function giftName(g){ return g === 'chest' ? C.t('aChest') : g + ' ' + C.t('coinsWord'); }
@@ -13603,6 +13879,10 @@ window.SignLogic = (function(){
       '<div class="grow"><span>' + C.t('starChest') + '</span>' +
         (sc > 0 ? '<button class="btn mini" id="gStar">' + C.t('open') + '</button>'
                 : '<span class="mb wide"><i style="width:' + Math.round(into/STAR_STEP*100) + '%"></i></span><b>' + into + '/' + STAR_STEP + '</b>') + '</div>' +
+      '<div class="grow"><span>' + C.t('weekTitle') + '</span>' +
+        (weekReady() ? '<button class="btn mini" id="gWeek">' + C.t('collect') + '</button>'
+                     : '<span class="mb wide"><i style="width:' + Math.round(Math.min(1, week().n/WEEK.goal)*100) + '%"></i></span><b>' + Math.min(week().n, WEEK.goal) + '/' + WEEK.goal + '</b>' +
+                       '<button class="btn mini alt" id="gWeek">' + C.t('open') + '</button>') + '</div>' +
       '<div class="grow"><span>' + C.t('dailyGift') + '</span>' +
         (dd.ready ? '<button class="btn mini" id="gDaily">' + C.t('collect') + '</button>' : '<b class="soft">' + C.t('tomorrow') + '</b>') + '</div>' +
       '<div class="stack" style="margin-top:14px"><button class="btn alt" id="gGarage">' + C.t('garage') + '</button>' +
@@ -13615,17 +13895,15 @@ window.SignLogic = (function(){
     if(extra) document.getElementById('gExtra').onclick = extra.go;
     var b;
     if((b = document.getElementById('gDaily'))) b.onclick = function(){ showDaily(back); };
+    if((b = document.getElementById('gWeek'))) b.onclick = function(){ showWeek(back); };
     if((b = document.getElementById('gStar'))) b.onclick = function(){
       s.chests++; var got = openChest(100, false); C.sfx.clear(); C.haptic(30);
-      UI.open(chestHTML(C.t('starChest'), got) + '<div class="stack"><button class="btn" id="gc">' + C.t('done') + '</button></div>', true);
-      document.getElementById('gc').onclick = back;
+      gotCard(C.t('starChest'), got, '', true, back);
     };
     if((b = document.getElementById('gSet'))) b.onclick = function(){
       var got = openChest(150 + 50*s.rank, s.rank % 2 === 0);
       s.rank++; s.setReady = false; s.missions = newSet(s.rank); C.persist(); C.sfx.clear(); C.haptic(40);
-      UI.open(chestHTML(C.t('rankUp').replace('{r}', s.rank), got, C.t('rankLbl').replace('{r}', s.rank).replace('{p}', Math.round((bonusRate() - 1)*100))) +
-              '<div class="stack"><button class="btn" id="gc">' + C.t('done') + '</button></div>', true);
-      document.getElementById('gc').onclick = back;
+      gotCard(C.t('rankUp').replace('{r}', s.rank), got, C.t('rankLbl').replace('{r}', s.rank).replace('{p}', Math.round((bonusRate() - 1)*100)), true, back);
     };
   }
   var previewCache = {};
@@ -13671,7 +13949,12 @@ window.SignLogic = (function(){
   }
   /* The one line on a win or lose card that says what to do next. */
   function nextGoalHTML(justDone){
-    var s = st(), out = '';
+    var s = st(), out = '', w = week();
+    if(w.just){
+      w.just = false;
+      out += '<div class="goal' + (w.n >= WEEK.goal ? ' ok' : '') + '"><b>' + C.t('weekTitle') + '</b> ' +
+        (w.n >= WEEK.goal && !w.got ? C.t('weekReady') : C.t('weekTick').replace('{a}', w.n).replace('{b}', WEEK.goal)) + '</div>';
+    }
     (justDone || []).forEach(function(m){
       out += '<div class="goal ok"><b>' + C.t('missionDone') + '</b> ' + missionText(m) + ' <span><i class="coin sm"></i>+' + m.coins + '</span></div>';
     });
@@ -13686,7 +13969,8 @@ window.SignLogic = (function(){
     init:function(ui){ UI = ui; st(); },
     event:event, bonusRate:bonusRate, daily:daily, hasNews:hasNews, starChestsReady:starChestsReady,
     showDaily:showDaily, showGoals:showGoals, showGarage:showGarage, outfit:outfit, nextGoalHTML:nextGoalHTML,
-    missions:function(){ return st().missions; }, rank:function(){ return st().rank; }, LOOKS:LOOKS
+    missions:function(){ return st().missions; }, rank:function(){ return st().rank; }, LOOKS:LOOKS,
+    showReward:showReward, showWeek:showWeek, weekChip:weekChip, art:art
   };
 })();
 </script>
@@ -13788,7 +14072,7 @@ window.SignLogic = (function(){
   var bg = document.createElement('canvas'), bgx = bg.getContext('2d');
   var mqReduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   var reduceMotion = mqReduce || !!C.save.calm;
-  var APP_VERSION = 36;
+  var APP_VERSION = 37;
   var dpr = 1, k = 1, bgDirty = true;
   var G = {W:420, H:800};
   var screen = 'map', game = null, gameStop = 0, paused = false;
@@ -15023,7 +15307,12 @@ window.SignLogic = (function(){
         var a = -Math.PI/2 + (Math.random() - .5)*2.2, v = 160 + Math.random()*170;
         map.burst.push({x:ch.x, y:ch.y - 16, vx:Math.cos(a)*v, vy:Math.sin(a)*v, t:0, r:4 + Math.random()*2.5});
       }
-      toast(C.t('chestGot').replace('{x}', n));
+      if(window.Rewards && window.Rewards.showReward){
+        setTimeout(function(){
+          if(screen !== 'map' || !ov.hidden) return;
+          window.Rewards.showReward({title:C.t('zoneGift'), coins:n, art:'chest', note:C.t('zoneGiftNote').replace('{z}', C.t(zoneDef(ch.zone).key))});
+        }, 650);                                        // after the coins have burst out of the chest
+      } else toast(C.t('chestGot').replace('{x}', n));
     } else if(st === 0){ C.sfx.bump(); toast(C.t('chestLocked').replace('{n}', ch.stop)); }
     else { C.sfx.tap(); toast(C.t('chestDone')); }
   }
@@ -15456,6 +15745,14 @@ window.SignLogic = (function(){
       var ms = window.Rewards.missions(), mdone = ms.filter(function(m){ return m.done; }).length, news = window.Rewards.hasNews(totalStars());
       $('#hmCard').innerHTML = tileHTML(goalIcon(), '#f2a20c', C.t('goals'), news ? C.t('newsLbl') : C.t('goalsSub').replace('{d}', mdone));
       $('#hmCard').classList.toggle('dot', news);
+      // the 3-Star Week, as a badge on the street: progress and time left
+      var wk = window.Rewards.weekChip(), ev = $('#hmEvent');
+      if(ev){
+        ev.hidden = brandNew;
+        ev.classList.toggle('ready', wk.ready);
+        ev.innerHTML = '<img alt="" src="' + window.Rewards.art('stars') + '"><span><b>' + C.t('weekTitle') + '</b><small>' +
+          (wk.got ? '✓ ' + wk.left : wk.ready ? C.t('collect') : wk.n + '/' + wk.goal + ' · ' + wk.left) + '</small></span>';
+      }
       if(news && window.Rewards.daily().ready && !giftShown && !brandNew){
         giftShown = true;
         setTimeout(function(){ if(screen === 'home' && ov.hidden) window.Rewards.showDaily(); }, 900);
@@ -16532,6 +16829,7 @@ window.SignLogic = (function(){
   };
   var hmCoinsEl = document.getElementById('hmCoins');
   hmCoinsEl.setAttribute('role', 'button'); hmCoinsEl.tabIndex = 0;
+  (function(){ var ev = document.getElementById('hmEvent'); if(ev) ev.onclick = function(){ C.ensureAudio(); C.sfx.tap(); if(window.Rewards) window.Rewards.showWeek(); }; })();
   hmCoinsEl.onclick = function(){ C.ensureAudio(); C.sfx.tap(); if(window.Rewards) window.Rewards.showGarage('helmet'); };
   if(window.Rewards) window.Rewards.init({open:openOverlay, close:closeOverlay, addCoins:addCoins, spend:spend, toast:toast,
     dailyDone:function(){ return dailyDone(); }, refresh:function(){ if(screen === 'home') showHome(); }});

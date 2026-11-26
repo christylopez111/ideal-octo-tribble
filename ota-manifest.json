@@ -1,7 +1,7 @@
 {
- "version": 36,
+ "version": 37,
  "api": 1,
- "built": "2026-11-26T04:22:33.378Z",
+ "built": "2026-11-26T05:37:06.244Z",
  "files": {
   "assets/cars/Textures/colormap.png": {
    "sha": "f3622a03a20c6696065cae9cbe391351be873508af190c2ebd1d420c055787a5",
@@ -204,8 +204,8 @@
    "size": 1166
   },
   "index.html": {
-   "sha": "0c7de556bdb5dc58b3fe524883eb41bab253a48e56080863e6470068d896ab36",
-   "size": 923565
+   "sha": "5c4831303b784c7a8a62f7805bae0a6b1be1bcebd1234df9fb9be42b8f2c52ad",
+   "size": 947380
   },
   "lib/GLTFLoader.js": {
    "sha": "5c15967ba830918a9caea6338712c994c354bccd4edc4569bde411c3ec06a3e6",
